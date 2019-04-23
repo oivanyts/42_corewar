@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/libftprintf.h"
+#include "../includes/libft.h"
 
 const char	*g_colortab[9] = { "{black}", "{red}", "{green}", "{yellow}",
 	"{blue}", "{magenta}", "{cyan}", "{white}", "{eoc}"};

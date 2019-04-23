@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/libftprintf.h"
+#include "../includes/libft.h"
 
 wchar_t	*ft_strndup_u(wchar_t *src, size_t n)
 {

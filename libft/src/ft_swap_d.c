@@ -1,19 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   ft_swap_d.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/25 17:08:02 by oivanyts          #+#    #+#             */
-/*   Updated: 2018/11/01 14:48:51 by oivanyts         ###   ########.fr       */
+/*   Created: 2019/04/15 00:28:43 by oivanyts          #+#    #+#             */
+/*   Updated: 2019/04/15 00:29:07 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/libft.h"
-
-void	ft_putstr_fd(char const *s, int fd)
+void	ft_swap_d(double *a, double *b)
 {
-	if (s)
-		write(fd, s, ft_strlen(s));
+	*a = *a + *b;
+	*b = *a - *b;
+	*a = *a - *b;
 }

@@ -1,32 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup_u.c                                      :+:      :+:    :+:   */
+/*   ft_atoi_base.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/14 17:33:15 by oivanyts          #+#    #+#             */
-/*   Updated: 2019/01/14 17:33:21 by oivanyts         ###   ########.fr       */
+/*   Created: 2019/04/12 01:00:50 by oivanyts          #+#    #+#             */
+/*   Updated: 2019/04/12 01:00:54 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
 
-wchar_t	*ft_strdup_u(wchar_t *src)
+static inline bool	ft_ishex(char c)
 {
-	size_t		i;
-	size_t		len;
-	wchar_t		*str;
+	return (ft_isdigit(c) || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f'));
+}
 
-	len = ft_strlen_u(src);
-	if (!(str = (wchar_t *)malloc(sizeof(*str) * (len + 1))))
-		return (NULL);
-	i = 0;
-	while (i < len)
+unsigned int		ft_atoi_hex(const char *str)
+{
+	unsigned long long	x;
+
+	x = 0;
+	while (ft_isspace(*str))
+		str++;
+	if (!(*str++ == '0' && *str++ == 'x'))
 	{
-		str[i] = src[i];
-		i++;
+		return (0);
 	}
-	str[i] = '\0';
-	return (str);
+	while (*str && ft_ishex(*str))
+	{
+		x = x << 4;
+		if (*str > 64)
+			x += ft_toupper(*str) - 55;
+		else
+			x += (*str - 48);
+		str++;
+	}
+	return (x);
 }

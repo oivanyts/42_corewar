@@ -1,30 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strmap.c                                        :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/31 13:09:55 by oivanyts          #+#    #+#             */
-/*   Updated: 2018/11/07 14:19:00 by oivanyts         ###   ########.fr       */
+/*   Created: 2018/09/11 16:50:24 by oivanyts          #+#    #+#             */
+/*   Updated: 2018/11/06 14:53:11 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
 
-char	*ft_strmap(char const *s, char (*f)(char))
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	char	*fresh;
-	size_t	i;
+	int n;
 
-	i = 0;
-	if (!s || !f)
-		return (NULL);
-	fresh = malloc((ft_strlen(s)) + 1);
-	if (!fresh)
-		return (NULL);
-	while (*s)
-		fresh[i++] = f(*s++);
-	fresh[i] = '\0';
-	return (fresh);
+	n = 0;
+	while (s1[n] && s2[n])
+	{
+		if (s1[n] == s2[n])
+			n++;
+		else
+			return ((unsigned char)s1[n] - (unsigned char)s2[n]);
+	}
+	return ((unsigned char)s1[n] - (unsigned char)s2[n]);
 }

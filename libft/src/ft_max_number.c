@@ -10,8 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/libftprintf.h"
-
 int	ft_max_number(int a, int b, int c)
 {
 	if (a >= b && a >= c)

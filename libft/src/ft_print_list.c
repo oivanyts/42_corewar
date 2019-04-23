@@ -1,32 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_countwords.c                                    :+:      :+:    :+:   */
+/*   ft_print_list.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/01 13:54:50 by oivanyts          #+#    #+#             */
-/*   Updated: 2018/11/07 13:58:12 by oivanyts         ###   ########.fr       */
+/*   Created: 2019/04/18 07:28:14 by oivanyts          #+#    #+#             */
+/*   Updated: 2019/04/18 07:29:12 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/libftprintf.h"
+#include "../includes/libft.h"
 
-size_t	ft_countwords(const	char *s, char c)
+void	ft_print_list(t_list *list)
 {
-	size_t	count;
-
-	count = 0;
-	while (*s)
+	while (list)
 	{
-		while (*s == c && *s)
-			s++;
-		if (*s != c && *s)
-		{
-			while (*s != c && *s)
-				s++;
-			count++;
-		}
+		if (list->content)
+			ft_printf("{%s}\n", *(char **)list->content);
+		pList = pList->next;
 	}
-	return (count);
 }

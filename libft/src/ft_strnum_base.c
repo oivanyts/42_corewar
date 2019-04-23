@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/libftprintf.h"
+#include "../includes/libft.h"
 
 static size_t	ft_count_st(unsigned long long int n, int base, t_format fx)
 {

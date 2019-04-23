@@ -1,35 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putbr_fd.c                                      :+:      :+:    :+:   */
+/*   ft_array_print.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/25 17:12:18 by oivanyts          #+#    #+#             */
-/*   Updated: 2018/10/25 17:26:30 by oivanyts         ###   ########.fr       */
+/*   Created: 2019/04/18 07:21:29 by oivanyts          #+#    #+#             */
+/*   Updated: 2019/04/18 07:21:32 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
 
-void	ft_putnbr_fd(int nb, int fd)
+void	ft_array_print(int **map, int line, int col)
 {
-	unsigned int n;
+	int i;
+	int j;
 
-	if (nb < 0)
+	i = 0;
+	while (i < line)
 	{
-		write(fd, "-", 1);
-		nb *= (-1);
-	}
-	n = nb;
-	if (n >= 10)
-	{
-		ft_putnbr_fd(n / 10, fd);
-		ft_putnbr_fd(n % 10, fd);
-	}
-	else
-	{
-		nb += '0';
-		write(fd, &nb, 1);
+		j = 0;
+		ft_printf("{ ");
+		while (j < col)
+		{
+			ft_printf("%d ", map[i][j]);
+			j++;
+		}
+		ft_printf("}\n");
+		i++;
 	}
 }

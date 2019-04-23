@@ -1,20 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_swap.c                                          :+:      :+:    :+:   */
+/*   ft_countwords.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/09 18:32:28 by oivanyts          #+#    #+#             */
-/*   Updated: 2018/11/09 18:32:39 by oivanyts         ###   ########.fr       */
+/*   Created: 2018/11/01 13:54:50 by oivanyts          #+#    #+#             */
+/*   Updated: 2018/11/07 13:58:12 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void	ft_swap(int *a, int *b)
-{
-	int x;
+#include "../includes/libft.h"
 
-	x = *b;
-	*b = *a;
-	*a = x;
+size_t	ft_countwords(const	char *s, char c)
+{
+	size_t	count;
+
+	count = 0;
+	while (*s)
+	{
+		while (*s == c && *s)
+			s++;
+		if (*s != c && *s)
+		{
+			while (*s != c && *s)
+				s++;
+			count++;
+		}
+	}
+	return (count);
 }
