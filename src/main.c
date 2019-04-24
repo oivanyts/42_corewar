@@ -1,6 +1,9 @@
 #include "asm.h"
-int main(void)
+#include "vm.h"
+
+int main(int argc, char *argv[])
 {
+
 	ft_printf("test");
 	return 0;
 }

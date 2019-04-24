@@ -3,7 +3,7 @@ project(corewar LANGUAGES C)
 #set(CMAKE_C_COMPILER clang)
 
 set(CMAKE_C_STANDARD 99)
-#set(CMAKE_C_FLAGS "-Wextra -Werror")
+set(CMAKE_C_FLAGS "-Wall -Wextra -Werror -O3")
 
 add_subdirectory(./libft)
 
