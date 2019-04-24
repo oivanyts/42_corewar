@@ -55,6 +55,8 @@ typedef char					t_arg_type;
 # define COMMENT_LENGTH			(2048)
 # define COREWAR_EXEC_MAGIC		0xea83f3
 
+#include "asm.h"
+
 typedef struct			s_header
 {
 	unsigned int		magic;
