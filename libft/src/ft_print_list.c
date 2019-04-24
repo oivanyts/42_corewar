@@ -18,6 +18,6 @@ void	ft_print_list(t_list *list)
 	{
 		if (list->content)
 			ft_printf("{%s}\n", *(char **)list->content);
-		pList = pList->next;
+		list = list->next;
 	}
 }
