@@ -16,5 +16,5 @@ bool	load_from_file(char	*filename)
 {
 	int	fd;
 
-	if (!(fd = open()))
+	if (!(fd = open(filename, O_RONLY)))
 }

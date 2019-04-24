@@ -3,7 +3,6 @@
 
 int main(int argc, char *argv[])
 {
-
-	ft_printf("test");
+	ft_printf("test %s %d", argv[1], argc);
 	return 0;
 }
