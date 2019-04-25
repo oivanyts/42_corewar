@@ -31,11 +31,23 @@ typedef struct	s_op_list					//Структура для зберігання с
 typedef struct	s_token_list
 {
 	enum e_identifier	ident;			//ідентифікатор токену (один зі списку нижче)
-	char				*data;				//Для зберігання самої строки, що відповідає даному токену
+	void				*data;				//Для зберігання самої строки, що відповідає даному токену
 	int					col;				//Номер колонки (де знаходиться перший символ токену)
 	int					row;				//Номер рядка
 	struct s_token_list	*next;
 }				t_token_list;
+
+// COMMENT - NULL
+// NAME	- NULL
+// LABEL - name of label (char*)
+// INSTRUCTION - name of instruction (char*)
+// REGISTER - number (int)
+// INDIRECT - number (int)
+// DIRECT - number (int)
+// DIRECT_LABEL - name of label (char*)
+// INDIRECT_LABEL - name of label (char*)
+// SEPARATOR - NULL
+// STRING - (char*)
 
 typedef struct	s_op
 {
