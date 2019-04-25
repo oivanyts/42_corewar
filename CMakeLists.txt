@@ -11,7 +11,7 @@ AUX_SOURCE_DIRECTORY(./src/vm/ SOURCE_FILES_VM)
 AUX_SOURCE_DIRECTORY(./src/asm/ SOURCE_FILES_ASM)
 
 
-add_executable(vm ${SOURCE_FILES_VM})
+add_executable(vm ${SOURCE_FILES_VM} src/vm/op.c)
 add_executable(asm ${SOURCE_FILES_ASM})
 
 target_include_directories(vm PUBLIC ./include)
