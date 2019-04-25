@@ -6,7 +6,7 @@
 /*   By: npiatiko <npiatiko@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 12:19:23 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/04/25 12:19:24 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/04/25 14:46:32 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@ typedef struct	s_token_list
 
 typedef struct	s_op
 {
-	char	*instr;
+	char	*name;
 	int		args;
 	int		targs[3];
 	int		opcode;
 	int		cycle;
-	char	*name;
+	char	*descr;
 	int		codoctal;
 	int		some;
 }				t_op;
@@ -81,4 +81,5 @@ static t_op		g_op_tab[17] =
 	{"aff", 1, {T_REG}, 16, 2, "aff", 1, 0},
 	{0, 0, {0}, 0, 0, 0, 0, 0}
 };
+int		ft_listlen(t_token_list *lst);
 #endif
