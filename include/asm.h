@@ -1,8 +1,8 @@
 #ifndef ASM_H
 #define ASM_H
 
-#include "op.h"
 #include "libft.h"
+#include "op.h"
 typedef enum e_identifier
 {
 	COMMENT, NAME, LABEL, INSTRUCTION,
@@ -37,11 +37,5 @@ typedef struct s_op
 	int		codoctal;
 	int 	some;
 }t_op;
-char g_ident_str[11][20] =
-		{
-				"COMMENT", "NAME", "LABEL", "INSTRUCTION",
-				"REGISTER", "INDIRECT", "DIRECT", "DIRECT_LABEL",
-				"INDIRECT_LABEL", "SEPARATOR", "STRING"
-		};
 
 #endif //COREWAR_ASM_H
