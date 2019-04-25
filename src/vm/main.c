@@ -1,7 +1,7 @@
 #include <op.h>
 #include "vm.h"
 
-uint8_t	parce_all_players(int num_players, char **filenames, t_header *player)
+uint8_t	parce_all_players(int num_players, char **filenames, t_header **player)
 {
 	uint8_t i;
 
@@ -13,15 +13,16 @@ uint8_t	parce_all_players(int num_players, char **filenames, t_header *player)
 	while (i < num_players)
 	{
 		i++;
-		load_from_file(filenames[i], i);
+		load_from_file(filenames[i], i, &player[i - 1]);
 	}
 	return (0);
 }
 
 int		main(int argc, char *argv[])
 {
-	t_header	players[argc];
+	t_play	players[argc];
 
-	parce_all_players(argc - 1, argv, players);
+
+	parce_all_players(argc - 1, argv, &players);
 	return 0;
 }
