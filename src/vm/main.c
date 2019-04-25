@@ -3,8 +3,6 @@
 
 int main(int argc, char *argv[])
 {
-
-	ft_printf("test %s %d\n", argv[1], argc);
-	load_from_file(argv[1]);
+	ft_printf("test %s %d", argv[1], argc);
 	return 0;
 }
