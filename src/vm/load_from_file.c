@@ -6,7 +6,7 @@
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 08:55:42 by oivanyts          #+#    #+#             */
-/*   Updated: 2019/04/25 05:44:43 by oivanyts         ###   ########.fr       */
+/*   Updated: 2019/04/25 05:50:34 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	output_binary(unsigned char *bitecode, size_t size)
 	}
 }
 
-bool	load_from_file(char	*filename)
+bool	load_from_file(char	*filename, int num)
 {
 	int				fd;
 	unsigned char	bitecode[MEM_SIZE];

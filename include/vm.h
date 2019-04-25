@@ -6,7 +6,7 @@
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 08:58:10 by oivanyts          #+#    #+#             */
-/*   Updated: 2019/04/25 05:16:33 by oivanyts         ###   ########.fr       */
+/*   Updated: 2019/04/25 05:52:58 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct s_decoded_op
 	uint32_t *args[3];
 } t_decoded_op;
 
-bool	load_from_file(char	*filename);
+bool	load_from_file(char	*filename, int num);
 
 void	vm_cycle();
 
