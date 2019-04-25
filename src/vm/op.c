@@ -11,34 +11,34 @@
 /* ************************************************************************** */
 
 #include "vm.h"
-
-void *vm_memory;
-
-void	vm_cycle()
-{
-
-}
-
-t_decoded_op	op_decode(struct s_carriage *pc)
-{
-	t_decoded_op op;
-
-	op.opcode = as_byte(vm_memory)[pc->ip];
-	pc->ip += 1;
-	if (pc->ip == MEM_SIZE)
-	{
-		//error?
-	}
-	op.nargs += as_byte(vm_memory)[pc->ip]
-	return (op);
-}
-
-void	op_exec(struct s_decoded_op *data)
-{
-
-}
-
-inline uint8_t	*as_byte(void *ptr)
-{
-	return (ptr);
-}
+//
+//void *vm_memory;
+//
+//void	vm_cycle()
+//{
+//
+//}
+//
+//t_decoded_op	op_decode(struct s_carriage *pc)
+//{
+//	t_decoded_op op;
+//
+//	op.opcode = as_byte(vm_memory)[pc->ip];
+//	pc->ip += 1;
+//	if (pc->ip == MEM_SIZE)
+//	{
+//		//error?
+//	}
+//	op.nargs += as_byte(vm_memory)[pc->ip]
+//	return (op);
+//}
+//
+//void	op_exec(struct s_decoded_op *data)
+//{
+//
+//}
+//
+//inline uint8_t	*as_byte(void *ptr)
+//{
+//	return (ptr);
+//}
