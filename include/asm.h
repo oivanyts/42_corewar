@@ -6,7 +6,7 @@
 /*   By: npiatiko <npiatiko@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 12:19:23 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/04/25 14:46:32 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/04/25 16:17:58 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ typedef struct	s_op
 	int		some;
 }				t_op;
 
-static char 	g_ident_str[] =
+static char 	*g_ident_str[] =
 {
 	"COMMENT", "NAME", "LABEL", "INSTRUCTION",
 	"REGISTER", "INDIRECT", "DIRECT", "DIRECT_LABEL",
