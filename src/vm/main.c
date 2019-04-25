@@ -1,11 +1,27 @@
 #include <op.h>
 #include "vm.h"
 
-int main(int argc, char *argv[])
+uint8_t	parce_all_players(int num_players, char **filenames, t_header *player)
+{
+	uint8_t i;
+
+	if (!num_players)
+		handle_error(1);
+	else if (num_players > 4)
+		handle_error(2);
+	i = 0;
+	while (i < num_players)
+	{
+		i++;
+		load_from_file(filenames[i], i);
+	}
+	return (0);
+}
+
+int		main(int argc, char *argv[])
 {
 	t_header	players[argc];
 
-	load_from_file(argv[1], argc);
-	ft_printf("#%d players {red}[%s] {green}[%s] {cyan}[%s] {blue}[%s]{eoc}\n", argc, argv[1], argv[2], argv[3], argv[4]);
+	parce_all_players(argc - 1, argv, players);
 	return 0;
 }

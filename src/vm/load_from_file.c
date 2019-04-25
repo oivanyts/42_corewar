@@ -6,14 +6,14 @@
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 08:55:42 by oivanyts          #+#    #+#             */
-/*   Updated: 2019/04/25 05:50:34 by oivanyts         ###   ########.fr       */
+/*   Updated: 2019/04/25 06:22:29 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
 #include "op.h"
 
-void	output_binary(unsigned char *bitecode, size_t size)
+void	output_binary(uint8_t *bitecode, size_t size)
 {
 	size_t i;
 
@@ -29,12 +29,12 @@ void	output_binary(unsigned char *bitecode, size_t size)
 
 bool	load_from_file(char	*filename, int num)
 {
-	int				fd;
-	unsigned char	bitecode[MEM_SIZE];
+	int		fd;
+	uint8_t	bitecode[MEM_SIZE];
 
 	if (!(fd = open(filename, O_RDONLY)))
 		return (false);
+	ft_printf("opened %s\n", filename);
 //	output_binary(bitecode, (size_t)read(fd, bitecode, MEM_SIZE));
-
 	return (true);
 }

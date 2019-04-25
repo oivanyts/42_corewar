@@ -6,7 +6,7 @@
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 08:58:10 by oivanyts          #+#    #+#             */
-/*   Updated: 2019/04/25 05:52:58 by oivanyts         ###   ########.fr       */
+/*   Updated: 2019/04/25 06:11:07 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	vm_cycle();
 t_decoded_op	op_decode(struct s_carriage *pc);
 
 void	op_exec(struct s_decoded_op *data);
+void	handle_error(uint8_t n_err);
 
 inline uint8_t	*as_byte(void *ptr);
 
