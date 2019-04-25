@@ -14,8 +14,9 @@
 #define PROJECT_VM_H
 
 #include "libft.h"
+#include "op.h"
 
-struct s_carriage
+typedef struct s_carriage
 {
 	uint32_t ip;
 	bool cf;
@@ -23,17 +24,27 @@ struct s_carriage
 	uint8_t reg[16];
 	bool alive;
 	uint8_t wait;
+} t_carriage;
+
+struct s_player
+{
+	t_carriage carriage;
+	t_header header;
 };
 
-struct s_op_data
+typedef struct s_decoded_op
 {
 	uint8_t opcode;
-};
+	uint8_t nargs;
+	uint32_t *args[3];
+} t_decoded_op;
 
 bool	load_from_file(char	*filename);
 
-void	get_command();
+void	vm_cycle();
 
-void	decode(struct s_carriage *player);
+t_decoded_op	op_decode(struct s_player *player);
+
+void	op_exec(struct s_decoded_op *data);
 
 #endif
