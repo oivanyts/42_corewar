@@ -37,6 +37,13 @@ typedef struct	s_token_list
 	struct s_token_list	*next;
 }				t_token_list;
 
+typedef struct  s_label_list
+{
+    char                *name;
+    struct s_op_list    *op;
+    struct s_label_list *next;
+}               t_label_list;
+
 // COMMENT - NULL
 // NAME	- NULL
 // LABEL - name of label (char*)
