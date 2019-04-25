@@ -14,14 +14,14 @@
 
 
 
-int		main(int argc, char **argv)
-{
-	t_token_list	*lst;
-
-	lst = ft_memalloc(sizeof(t_token_list));
-	lst->next = ft_memalloc(sizeof(t_token_list));
-
-	ft_printf("%s", g_ident_str[10]);
-//	ft_printf("%s %d %d %d %d %s %d %d\n", g_op_tab[0].name, g_op_tab[0].args, g_op_tab[0].targs[0], g_op_tab[0].opcode, g_op_tab[0].cycle, g_op_tab[0].descr, g_op_tab[0].codoctal, g_op_tab[0].codoctal);
-	return (0);
-}
+//int		main(int argc, char **argv)
+//{
+//	t_token_list	*lst;
+//
+//	lst = ft_memalloc(sizeof(t_token_list));
+//	lst->next = ft_memalloc(sizeof(t_token_list));
+//
+//	ft_printf("%s", g_ident_str[10]);
+////	ft_printf("%s %d %d %d %d %s %d %d\n", g_op_tab[0].name, g_op_tab[0].args, g_op_tab[0].targs[0], g_op_tab[0].opcode, g_op_tab[0].cycle, g_op_tab[0].descr, g_op_tab[0].codoctal, g_op_tab[0].codoctal);
+//	return (0);
+//}
