@@ -8,6 +8,5 @@ char g_ident_str[11][20] =
 
 int main(int argc, char **argv)
 {
-
 	return 0;
 }
