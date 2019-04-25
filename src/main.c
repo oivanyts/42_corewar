@@ -1,6 +1,13 @@
 #include "asm.h"
-int main(void)
+char g_ident_str[11][20] =
+		{
+				"COMMENT", "NAME", "LABEL", "INSTRUCTION",
+				"REGISTER", "INDIRECT", "DIRECT", "DIRECT_LABEL",
+				"INDIRECT_LABEL", "SEPARATOR", "STRING"
+		};
+
+int main(int argc, char **argv)
 {
-	ft_printf("test");
+
 	return 0;
 }
