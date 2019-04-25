@@ -6,7 +6,7 @@
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 08:55:42 by oivanyts          #+#    #+#             */
-/*   Updated: 2019/04/25 05:13:31 by oivanyts         ###   ########.fr       */
+/*   Updated: 2019/04/25 05:44:43 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ bool	load_from_file(char	*filename)
 
 	if (!(fd = open(filename, O_RDONLY)))
 		return (false);
-	output_binary(bitecode, (size_t)read(fd, bitecode, MEM_SIZE));
+//	output_binary(bitecode, (size_t)read(fd, bitecode, MEM_SIZE));
 
 	return (true);
 }
