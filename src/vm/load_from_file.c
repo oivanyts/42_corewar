@@ -6,14 +6,13 @@
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 08:55:42 by oivanyts          #+#    #+#             */
-/*   Updated: 2019/04/25 04:46:36 by oivanyts         ###   ########.fr       */
+/*   Updated: 2019/04/25 04:51:16 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
 #include "op.h"
 
-#define TESTTESTTEST
 bool	load_from_file(char	*filename)
 {
 	int	fd, rd, i = 0;
