@@ -6,7 +6,7 @@
 /*   By: npiatiko <npiatiko@student.unit.ua>          +#+  +:+       +#+      */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 14:37:25 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/04/25 16:16:36 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/04/25 16:47:52 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int ft_listlen(t_token_list *lst)
 	return i;
 }
 
-int		ft_checkname(char *name)
+void	*ft_checkname(char *name)
 {
 	int i;
 
@@ -34,7 +34,7 @@ int		ft_checkname(char *name)
 	while (i < 17)
 	{
 		if (ft_strequ(name, g_op_tab[i++].name))
-			return (1);
+			return (NULL);
 	}
-	return (0);
+	return (ft_listlen);
 }

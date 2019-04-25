@@ -6,7 +6,7 @@
 /*   By: npiatiko <npiatiko@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 12:19:23 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/04/25 16:24:11 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/04/25 16:24:40 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,4 +94,5 @@ static t_op		g_op_tab[17] =
 	{0, 0, {0}, 0, 0, 0, 0, 0}
 };
 int		ft_listlen(t_token_list *lst);
+void	*ft_checkname(char *name);
 #endif
