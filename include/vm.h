@@ -13,8 +13,33 @@
 #ifndef PROJECT_VM_H
 #define PROJECT_VM_H
 
-#include "libft.h"
-#include "op.h"
+# include "op.h"
+
+# define T_FIRST_PARAM 0xC0
+# define T_SECOND_PARAM 0x30
+# define T_THIRD_PARAM 0x0C
+
+typedef enum e_opcode
+{
+	oplowborder = 0,
+	oplive = 1,
+	opld,
+	opst,
+	opadd,
+	opsub,
+	opand,
+	opor,
+	opxor,
+	opzjmp,
+	opldi,
+	opsti,
+	opfork,
+	oplld,
+	oplldi,
+	oplfork,
+	opaff,
+	ophighborder
+} t_opcode;
 
 typedef struct s_carriage
 {
@@ -26,15 +51,15 @@ typedef struct s_carriage
 	uint8_t wait;
 } t_carriage;
 
-struct s_player
+typedef struct s_player
 {
 	t_carriage carriage;
 	t_header header;
-};
+} t_player;
 
 typedef struct s_decoded_op
 {
-	uint8_t opcode;
+	t_opcode opcode;
 	uint8_t nargs;
 	uint32_t *args[3];
 } t_decoded_op;
@@ -43,9 +68,11 @@ bool	load_from_file(char	*filename, int num, t_header *player);
 
 void	vm_cycle();
 
-t_decoded_op	op_decode(struct s_player *player);
+t_decoded_op	op_decode(struct s_carriage *pc);
 
 void	op_exec(struct s_decoded_op *data);
 void	handle_error(uint8_t n_err);
+
+inline uint8_t	*as_byte(void *ptr);
 
 #endif
