@@ -15,6 +15,25 @@
 
 #include "libft.h"
 
+struct s_carriage
+{
+	uint32_t ip;
+	bool cf;
+	uint8_t thread;
+	uint8_t reg[16];
+	bool alive;
+	uint8_t wait;
+};
+
+struct s_op_data
+{
+	uint8_t opcode;
+};
+
 bool	load_from_file(char	*filename);
 
-#endif //PROJECT_VM_H
+void	get_command();
+
+void	decode(struct s_carriage *player);
+
+#endif
