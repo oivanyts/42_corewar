@@ -15,6 +15,7 @@
 
 #define aaaa 234532
 
+#define TESTTESTTEST
 bool	load_from_file(char	*filename)
 {
 	int	fd, rd, i = 0;
