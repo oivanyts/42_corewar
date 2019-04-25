@@ -1,23 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print_list.c                                    :+:      :+:    :+:   */
+/*   load_from_file.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/18 07:28:14 by oivanyts          #+#    #+#             */
-/*   Updated: 2019/04/18 07:29:12 by oivanyts         ###   ########.fr       */
+/*   Created: 2019/04/24 08:55:42 by oivanyts          #+#    #+#             */
+/*   Updated: 2019/04/24 08:55:47 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/libft.h"
+#include "vm.h"
 
-void	ft_print_list(t_list *list)
+bool	load_from_file(char	*filename)
 {
-	while (list)
-	{
-		if (list->content)
-			ft_printf("{%s}\n", *(char **)list->content);
-		list = list->next;
-	}
+	int	fd;
+
+	if (!(fd = open(filename, O_RONLY)))
 }
