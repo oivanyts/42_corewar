@@ -26,7 +26,7 @@ typedef struct  s_asm
 {
 	int 				row;
 	int 				col;
-
+	int					fsm;
     struct s_op_list	*op_list;
     struct s_token_list	*token_list;
     struct s_label_list	*label_list;

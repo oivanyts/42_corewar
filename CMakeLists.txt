@@ -12,7 +12,7 @@ AUX_SOURCE_DIRECTORY(./src/asm/ SOURCE_FILES_ASM)
 
 
 add_executable(vm ${SOURCE_FILES_VM})
-add_executable(asm ${SOURCE_FILES_ASM} src/asm/lexer/lexer.c src/asm/lexer/read_text.c include/lexer.h src/asm/lexer/main.c src/asm/lexer/read_table_from.c)
+add_executable(asm ${SOURCE_FILES_ASM} src/asm/lexer/lexer.c src/asm/lexer/read_text.c include/lexer.h src/asm/lexer/main.c src/asm/lexer/read_table_from.c src/asm/lexer/lex_condition/lex_condition0.c src/asm/lexer/lex_condition/lex_condition1.c)
 
 target_include_directories(vm PUBLIC ./include)
 target_include_directories(asm PUBLIC ./include)
