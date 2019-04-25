@@ -12,9 +12,22 @@
 
 #include "vm.h"
 
+# define MEM_SIZE (4 * 1024)
+# define CHAMP_MAX_SIZE     (MEM_SIZE / 6)
+
 bool	load_from_file(char	*filename)
 {
-	int	fd;
+	int	fd, rd, i = 0;
+	unsigned char bitecode[MEM_SIZE];
 
-	if (!(fd = open(filename, O_RONLY)))
+	if (!(fd = open(filename, O_RDONLY)))
+		return (false);
+	rd = read(fd, bitecode, MEM_SIZE);
+	while (i < rd)
+	{
+		ft_printf("%.2x%.2x ", bitecode[i], bitecode[i + 1]);
+		i += 2;
+		if (!(i % 16))
+			ft_printf("\n");
+	}
 }
