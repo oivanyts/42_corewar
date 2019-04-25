@@ -13,6 +13,8 @@
 #include "vm.h"
 #include "op.h"
 
+#define aaaa 234532
+
 bool	load_from_file(char	*filename)
 {
 	int	fd, rd, i = 0;
