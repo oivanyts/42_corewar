@@ -31,3 +31,5 @@ bool	load_from_file(char	*filename)
 			ft_printf("\n");
 	}
 }
+
+//123
