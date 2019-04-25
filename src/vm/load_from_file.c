@@ -6,14 +6,12 @@
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 08:55:42 by oivanyts          #+#    #+#             */
-/*   Updated: 2019/04/24 08:55:47 by oivanyts         ###   ########.fr       */
+/*   Updated: 2019/04/25 04:35:00 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
-
-# define MEM_SIZE (4 * 1024)
-# define CHAMP_MAX_SIZE     (MEM_SIZE / 6)
+#include "op.h"
 
 bool	load_from_file(char	*filename)
 {
@@ -30,6 +28,5 @@ bool	load_from_file(char	*filename)
 		if (!(i % 16))
 			ft_printf("\n");
 	}
+	return (true);
 }
-
-//123
