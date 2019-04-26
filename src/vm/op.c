@@ -12,23 +12,31 @@
 
 #include "vm.h"
 
-void *vm_memory;
+void	players_sort_by_id(t_player *players, uint32_t nplayers)
+{
+	(void)players;
+	(void)nplayers;
+}
 
-//void	players_sort_by_id(t_player *players, uint32_t nplayers)
-//{
-//
-//}
+uint32_t player_threads_alive(t_player *player)
+{
+	size_t alive;
 
-bool anybody_alive(t_player *players, uint32_t nplayers)
+	alive = 0;
+
+	return (alive);
+}
+
+uint32_t threads_alive(t_player *players, uint32_t nplayers)
 {
 	uint32_t player;
-	bool alive;
+	uint32_t alive;
 
 	player = 0;
 	alive = 0;
 	while (player < nplayers)
 	{
-		if (players[player].carriage.alive)
+		if (players[player].threads.alive)
 		{
 			alive = 1;
 		}
@@ -37,7 +45,7 @@ bool anybody_alive(t_player *players, uint32_t nplayers)
 	return (alive);
 }
 
-void	vm_cycle(t_player *players, uint32_t nplayers)
+void	vm_cycle(t_player *players, uint32_t nplayers, uint8_t *vm_memory)
 {
 	uint32_t player;
 	uint32_t cycles;
@@ -46,14 +54,14 @@ void	vm_cycle(t_player *players, uint32_t nplayers)
 	cycles = CYCLE_TO_DIE;
 	player = 0;
 	checks = 0;
-	while (anybody_alive(players, nplayers) && (cycles > 0))
+	while (threads_alive(players, nplayers) && (cycles > 0))
 	{
 		++checks;
 		if (checks == MAX_CHECKS)
 		{
 			cycles -= CYCLE_DELTA;
 		}
-		op_exec(&players[player].carriage);
+		op_exec(&players[player].threads);
 		++player;
 		if (player == nplayers)
 		{
@@ -62,7 +70,7 @@ void	vm_cycle(t_player *players, uint32_t nplayers)
 	}
 }
 
-t_opcode decode_opcode(struct s_carriage *pc)
+t_opcode decode_opcode(struct s_thread *pc, uint8_t *vm_memory)
 {
 	t_opcode opcode;
 
@@ -96,13 +104,14 @@ void	check_op_params(t_opcode opcode, uint8_t tparams)
 	}
 }
 
-uint8_t	decode_tparams(struct s_carriage *pc, t_opcode opcode)
+uint8_t	decode_tparams(struct s_thread *pc, t_opcode opcode)
 {
 	uint8_t tparams;
 
 	if (t_ops[opcode].nargs > 0 && pc->ip == MEM_SIZE)
 	{
-		//error
+		pc->alive = 0;
+		return (tparams);
 	}
 	tparams = as_byte(vm_memory)[pc->ip];
 	check_op_params(opcode, tparams);
@@ -110,7 +119,7 @@ uint8_t	decode_tparams(struct s_carriage *pc, t_opcode opcode)
 	return (tparams);
 }
 
-void	*decode_param(t_opcode opcode, uint8_t tparams, t_carriage *pc, uint8_t param_number)
+void	*decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t param_number)
 {
 	void *param;
 	uint8_t  tparam;
@@ -161,7 +170,7 @@ void	*decode_param(t_opcode opcode, uint8_t tparams, t_carriage *pc, uint8_t par
 	return (param);
 }
 
-t_decoded_op	op_decode(struct s_carriage *pc)
+t_decoded_op	op_decode(struct s_thread *pc)
 {
 	t_decoded_op op;
 	uint8_t tparams;
@@ -178,7 +187,7 @@ t_decoded_op	op_decode(struct s_carriage *pc)
 	return (op);
 }
 
-void	op_exec(struct s_carriage *pc)
+void	op_exec(struct s_thread *pc)
 {
 	t_decoded_op op;
 

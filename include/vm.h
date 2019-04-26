@@ -14,7 +14,9 @@
 #define PROJECT_VM_H
 
 # include "op.h"
+# include "opcalls.h"
 # include "libft.h"
+# include "thread_array.h"
 
 #define IS_BIG_ENDIAN (*(uint16_t *)"\0\xff" < 0x100)
 
@@ -28,54 +30,36 @@ typedef enum e_error_code
 	error_to_many_players
 } t_error_code;
 
-typedef enum e_opcode
-{
-	oplowborder = 0,
-	oplive = 1,
-	opld,
-	opst,
-	opadd,
-	opsub,
-	opand,
-	opor,
-	opxor,
-	opzjmp,
-	opldi,
-	opsti,
-	opfork,
-	oplld,
-	oplldi,
-	oplfork,
-	opaff,
-	ophighborder
-} t_opcode;
-
-typedef struct s_op
-{
-	void (*op)(void*, void*, void*);
-	uint8_t targs[3];
-	uint8_t nargs;
-	uint8_t label_size;
-} t_op;
-
-static t_op t_ops[ophighborder - 1] =
-{
-
-};
-
-typedef struct s_carriage
-{
-	uint32_t ip;
-	bool cf;
-	uint32_t id;
-	uint32_t reg[16];
-	bool alive;
-	uint8_t wait;
-} t_carriage;
+t_op    op_tab[17] =
+		{
+				{"live", 1, {T_DIR}, 1, 10, "alive", 0, 0},
+				{"ld", 2, {T_DIR | T_IND, T_REG}, 2, 5, "load", 1, 0},
+				{"st", 2, {T_REG, T_IND | T_REG}, 3, 5, "store", 1, 0},
+				{"add", 3, {T_REG, T_REG, T_REG}, 4, 10, "addition", 1, 0},
+				{"sub", 3, {T_REG, T_REG, T_REG}, 5, 10, "soustraction", 1, 0},
+				{"and", 3, {T_REG | T_DIR | T_IND, T_REG | T_IND | T_DIR, T_REG}, 6, 6,
+						"et (and  r1, r2, r3   r1&r2 -> r3", 1, 0},
+				{"or", 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 7, 6,
+						"ou  (or   r1, r2, r3   r1 | r2 -> r3", 1, 0},
+				{"xor", 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 8, 6,
+						"ou (xor  r1, r2, r3   r1^r2 -> r3", 1, 0},
+				{"zjmp", 1, {T_DIR}, 9, 20, "jump if zero", 0, 1},
+				{"ldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 10, 25,
+						"load index", 1, 1},
+				{"sti", 3, {T_REG, T_REG | T_DIR | T_IND, T_DIR | T_REG}, 11, 25,
+						"store index", 1, 1},
+				{"fork", 1, {T_DIR}, 12, 800, "fork", 0, 1},
+				{"lld", 2, {T_DIR | T_IND, T_REG}, 13, 10, "long load", 1, 0},
+				{"lldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 14, 50,
+						"long load index", 1, 1},
+				{"lfork", 1, {T_DIR}, 15, 1000, "long fork", 0, 1},
+				{"aff", 1, {T_REG}, 16, 2, "aff", 1, 0},
+				{0, 0, {0}, 0, 0, 0, 0, 0}
+		};
 
 typedef struct s_player
 {
-	t_carriage carriage;
+	t_threads threads;
 	t_header header;
 } t_player;
 
@@ -90,20 +74,20 @@ bool load_from_file(char *filename, t_player *player, uint8_t memory[]);
 
 void	players_sort_by_id(t_player *players, uint32_t nplayers);
 
-void	vm_cycle(t_player *players, uint32_t nplayers);
+void	vm_cycle(t_player *players, uint32_t nplayers, uint8_t *vm_memory);
 
-uint8_t decode_tparams(struct s_carriage *pc, t_opcode opcode);
+uint8_t decode_tparams(struct s_thread *pc, t_opcode opcode);
 
-void *decode_param(t_opcode opcode, uint8_t tparams, t_carriage *pc, uint8_t param_number);
+void *decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t param_number);
 
-t_decoded_op	op_decode(struct s_carriage *pc);
+t_decoded_op	op_decode(struct s_thread *pc);
 
-void	op_exec(struct s_carriage *pc);
+void	op_exec(struct s_thread *pc);
 
 void	handle_error(uint8_t n_err);
 
 uint8_t	*as_byte(void *ptr);
 
-bool anybody_alive(t_player *players, uint32_t nplayers);
+uint32_t threads_alive(t_player *players, uint32_t nplayers);
 
 #endif
