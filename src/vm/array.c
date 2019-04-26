@@ -6,18 +6,12 @@
 /*   By: myaremen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/15 15:08:38 by myaremen          #+#    #+#             */
-/*   Updated: 2019/02/15 15:08:39 by myaremen         ###   ########.fr       */
+/*   Updated: 2019/04/26 08:00:45 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "array.h"
 
-void	ft_memswap(void *dest, void *src, void *buffer, size_t size)
-{
-	ft_memcpy(buffer, dest, size);
-	ft_memcpy(dest, src, size);
-	ft_memcpy(src, buffer, size);
-}
 
 void	array_init(struct s_array *sarr, size_t elem_size,
 		void (*alloc_elem)(void *ptr, const void *elem), void (*destroy_elem)
