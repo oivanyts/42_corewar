@@ -22,6 +22,12 @@
 # define T_SECOND_PARAM (uint8_t)0x30
 # define T_THIRD_PARAM (uint8_t)0x0C
 
+typedef enum e_error_code
+{
+	error_no_players,
+	error_to_many_players
+} t_error_code;
+
 typedef enum e_opcode
 {
 	oplowborder = 0,

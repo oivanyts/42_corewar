@@ -29,9 +29,9 @@ uint8_t parce_all_players(int num_players, char **filename, t_player *player, ui
 	int			player_gap;
 
 	if (num_players < 1)
-		handle_error(1);
+		handle_error(error_no_players);
 	else if (num_players > MAX_PLAYERS)
-		handle_error(2);
+		handle_error(error_to_many_players);
 	ft_printf("gap = %d\n", player_gap = MEM_SIZE / num_players);
 	i = 0;
 	while (i < num_players)
