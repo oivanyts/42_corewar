@@ -61,4 +61,5 @@ void		read_table(char *name, t_fsm *fsm)
 	fd = open(name, O_RDONLY);
 	create_table(fd, fsm);
 	fill_table(fd, fsm);
+	close(fd);
 }
