@@ -66,7 +66,7 @@ typedef struct s_decoded_op
 	uint32_t *args[3];
 } t_decoded_op;
 
-bool	load_from_file(char	*filename, int num, t_player *player);
+bool load_from_file(char *filename, int num, t_player *player, uint8_t memory[]);
 
 void	vm_cycle();
 
