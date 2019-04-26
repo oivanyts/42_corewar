@@ -47,9 +47,10 @@ typedef enum e_opcode
 
 typedef struct s_op
 {
-	void (*op)(uint32_t*, uint32_t*, uint32_t*);
+	void (*op)(void*, void*, void*);
 	uint8_t targs[3];
 	uint8_t nargs;
+	uint8_t label_size;
 } t_op;
 
 static t_op t_ops[ophighborder - 1] =
@@ -61,7 +62,7 @@ typedef struct s_carriage
 {
 	uint32_t ip;
 	bool cf;
-	uint8_t thread;
+	uint32_t id;
 	uint32_t reg[16];
 	bool alive;
 	uint8_t wait;
@@ -77,23 +78,27 @@ typedef struct s_decoded_op
 {
 	t_opcode opcode;
 	uint8_t nargs;
-	uint32_t *args[3];
+	void *args[3];
 } t_decoded_op;
 
 bool load_from_file(char *filename, int num, t_player *player, uint8_t memory[]);
 
-void	vm_cycle();
+void	players_sort_by_id(t_player *players, uint32_t nplayers);
+
+void	vm_cycle(t_player *players, uint32_t nplayers);
 
 uint8_t decode_tparams();
 
-uint32_t *decode_param(t_opcode opcode, uint8_t tparams, t_carriage *pc, uint8_t param_number);
+void *decode_param(t_opcode opcode, uint8_t tparams, t_carriage *pc, uint8_t param_number);
 
 t_decoded_op	op_decode(struct s_carriage *pc);
 
-void	op_exec(struct s_decoded_op *data);
+void	op_exec(struct s_carriage *pc);
 
 void	handle_error(uint8_t n_err);
 
 inline uint8_t	*as_byte(void *ptr);
+
+bool anybody_alive(t_player *players, uint32_t nplayers);
 
 #endif

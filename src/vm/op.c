@@ -14,9 +14,52 @@
 
 void *vm_memory;
 
-void	vm_cycle()
+void	players_sort_by_id(t_player *players, uint32_t nplayers)
 {
 
+}
+
+bool anybody_alive(t_player *players, uint32_t nplayers)
+{
+	uint32_t player;
+	bool alive;
+
+	player = 0;
+	alive = 0;
+	while (player < nplayers)
+	{
+		if (players[player].carriage.alive)
+		{
+			alive = 1;
+		}
+		++player;
+	}
+	return (alive);
+}
+
+void	vm_cycle(t_player *players, uint32_t nplayers)
+{
+	uint32_t player;
+	uint32_t cycles;
+	uint32_t checks;
+
+	cycles = CYCLE_TO_DIE;
+	player = 0;
+	checks = 0;
+	while (anybody_alive(players, nplayers) && (cycles > 0))
+	{
+		++checks;
+		if (checks == MAX_CHECKS)
+		{
+			cycles -= CYCLE_DELTA;
+		}
+		op_exec(&players[player].carriage);
+		++player;
+		if (player == nplayers)
+		{
+			player = 0;
+		}
+	}
 }
 
 t_opcode decode_opcode(struct s_carriage *pc)
@@ -67,11 +110,12 @@ uint8_t	decode_tparams(struct s_carriage *pc, t_opcode opcode)
 	return (tparams);
 }
 
-uint32_t	*decode_param(t_opcode opcode, uint8_t tparams, t_carriage *pc, uint8_t param_number)
+void	*decode_param(t_opcode opcode, uint8_t tparams, t_carriage *pc, uint8_t param_number)
 {
-	uint32_t *param;
+	void *param;
 	uint8_t  tparam;
 	uint8_t reg_number;
+	uint32_t addr;
 
 	param = 0;
 	if (param_number <= t_ops[opcode].nargs)
@@ -99,11 +143,14 @@ uint32_t	*decode_param(t_opcode opcode, uint8_t tparams, t_carriage *pc, uint8_t
 		}
 		else if (tparam == T_DIR)
 		{
+			param = (uint32_t*)as_byte(vm_memory)[pc->ip];
 
 		}
 		else if (tparam == T_IND)
 		{
-
+			addr = pc->ip + as_byte(vm_memory)[pc->ip];
+			addr = pc->ip % MEM_SIZE;
+			param = (uint32_t*)&as_byte(vm_memory)[addr];
 			pc->ip += 2;
 		}
 		else
@@ -131,9 +178,12 @@ t_decoded_op	op_decode(struct s_carriage *pc)
 	return (op);
 }
 
-void	op_exec(struct s_decoded_op *data)
+void	op_exec(struct s_carriage *pc)
 {
+	t_decoded_op op;
 
+	op = op_decode(pc);
+	t_ops[op.opcode].op(op.args[0], op.args[1], op.args[2]);
 }
 
 inline uint8_t	*as_byte(void *ptr)
