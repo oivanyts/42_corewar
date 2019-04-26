@@ -30,6 +30,8 @@ struct	s_array
 	void	(*destroy_func)(void *ptr);
 };
 
+void	ft_memswap(void *dest, void *src, void *buffer, size_t size);
+
 void	array_init(struct s_array *sarr, size_t elem_size,
 		void (*alloc_elem)(void *ptr, const void *elem),
 		void (*destroy_elem)(void *ptr));
