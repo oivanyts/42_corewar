@@ -17,6 +17,8 @@
 # include <stdlib.h>
 # include <stdbool.h>
 
+#define IS_BIG_ENDIAN (*(uint16_t *)"\0\xff" < 0x100)
+
 # define T_FIRST_PARAM (uint8_t)0xC0
 # define T_SECOND_PARAM (uint8_t)0x30
 # define T_THIRD_PARAM (uint8_t)0x0C
@@ -74,10 +76,11 @@ typedef struct s_player
 typedef struct s_decoded_op
 {
 	t_opcode opcode;
+	uint8_t nargs;
 	uint32_t *args[3];
 } t_decoded_op;
 
-bool	load_from_file(char	*filename, int num);
+bool load_from_file(char *filename, int num, t_player *player, uint8_t memory[]);
 
 void	vm_cycle();
 
