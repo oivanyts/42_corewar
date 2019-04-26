@@ -6,7 +6,7 @@
 /*   By: npiatiko <npiatiko@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 12:19:23 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/04/25 16:24:40 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/04/26 11:54:12 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,17 @@
 
 typedef enum	e_identifier
 {
-	COMMENT, NAME, LABEL, INSTRUCTION,
-	REGISTER, INDIRECT, DIRECT, DIRECT_LABEL,
-	INDIRECT_LABEL, SEPARATOR, STRING
+	REGISTER = T_REG,
+	INDIRECT = T_IND,
+	DIRECT = T_DIR,
+	DIRECT_LABEL = T_DIR,
+	INDIRECT_LABEL = T_IND,
+	COMMENT,
+	NAME,
+	LABEL,
+	INSTRUCTION,
+	SEPARATOR,
+	STRING
 }				t_identifier;
 
 typedef struct	s_op_list					//Структура для зберігання списку операцій (одна строка - одна операція)
@@ -93,6 +101,6 @@ static t_op		g_op_tab[17] =
 	{"aff", 1, {T_REG}, 16, 2, "aff", 1, 0},
 	{0, 0, {0}, 0, 0, 0, 0, 0}
 };
-int		ft_listlen(t_token_list *lst);
-void	*ft_checkname(char *name);
+void	ft_validation (t_op_list *oplist);
+
 #endif

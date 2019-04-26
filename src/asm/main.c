@@ -6,7 +6,7 @@
 /*   By: npiatiko <npiatiko@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 11:47:27 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/04/25 16:56:37 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/04/26 13:25:32 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,20 @@
 
 int		main(int argc, char **argv)
 {
-	t_token_list	*lst;
+	t_token_list	*toklst;
+	t_op_list *oplist;
 
-	lst = ft_memalloc(sizeof(t_token_list));
-	lst->next = ft_memalloc(sizeof(t_token_list));
-	int (*f)(t_token_list *lst);
-	f = ft_checkname("o");
-
-	ft_printf("%d", f(lst));
-//	ft_printf("%s %d %d %d %d %s %d %d\n", g_op_tab[0].name, g_op_tab[0].args, g_op_tab[0].targs[0], g_op_tab[0].opcode, g_op_tab[0].cycle, g_op_tab[0].descr, g_op_tab[0].codoctal, g_op_tab[0].codoctal);
+	oplist = ft_memalloc(sizeof(t_op_list));
+	toklst = ft_memalloc(sizeof(t_token_list));
+	toklst->next = ft_memalloc(sizeof(t_token_list));
+//	toklst->next->next = ft_memalloc(sizeof(t_token_list));
+	toklst->data = "live";
+	toklst->ident = INSTRUCTION;
+	toklst->next->ident = DIRECT;
+	toklst->next->data = "1";
+//	toklst->next->next->ident = SEPARATOR;
+//	toklst->next->next->data = ",";
+	oplist->token_list = toklst;
+	ft_validation (oplist);
 	return (0);
 }
