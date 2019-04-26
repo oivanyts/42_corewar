@@ -6,13 +6,11 @@
 /*   By: npiatiko <npiatiko@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 11:47:27 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/04/26 15:45:10 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/04/26 16:10:38 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
-
-
 
 int		main(int argc, char **argv)
 {
@@ -33,3 +31,4 @@ int		main(int argc, char **argv)
 	ft_validation (oplist);
 	return (0);
 }
+

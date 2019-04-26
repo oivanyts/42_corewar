@@ -22,6 +22,27 @@ typedef enum	e_identifier
 	INDIRECT_LABEL, SEPARATOR, STRING
 }				t_identifier;
 
+typedef struct  s_asm
+{
+	int 				row;
+	int 				col;
+	int					fsm;
+    struct s_op_list	*op_list;
+    struct s_token_list	*token_list;
+    struct s_label_list	*label_list;
+}               t_asm;
+
+typedef struct	s_fsm
+{
+	char 				*start;
+	char 				*curr;
+	int 				state;
+	int 				**table;
+	int					tab_row;
+	int					tab_col;
+	char 				*code;
+}				t_fsm;
+
 typedef struct	s_op_list					//Структура для зберігання списку операцій (одна строка - одна операція)
 {
 	struct s_token_list	*token_list;		//Для зберігання списку з токенами
@@ -36,6 +57,13 @@ typedef struct	s_token_list
 	int					row;				//Номер рядка
 	struct s_token_list	*next;
 }				t_token_list;
+ 
+typedef struct  s_label_list
+{
+    char                *name;
+    struct s_op_list    *op;
+    struct s_label_list *next;
+}               t_label_list;
 
 // COMMENT - NULL
 // NAME	- NULL
