@@ -6,7 +6,7 @@
 /*   By: npiatiko <npiatiko@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 12:19:23 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/04/26 15:42:26 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/04/26 15:42:29 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,9 @@
 
 typedef enum	e_identifier
 {
-	REGISTER = T_REG,
-	INDIRECT = T_IND,
-	DIRECT = T_DIR,
-	DIRECT_LABEL = T_DIR,
-	INDIRECT_LABEL = T_IND,
-	COMMENT,
-	NAME,
-	LABEL,
-	INSTRUCTION,
-	SEPARATOR,
-	STRING
+	COMMENT, NAME, LABEL, INSTRUCTION,
+	REGISTER, INDIRECT, DIRECT, DIRECT_LABEL,
+	INDIRECT_LABEL, SEPARATOR, STRING
 }				t_identifier;
 
 typedef struct	s_op_list					//Структура для зберігання списку операцій (одна строка - одна операція)
