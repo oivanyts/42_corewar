@@ -54,6 +54,6 @@ int		main(int argc, char *argv[])
 	ft_bzero(memory, sizeof(uint8_t) * MEM_SIZE);
 	parce_all_players(argc - 1, argv, &players[0], &memory[0]);
 	output_field(memory, MEM_SIZE, &players[0], argc - 1);
-	vm_cycle(&players[0], argc - 1, &memory[0]);
+	vm_cycle(&players[0], argc - 1);
 	return 0;
 }

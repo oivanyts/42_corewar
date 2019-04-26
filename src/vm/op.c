@@ -51,11 +51,12 @@ uint32_t threads_alive(t_player *players, uint32_t nplayers)
 	return (alive);
 }
 
-void	vm_cycle(t_player *players, uint32_t nplayers, uint8_t *vm_memory)
+void	vm_cycle(t_player *players, uint32_t nplayers)
 {
 	uint32_t player;
+	uint32_t player_thread;
 	uint32_t cycles;
-	uint32_t checks; //???
+	uint32_t checks;
 	uint32_t alive;
 
 	cycles = CYCLE_TO_DIE;
@@ -63,13 +64,22 @@ void	vm_cycle(t_player *players, uint32_t nplayers, uint8_t *vm_memory)
 	checks = 0;
 	while ((alive = threads_alive(players, nplayers) && (cycles > 0)))
 	{
-		++checks;
 		if (checks == MAX_CHECKS || alive > 21)
 		{
 			cycles -= CYCLE_DELTA;
+			checks = 0;
 		}
-		op_exec(&players[player].threads, vm_memory);
-		++player;
+		++checks;
+		while (player < nplayers)
+		{
+			player_thread = 0;
+			while (player_thread < threads_size(&players[player].threads))
+			{
+				op_exec(threads_pat(&players[player].threads, player_thread));
+				++player_thread;
+			}
+			++player;
+		}
 		if (player == nplayers)
 		{
 			player = 0;
@@ -77,15 +87,11 @@ void	vm_cycle(t_player *players, uint32_t nplayers, uint8_t *vm_memory)
 	}
 }
 
-t_opcode decode_opcode(struct s_thread *pc, uint8_t *vm_memory)
+t_opcode decode_opcode(struct s_thread *pc)
 {
 	t_opcode opcode;
 
-	if (pc->ip == MEM_SIZE)
-	{
-		pc->ip = 0;
-	}
-	opcode = as_byte(vm_memory)[pc->ip];
+	opcode = as_byte(vm_memory)[pc->ip % MEM_SIZE];
 	if (opcode <= oplowborder || opcode >= ophighborder)
 	{
 		pc->alive = 0;
@@ -115,12 +121,7 @@ uint8_t	decode_tparams(struct s_thread *pc, t_opcode opcode)
 {
 	uint8_t tparams;
 
-	if (t_ops[opcode].nargs > 0 && pc->ip == MEM_SIZE)
-	{
-		pc->alive = 0;
-		return (tparams);
-	}
-	tparams = as_byte(vm_memory)[pc->ip];
+	tparams = as_byte(vm_memory)[pc->ip % MEM_SIZE];
 	check_op_params(opcode, tparams);
 	pc->ip += 1;
 	return (tparams);
@@ -194,12 +195,16 @@ t_decoded_op	op_decode(struct s_thread *pc)
 	return (op);
 }
 
-void	op_exec(struct s_thread *pc, uint8_t *vm_memory)
+void	op_exec(struct s_thread *pc)
 {
 	t_decoded_op op;
 
+	if (pc->wait)
+	{
+		return ;
+	}
 	op = op_decode(pc);
-	t_ops[op.opcode].op(op.args[0], op.args[1], op.args[2]);
+	opcalls[op.opcode].opfunc(pc, op.args[0], op.args[1], op.args[2]);
 }
 
 uint8_t	*as_byte(void *ptr)

@@ -97,6 +97,5 @@ void f_lfork(t_thread *sp, void *p1, void *p2, void *p3)
 
 void f_aff(t_thread *sp, void *p1, void *p2, void *p3)
 {
-	(void)sp;
 
 }

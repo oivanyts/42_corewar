@@ -66,7 +66,6 @@ typedef struct s_player
 typedef struct s_decoded_op
 {
 	t_opcode opcode;
-	uint8_t nargs;
 	void *args[3];
 } t_decoded_op;
 
@@ -74,7 +73,7 @@ bool load_from_file(char *filename, t_player *player, uint8_t memory[]);
 
 void	players_sort_by_id(t_player *players, uint32_t nplayers);
 
-void	vm_cycle(t_player *players, uint32_t nplayers, uint8_t *vm_memory);
+void	vm_cycle(t_player *players, uint32_t nplayers);
 
 uint8_t decode_tparams(struct s_thread *pc, t_opcode opcode);
 
@@ -82,7 +81,7 @@ void *decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t param
 
 t_decoded_op	op_decode(struct s_thread *pc);
 
-void	op_exec(struct s_thread *pc, uint8_t *vm_memory);
+void	op_exec(struct s_thread *pc);
 
 void	handle_error(uint8_t n_err);
 
