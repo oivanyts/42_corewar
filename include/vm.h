@@ -6,7 +6,7 @@
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 08:58:10 by oivanyts          #+#    #+#             */
-/*   Updated: 2019/04/25 07:20:10 by oivanyts         ###   ########.fr       */
+/*   Updated: 2019/04/26 06:27:37 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	players_sort_by_id(t_player *players, uint32_t nplayers);
 
 void	vm_cycle(t_player *players, uint32_t nplayers);
 
-uint8_t decode_tparams();
+uint8_t decode_tparams(struct s_carriage *pc, t_opcode opcode);
 
 void *decode_param(t_opcode opcode, uint8_t tparams, t_carriage *pc, uint8_t param_number);
 
@@ -96,7 +96,7 @@ void	op_exec(struct s_carriage *pc);
 
 void	handle_error(uint8_t n_err);
 
-inline uint8_t	*as_byte(void *ptr);
+uint8_t	*as_byte(void *ptr);
 
 bool anybody_alive(t_player *players, uint32_t nplayers);
 

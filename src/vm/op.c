@@ -6,7 +6,7 @@
 /*   By: myaremen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 15:57:21 by myaremen          #+#    #+#             */
-/*   Updated: 2019/04/25 15:57:23 by myaremen         ###   ########.fr       */
+/*   Updated: 2019/04/26 06:26:23 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 void *vm_memory;
 
-void	players_sort_by_id(t_player *players, uint32_t nplayers)
-{
-
-}
+//void	players_sort_by_id(t_player *players, uint32_t nplayers)
+//{
+//
+//}
 
 bool anybody_alive(t_player *players, uint32_t nplayers)
 {
@@ -143,7 +143,7 @@ void	*decode_param(t_opcode opcode, uint8_t tparams, t_carriage *pc, uint8_t par
 		}
 		else if (tparam == T_DIR)
 		{
-			param = (uint32_t*)as_byte(vm_memory)[pc->ip];
+//			param = (as_byte(vm_memory)[pc->ip]);
 
 		}
 		else if (tparam == T_IND)
@@ -186,7 +186,7 @@ void	op_exec(struct s_carriage *pc)
 	t_ops[op.opcode].op(op.args[0], op.args[1], op.args[2]);
 }
 
-inline uint8_t	*as_byte(void *ptr)
+uint8_t	*as_byte(void *ptr)
 {
 	return (ptr);
 }
