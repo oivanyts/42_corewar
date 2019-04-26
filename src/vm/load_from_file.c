@@ -6,7 +6,7 @@
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 08:55:42 by oivanyts          #+#    #+#             */
-/*   Updated: 2019/04/26 02:15:57 by oivanyts         ###   ########.fr       */
+/*   Updated: 2019/04/26 06:18:28 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ void	output_binary(uint8_t *bytecode, size_t size)
 	ft_printf("\n");
 }
 
-int	reverse_byte(int old)
+unsigned int reverse_byte(unsigned int old)
 {
 	return ((old >> 24) | ((old >> 8) & 0xff00) | ((old << 8) & 0xff0000) | old << 24);
 }
 
-bool load_from_file(char *filename, int num, t_player *player, uint8_t memory[])
+bool load_from_file(char *filename, t_player *player, uint8_t memory[])
 {
 	int		fd;
 	size_t	ret;

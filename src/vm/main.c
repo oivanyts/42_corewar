@@ -37,7 +37,9 @@ uint8_t parce_all_players(int num_players, char **filename, t_player *player, ui
 	while (i < num_players)
 	{
 		ft_printf("Next player starts from : %d\n", i * player_gap);
-		load_from_file(filename[i + 1], i, &player[i], &memory[i * player_gap]);
+		load_from_file(filename[i +
+								1], &player[i], &memory[i *
+														player_gap]);
 		i++;
 	}
 	return (0);
