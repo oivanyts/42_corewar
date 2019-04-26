@@ -82,7 +82,7 @@ void *decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t param
 
 t_decoded_op	op_decode(struct s_thread *pc);
 
-void	op_exec(struct s_thread *pc);
+void	op_exec(struct s_thread *pc, uint8_t *vm_memory);
 
 void	handle_error(uint8_t n_err);
 

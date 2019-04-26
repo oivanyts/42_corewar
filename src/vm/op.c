@@ -20,10 +20,19 @@ void	players_sort_by_id(t_player *players, uint32_t nplayers)
 
 uint32_t player_threads_alive(t_player *player)
 {
-	size_t alive;
+	size_t thread;
+	uint32_t alive;
 
 	alive = 0;
-
+	thread = 0;
+	while (thread < threads_size(&player->threads))
+	{
+		if (threads_pat(&player->threads, thread)->alive)
+		{
+			++alive;
+		}
+		++thread;
+	}
 	return (alive);
 }
 
@@ -36,10 +45,7 @@ uint32_t threads_alive(t_player *players, uint32_t nplayers)
 	alive = 0;
 	while (player < nplayers)
 	{
-		if (players[player].threads.alive)
-		{
-			alive = 1;
-		}
+		alive += player_threads_alive(&players[player]);
 		++player;
 	}
 	return (alive);
@@ -49,19 +55,20 @@ void	vm_cycle(t_player *players, uint32_t nplayers, uint8_t *vm_memory)
 {
 	uint32_t player;
 	uint32_t cycles;
-	uint32_t checks;
+	uint32_t checks; //???
+	uint32_t alive;
 
 	cycles = CYCLE_TO_DIE;
 	player = 0;
 	checks = 0;
-	while (threads_alive(players, nplayers) && (cycles > 0))
+	while ((alive = threads_alive(players, nplayers) && (cycles > 0)))
 	{
 		++checks;
-		if (checks == MAX_CHECKS)
+		if (checks == MAX_CHECKS || alive > 21)
 		{
 			cycles -= CYCLE_DELTA;
 		}
-		op_exec(&players[player].threads);
+		op_exec(&players[player].threads, vm_memory);
 		++player;
 		if (player == nplayers)
 		{
@@ -187,7 +194,7 @@ t_decoded_op	op_decode(struct s_thread *pc)
 	return (op);
 }
 
-void	op_exec(struct s_thread *pc)
+void	op_exec(struct s_thread *pc, uint8_t *vm_memory)
 {
 	t_decoded_op op;
 

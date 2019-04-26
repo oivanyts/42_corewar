@@ -12,7 +12,6 @@
 
 #include "array.h"
 
-
 void	array_init(struct s_array *sarr, size_t elem_size,
 		void (*alloc_elem)(void *ptr, const void *elem), void (*destroy_elem)
 		(void *ptr))
