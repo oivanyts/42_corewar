@@ -10,34 +10,34 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "asm.h"
 
-int ft_listlen(t_token_list *lst)
+int ft_listlen(t_token_list *toklst)
 {
 	int i;
 
 	i = 0;
-	while (lst)
+	toklst->ident == LABEL ? toklst = toklst->next : 0;
+	while (toklst)
 	{
 		i++;
-		lst = lst->next;
+		toklst = toklst->next;
 	}
 	return i;
 }
 
-t_op	*ft_checkname(char *name)
+t_op	*ft_checkname(t_token_list *toklst)
 {
 	int i;
+	t_op *op;
 
-	i = 0;
-	while (i < 17)
-	{
-		if (ft_strequ(name, g_op_tab[i].name))
-			return (&g_op_tab[i]);
-		i++;
-	}
-	return (NULL);
+	i = -1;
+	toklst->ident == LABEL ? toklst = toklst->next : 0;
+	op = toklst ? NULL : &g_op_tab[16];
+	if (toklst && toklst->ident == INSTRUCTION)
+		while (++i < 16)
+			ft_strequ(toklst->data, g_op_tab[i].name) ? op = &g_op_tab[i] : 0;
+	return (op);
 }
 
 int		ft_typearg(t_identifier ident)
@@ -79,9 +79,13 @@ void	ft_validation (t_op_list *oplist)
 		oplist = oplist->next->next;
 	else
 		exit(11);
-	if (!(op = ft_checkname((char *)(oplist->token_list->data))))
-		exit(8);
-	if (ft_listlen(oplist->token_list) != op->args * 2)
-		exit(7);
-	ft_chekargs(oplist->token_list, op);
+	while (oplist)
+	{
+		if (!(op = ft_checkname(oplist->token_list)))
+			exit(8);
+		if (ft_listlen(oplist->token_list) != op->args * 2)
+			exit(7);
+		ft_chekargs(oplist->token_list, op);
+		oplist = oplist->next;
+	}
 }
