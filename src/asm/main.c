@@ -6,7 +6,7 @@
 /*   By: npiatiko <npiatiko@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 11:47:27 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/04/26 16:15:43 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/04/26 19:02:11 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,25 @@ int		main(int argc, char **argv)
 	t_op_list *oplist;
 
 	oplist = ft_memalloc(sizeof(t_op_list));
+	oplist->next = ft_memalloc(sizeof(t_op_list));
+	oplist->next->next = ft_memalloc(sizeof(t_op_list));
 	toklst = ft_memalloc(sizeof(t_token_list));
 	toklst->next = ft_memalloc(sizeof(t_token_list));
-//	toklst->next->next = ft_memalloc(sizeof(t_token_list));
-	toklst->data = "live";
+	toklst->next->next = ft_memalloc(sizeof(t_token_list));
+	toklst->next->next->next = ft_memalloc(sizeof(t_token_list));
+	oplist->token_list = ft_memalloc(sizeof(t_token_list));
+	oplist->next->token_list = ft_memalloc(sizeof(t_token_list));
+	oplist->token_list->ident = 1;
+	oplist->next->token_list->ident = 0;
+	toklst->data = "ld";
 	toklst->ident = INSTRUCTION;
 	toklst->next->ident = DIRECT;
 	toklst->next->data = "1";
-//	toklst->next->next->ident = SEPARATOR;
-//	toklst->next->next->data = ",";
-	oplist->token_list = toklst;
+	toklst->next->next->ident = SEPARATOR;
+	toklst->next->next->data = ",";
+	toklst->next->next->next->ident = REGISTER;
+	toklst->next->next->next->data = "43";
+	oplist->next->next->token_list = toklst;
 	ft_validation (oplist);
 	return (0);
 }
