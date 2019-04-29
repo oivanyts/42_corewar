@@ -51,20 +51,21 @@ int		ft_typearg(t_identifier ident)
 	return (0);
 }
 
-void 	ft_chekargs(t_token_list *lst, t_op *op)
+void 	ft_chekargs(t_token_list *toklst, t_op *op)
 {
 	int i;
 	int argnum;
 
 	i = 1;
 	argnum = 0;
-	while (lst)
+	toklst->ident == LABEL ? toklst = toklst->next : 0;
+	while (toklst)
 	{
-		if (i > 1 && (i % 2) && lst->ident != SEPARATOR)
+		if (i > 1 && (i % 2) && toklst->ident != SEPARATOR)
 			exit(6);
-		else if (i > 1 && !(i % 2) && !(ft_typearg(lst->ident) & op->targs[argnum++]))
+		else if (i > 1 && !(i % 2) && !(ft_typearg(toklst->ident) & op->targs[argnum++]))
 			exit(9);
-		lst = lst->next;
+		toklst = toklst->next;
 		i++;
 	}
 }
