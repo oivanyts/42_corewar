@@ -123,19 +123,23 @@ t_opcode decode_opcode(struct s_thread *pc)
 	return (opcode);
 }
 
-void	check_op_params(t_opcode opcode, uint8_t tparams)
+bool	check_op_params(t_opcode opcode, uint8_t tparams)
 {
-	if ((t_ops[opcode].targs[0] & (tparams & T_FIRST_PARAM)) == 0)
+	if ((op_tab[opcode].targs[0] & (tparams & T_FIRST_PARAM)) == 0)
 	{
-		//error
+		return (0);
 	}
-	else if ((t_ops[opcode].targs[1] & (tparams & T_SECOND_PARAM)) == 0)
+	else if ((op_tab[opcode].targs[1] & (tparams & T_SECOND_PARAM)) == 0)
 	{
-		//error
+		return (0);
 	}
-	else if ((t_ops[opcode].targs[0] & (tparams & T_FIRST_PARAM)) == 0)
+	else if ((op_tab[opcode].targs[0] & (tparams & T_FIRST_PARAM)) == 0)
 	{
-		//error
+		return (0);
+	}
+	else
+	{
+		return (1);
 	}
 }
 
@@ -143,9 +147,17 @@ uint8_t	decode_tparams(struct s_thread *pc, t_opcode opcode)
 {
 	uint8_t tparams;
 
-	tparams = as_byte(pc->vm_memory)[pc->ip % MEM_SIZE];
-	check_op_params(opcode, tparams);
-	pc->ip += 1;
+	tparams = (1 << 7);
+	if (op_tab[opcode].codoctal == 1)
+	{
+		tparams = as_byte(pc->vm_memory)[pc->ip % MEM_SIZE];
+		if (!check_op_params(opcode, tparams))
+		{
+			pc->alive = 0;
+			return (tparams);
+		}
+		pc->ip += 1;
+	}
 	return (tparams);
 }
 
@@ -154,10 +166,9 @@ void	*decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t param
 	void *param;
 	uint8_t  tparam;
 	uint8_t reg_number;
-	uint32_t addr;
 
 	param = 0;
-	if (param_number <= t_ops[opcode].nargs)
+	if (param_number <= op_tab[opcode].args)
 	{
 		if (param_number == 1)
 		{
@@ -174,27 +185,35 @@ void	*decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t param
 		if (tparam == T_REG)
 		{
 			reg_number = as_byte(pc->vm_memory)[pc->ip];
-			if (reg_number == 0 || reg_number > REG_NUMBER)
+			if (reg_number >= REG_NUMBER)
 			{
-				//error
+				pc->alive = 0;
+				return (0);
 			}
-			param = &pc->reg[reg_number - 1];
+			param = &pc->reg[reg_number];
 		}
 		else if (tparam == T_DIR)
 		{
-//			param = (as_byte(vm_memory)[pc->ip]);
-
+			param = &pc->vm_memory[pc->ip];
+			if (op_tab[opcode].tdir_size == 0)
+			{
+				pc->ip += 4;
+			}
+			else
+			{
+				pc->ip += 2;
+			}
 		}
 		else if (tparam == T_IND)
 		{
-			addr = pc->ip + as_byte(pc->vm_memory)[pc->ip];
-			addr = pc->ip % MEM_SIZE;
-			param = (uint32_t*)&as_byte(pc->vm_memory)[addr];
+			//shrink IND address
+			param = (uint32_t*)&as_byte(pc->vm_memory)[pc->ip + *(int16_t*)&pc->vm_memory[pc->ip]];
 			pc->ip += 2;
 		}
 		else
 		{
-			//error
+			pc->alive = 0;
+			return (0);
 		}
 	}
 	return (param);

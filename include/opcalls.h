@@ -47,7 +47,7 @@ typedef struct	s_op
 	uint32_t		cycle;
 	char	*descr;
 	bool	codoctal;
-	int		some;
+	bool		tdir_size;
 }				t_op;
 
 typedef struct s_thread
