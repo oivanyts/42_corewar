@@ -10,9 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
+#include "error.h"
 
-void	handle_error(uint8_t n_err)
+const char *error_table[2] =
 {
+    "No players.",
+    "Too many players."
+};
+
+void	handle_error(t_error_code n_err)
+{
+    ft_printf("Error: %s\n", error_table[n_err]);
 	exit(n_err);
 }

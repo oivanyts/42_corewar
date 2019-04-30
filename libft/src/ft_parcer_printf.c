@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
+#include <stdarg.h>
 
 static int	f_precs(const char **w, va_list arg)
 {

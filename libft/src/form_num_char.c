@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
+#include <stdarg.h>
 
 static long long int			mod_int(va_list arg, t_format fx)
 {
@@ -93,7 +94,7 @@ int								format_char(va_list arg, t_format fx, int fd)
 		ret = ft_putchar_u(print, fd);
 	else
 		write(fd, &print, 1);
-	if ((MB_CUR_MAX < ft_charlen(print)))
+	if ((MB_CUR_MAX < (size_t)ft_charlen(print)))
 		ret = -1;
 	while (fx.flag[0] == '-' && (i++ < fx.whidth))
 		write(fd, &empty, 1);

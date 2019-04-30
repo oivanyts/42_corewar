@@ -17,7 +17,7 @@ int	ft_putchar_u(int c, int fd)
 	char	ustr[4];
 	int		size;
 
-	if ((size = ft_charlen(c)) > MB_CUR_MAX)
+	if ((size_t)(size = ft_charlen(c)) > MB_CUR_MAX)
 		return (-1);
 	if (size <= 1)
 		return ((int)write(fd, &c, 1));

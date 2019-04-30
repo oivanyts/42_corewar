@@ -17,18 +17,13 @@
 # include "opcalls.h"
 # include "libft.h"
 # include "thread_array.h"
+# include "error.h"
 
 #define IS_BIG_ENDIAN (*(uint16_t *)"\0\xff" < 0x100)
 
 # define T_FIRST_PARAM (uint8_t)0xC0
 # define T_SECOND_PARAM (uint8_t)0x30
 # define T_THIRD_PARAM (uint8_t)0x0C
-
-typedef enum e_error_code
-{
-	error_no_players,
-	error_to_many_players
-} t_error_code;
 
 t_op    op_tab[17] =
 		{
@@ -82,8 +77,6 @@ void *decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t param
 t_decoded_op	op_decode(struct s_thread *pc);
 
 void	op_exec(struct s_thread *pc);
-
-void	handle_error(uint8_t n_err);
 
 uint8_t	*as_byte(void *ptr);
 

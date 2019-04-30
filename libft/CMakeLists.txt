@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-set(CMAKE_C_COMPILER clang)
+set(CMAKE_C_COMPILER gcc)
 #project(LIBFT LANGUAGES C)
 
 # functions find all sourses in path and add their to target

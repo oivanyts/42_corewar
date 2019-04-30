@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
+#include <stdarg.h>
 
 int	ft_printf_fd(int fd, const char *format, ...)
 {

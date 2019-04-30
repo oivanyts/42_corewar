@@ -51,39 +51,61 @@ uint32_t threads_alive(t_player *players, uint32_t nplayers)
 	return (alive);
 }
 
-void	vm_cycle(t_player *players, uint32_t nplayers)
+void    kill_thread_if_no_lives(t_thread *th)
+{
+	if (th->lives == 0)
+	{
+		th->alive = 0;
+	}
+	else
+	{
+		th->lives = 0;
+	}
+}
+
+void    foreach_thread(t_player *players, uint32_t nplayers, void(*func)(t_thread*))
 {
 	uint32_t player;
 	uint32_t player_thread;
+
+	player = 0;
+	while (player < nplayers)
+	{
+		player_thread = 0;
+		while (player_thread < threads_size(&players[player].threads))
+		{
+			func(threads_pat(&players[player].threads, player_thread));
+			++player_thread;
+		}
+		++player;
+	}
+}
+
+void	vm_cycle(t_player *players, uint32_t nplayers)
+{
 	uint32_t cycles;
+	uint32_t cycles_to_die;
 	uint32_t checks;
 	uint32_t alive;
 
-	cycles = CYCLE_TO_DIE;
-	player = 0;
+	cycles = 0;
+	cycles_to_die = CYCLE_TO_DIE;
 	checks = 0;
-	while ((alive = threads_alive(players, nplayers) && (cycles > 0)))
+	while ((alive = threads_alive(players, nplayers)))
 	{
 		if (checks == MAX_CHECKS || alive > 21)
 		{
-			cycles -= CYCLE_DELTA;
+			cycles_to_die -= CYCLE_DELTA;
 			checks = 0;
 		}
 		++checks;
-		while (player < nplayers)
-		{
-			player_thread = 0;
-			while (player_thread < threads_size(&players[player].threads))
-			{
-				op_exec(threads_pat(&players[player].threads, player_thread));
-				++player_thread;
-			}
-			++player;
-		}
-		if (player == nplayers)
-		{
-			player = 0;
-		}
+		foreach_thread(players, nplayers, op_exec);
+		++cycles;
+		if (cycles == cycles_to_die)
+        {
+			foreach_thread(players, nplayers, kill_thread_if_no_lives);
+		    cycles = 0;
+        }
 	}
 }
 
@@ -91,7 +113,7 @@ t_opcode decode_opcode(struct s_thread *pc)
 {
 	t_opcode opcode;
 
-	opcode = as_byte(vm_memory)[pc->ip % MEM_SIZE];
+	opcode = as_byte(pc->vm_memory)[pc->ip % MEM_SIZE];
 	if (opcode <= oplowborder || opcode >= ophighborder)
 	{
 		pc->alive = 0;
@@ -121,7 +143,7 @@ uint8_t	decode_tparams(struct s_thread *pc, t_opcode opcode)
 {
 	uint8_t tparams;
 
-	tparams = as_byte(vm_memory)[pc->ip % MEM_SIZE];
+	tparams = as_byte(pc->vm_memory)[pc->ip % MEM_SIZE];
 	check_op_params(opcode, tparams);
 	pc->ip += 1;
 	return (tparams);
@@ -151,7 +173,7 @@ void	*decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t param
 		}
 		if (tparam == T_REG)
 		{
-			reg_number = as_byte(vm_memory)[pc->ip];
+			reg_number = as_byte(pc->vm_memory)[pc->ip];
 			if (reg_number == 0 || reg_number > REG_NUMBER)
 			{
 				//error
@@ -165,9 +187,9 @@ void	*decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t param
 		}
 		else if (tparam == T_IND)
 		{
-			addr = pc->ip + as_byte(vm_memory)[pc->ip];
+			addr = pc->ip + as_byte(pc->vm_memory)[pc->ip];
 			addr = pc->ip % MEM_SIZE;
-			param = (uint32_t*)&as_byte(vm_memory)[addr];
+			param = (uint32_t*)&as_byte(pc->vm_memory)[addr];
 			pc->ip += 2;
 		}
 		else

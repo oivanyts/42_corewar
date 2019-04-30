@@ -57,6 +57,7 @@ typedef struct s_thread
 	uint32_t id;
 	uint32_t reg[16];
 	uint8_t  *vm_memory;
+	uint32_t lives;
 	bool alive;
 	uint16_t wait;
 } t_thread;
