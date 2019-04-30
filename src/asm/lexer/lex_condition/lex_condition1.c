@@ -1,4 +1,5 @@
 #include "asm.h"
+#include "lexer.h"
 
 int		lex_separator_char(char *c)
 {
@@ -22,5 +23,5 @@ int		lex_quote(char *c)
 
 int 	lex_name(char *c)
 {
-	return (ft_strcmp(NAME_CMD_STRING, c) == 0);
+	return (str_cmp(c, NAME_CMD_STRING));
 }

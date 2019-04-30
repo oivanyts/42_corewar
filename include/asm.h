@@ -29,11 +29,14 @@ typedef struct  s_asm
 	struct s_fsm		*fsm;
     struct s_op_list	*op_list;
     struct s_token_list	*token_list;
-    struct s_label_list	*label_list;
+    int 				(*lex_condition[13])(char *c);
+	int 				(*id_state[13])(struct s_asm *a);
 }               t_asm;
 
 typedef struct	s_fsm
 {
+	int 				st_col;
+	int 				st_row;
 	char 				*start;
 	char 				*curr;
 	int 				state;

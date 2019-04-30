@@ -9,7 +9,7 @@ int		id_direct(t_asm *a)
 	size_t	len;
 
 	fsm = a->fsm;
-	len = fsm->curr - fsm->start + 1;
+	len = fsm->curr - fsm->start - 1;
 	data = (char*)ft_memalloc(len + 1);
 	ft_strncpy(data, fsm->start + 1, len);
 	i = (int*)malloc(sizeof(int));
@@ -26,7 +26,7 @@ int		id_direct_label(t_asm *a)
 	size_t 	len;
 
 	fsm = a->fsm;
-	len = fsm->curr - fsm->start + 2;
+	len = fsm->curr - fsm->start - 2;
 	data = (char*)ft_memalloc(len + 1);
 	ft_strncpy(data, fsm->start + 2, len);
 	add_to_token_list(&a->token_list, DIRECT_LABEL, data, a);
@@ -40,7 +40,7 @@ int		id_indirect_label(t_asm *a)
 	size_t 	len;
 
 	fsm = a->fsm;
-	len = fsm->curr - fsm->start + 1;
+	len = fsm->curr - fsm->start - 1;
 	data = (char*)ft_memalloc(len + 1);
 	ft_strncpy(data, fsm->start + 1, len);
 	add_to_token_list(&a->token_list, INDIRECT_LABEL, data, a);

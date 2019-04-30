@@ -3,6 +3,7 @@
 
 int		id_error(t_asm *a)
 {
+
 	ft_printf("Lexical error at [%i:%i]", a->row, a->col);
 	exit(1);
 }
@@ -61,7 +62,7 @@ int		id_register(t_asm *a)
 	size_t	len;
 
 	fsm = a->fsm;
-	len = fsm->curr - fsm->start + 1;
+	len = fsm->curr - fsm->start - 1;
 	data = (char*)ft_memalloc(len + 1);
 	ft_strncpy(data, fsm->start + 1, len);
 	i = (int*)malloc(sizeof(int));

@@ -1,8 +1,9 @@
 #include "asm.h"
+#include "lexer.h"
 
 int		lex_comment(char *c)
 {
-	return (ft_strcmp(COMMENT_CMD_STRING, c) == 0);
+	return (str_cmp(c, COMMENT_CMD_STRING));
 }
 
 int		lex_whitespace(char *c)

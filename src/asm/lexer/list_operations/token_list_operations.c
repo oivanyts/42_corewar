@@ -7,8 +7,8 @@ void	add_to_token_list(t_token_list **token_list, t_identifier ident,
 	tmp = (t_token_list*)ft_memalloc(sizeof(t_token_list));
 	tmp->ident = ident;
 	tmp->data = data;
-	tmp->col = a->col;
-	tmp->row = a->row;
+	tmp->col = a->fsm->st_col;
+	tmp->row = a->fsm->st_row;
 	if (*token_list == NULL)
 		*token_list = tmp;
 	else

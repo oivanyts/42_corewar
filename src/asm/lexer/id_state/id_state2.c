@@ -8,7 +8,7 @@ int		id_string(t_asm *a)
 	size_t 	len;
 
 	fsm = a->fsm;
-	len = fsm->curr - fsm->start + 1;
+	len = fsm->curr - fsm->start - 1;
 	data = (char*)ft_memalloc(len + 1);
 	ft_strncpy(data, fsm->start + 1, len);
 	add_to_token_list(&a->token_list, STRING, data, a);
