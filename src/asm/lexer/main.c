@@ -9,7 +9,7 @@ int main()
 {
 	t_op_list	*op_list;
 
-	op_list = get_op_list("cmake-build-debug/42.s");
+	op_list = get_op_list("bots/toto.s");
 	print_identifiers(op_list);
 	return (0);
 }

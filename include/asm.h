@@ -29,8 +29,9 @@ typedef struct  s_asm
 	struct s_fsm		*fsm;
     struct s_op_list	*op_list;
     struct s_token_list	*token_list;
-    int 				(*lex_condition[13])(char *c);
-	int 				(*id_state[13])(struct s_asm *a);
+    int 				(*lex_condition[15])(char *c);
+	int 				(*id_state[15])(struct s_asm *a);
+	void				(*errors[3])(struct s_asm *a);
 }               t_asm;
 
 typedef struct	s_fsm

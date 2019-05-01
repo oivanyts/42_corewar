@@ -42,7 +42,7 @@ static void	fill_table(int fd, t_fsm *fsm)
 	{
 		col = 0;
 		get_next_line(fd, &line);
-		tmp = ft_strsplit(line, ' ');
+		tmp = ft_strsplit(line, '\t');
 		free(line);
 		while (col < fsm->tab_col)
 		{

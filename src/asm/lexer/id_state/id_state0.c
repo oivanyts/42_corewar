@@ -1,13 +1,6 @@
 #include "asm.h"
 #include "lexer.h"
 
-int		id_error(t_asm *a)
-{
-
-	ft_printf("Lexical error at [%i:%i]", a->row, a->col);
-	exit(1);
-}
-
 int		id_indirect(t_asm *a)
 {
 	t_fsm	*fsm;

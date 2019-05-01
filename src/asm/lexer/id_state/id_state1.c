@@ -47,24 +47,9 @@ int		id_indirect_label(t_asm *a)
 	return (0);
 }
 
-int		id_comment_endline(t_asm *a)
+int		id_commentary(t_asm *a)
 {
-	int		i;
-	char	*tmp;
-
-	if (a->token_list != NULL)
-	{
-		reverse_token_list(&a->token_list);
-		add_to_op_list(&a->op_list, a->token_list);
-		a->token_list = NULL;
-	}
-	a->row++;
-	a->col = 0;
-	i = 0;
-	tmp = a->fsm->curr;
-	while (*tmp++ != '\n')
-		i++;
-	return (i + 1);
+	return (0);
 }
 
 int		id_separator(t_asm *a)
