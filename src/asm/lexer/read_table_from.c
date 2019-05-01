@@ -12,7 +12,7 @@ static void	create_table(int fd, t_fsm *fsm)
 	while (ft_isdigit(*tmp))
 		tmp++;
 	fsm->tab_col = ft_atoi(tmp);
-	free(line);
+//	free(line);
 	fsm->table = (int**)malloc(sizeof(int**) * fsm->tab_row);
 	i = 0;
 	while (i < fsm->tab_row)

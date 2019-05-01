@@ -41,6 +41,7 @@ int		main(int argc, char **argv)
 	oplist = ft_memalloc(sizeof(t_op_list));
 	oplist->next = ft_memalloc(sizeof(t_op_list));
 	oplist->next->next = ft_memalloc(sizeof(t_op_list));
+	oplist->next->next->next = ft_memalloc(sizeof(t_op_list));
 	toklst = ft_memalloc(sizeof(t_token_list));
 	toklst->next = ft_memalloc(sizeof(t_token_list));
 	toklst->next->next = ft_memalloc(sizeof(t_token_list));
@@ -49,9 +50,10 @@ int		main(int argc, char **argv)
 	oplist->token_list->next = ft_memalloc(sizeof(t_token_list));
 	oplist->next->token_list = ft_memalloc(sizeof(t_token_list));
 	oplist->next->token_list->next = ft_memalloc(sizeof(t_token_list));
+	oplist->next->next->next->token_list = ft_memalloc(sizeof(t_token_list));
 	oplist->token_list->ident = NAME;
 	oplist->token_list->next->ident = STRING;
-	oplist->token_list->next->data = "champna";
+	oplist->token_list->next->data = "champname";
 	oplist->next->token_list->ident = COMMENT;
 	oplist->next->token_list->next->ident = STRING;
 	oplist->next->token_list->next->data = "champcoment";
@@ -64,10 +66,14 @@ int		main(int argc, char **argv)
 	toklst->next->next->next->ident = REGISTER;
 	toklst->next->next->next->data = "43";
 	oplist->next->next->token_list = toklst;
+	oplist->next->next->next->token_list->ident = LABEL;
+	oplist->next->next->next->token_list->data = "labelname";
 	ft_validation(oplist, header);
-	fd = open("test", O_RDWR | O_CREAT | O_TRUNC, 0777);
-	ft_writehead(fd, header);
-	close(fd);
+	ft_printf("%hx", -19);
+//	if ((fd = open("test", O_RDWR | O_CREAT | O_TRUNC, 0755)) < 0)
+//		ft_exit(strerror(errno), errno);
+//	ft_writehead(fd, header);
+//	close(fd);
 	return (0);
 }
 
