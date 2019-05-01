@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "asm.h"
+#include "lexer.h"
 
 void	ft_write(int fd, void *data, size_t size)
 {
@@ -32,42 +33,14 @@ void	ft_writehead(int fd, t_header *header)
 
 int		main(int argc, char **argv)
 {
-	t_token_list	*toklst;
 	t_op_list *oplist;
 	int fd;
 	t_header *header;
 
 	header = ft_memalloc(sizeof(t_header));
-	oplist = ft_memalloc(sizeof(t_op_list));
-	oplist->next = ft_memalloc(sizeof(t_op_list));
-	oplist->next->next = ft_memalloc(sizeof(t_op_list));
-	oplist->next->next->next = ft_memalloc(sizeof(t_op_list));
-	toklst = ft_memalloc(sizeof(t_token_list));
-	toklst->next = ft_memalloc(sizeof(t_token_list));
-	toklst->next->next = ft_memalloc(sizeof(t_token_list));
-	toklst->next->next->next = ft_memalloc(sizeof(t_token_list));
-	oplist->token_list = ft_memalloc(sizeof(t_token_list));
-	oplist->token_list->next = ft_memalloc(sizeof(t_token_list));
-	oplist->next->token_list = ft_memalloc(sizeof(t_token_list));
-	oplist->next->token_list->next = ft_memalloc(sizeof(t_token_list));
-	oplist->next->next->next->token_list = ft_memalloc(sizeof(t_token_list));
-	oplist->token_list->ident = NAME;
-	oplist->token_list->next->ident = STRING;
-	oplist->token_list->next->data = "champname";
-	oplist->next->token_list->ident = COMMENT;
-	oplist->next->token_list->next->ident = STRING;
-	oplist->next->token_list->next->data = "champcoment";
-	toklst->data = "st";
-	toklst->ident = INSTRUCTION;
-	toklst->next->ident = REGISTER;
-	toklst->next->data = "1";
-	toklst->next->next->ident = SEPARATOR;
-	toklst->next->next->data = ",";
-	toklst->next->next->next->ident = REGISTER;
-	toklst->next->next->next->data = "43";
-	oplist->next->next->token_list = toklst;
-	oplist->next->next->next->token_list->ident = LABEL;
-	oplist->next->next->next->token_list->data = "labelname";
+	oplist = get_op_list("vm_champs/champs/ex.s");
+	print_identifiers(oplist);
+	ft_printf("\n\n\n");
 	ft_validation(oplist, header);
 	ft_printf("%hx", -19);
 //	if ((fd = open("test", O_RDWR | O_CREAT | O_TRUNC, 0755)) < 0)

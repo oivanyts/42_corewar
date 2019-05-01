@@ -25,5 +25,6 @@ char		*read_text_from(char *name) //Don't check '\n' at EOF
 	{
 		p_text++;
 	}
+	close(fd);
 	return (text);
 }
