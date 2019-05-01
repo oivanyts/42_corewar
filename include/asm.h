@@ -121,6 +121,6 @@ static t_op		g_op_tab[17] =
 	{"aff", 1, {T_REG}, 16, 2, "aff", 1, 0},
 	{0, 0, {0}, 0, 0, 0, 0, 0}
 };
-void	ft_validation (t_op_list *oplist);
+void ft_validation(t_op_list *oplist, t_header *header);
 
 #endif
