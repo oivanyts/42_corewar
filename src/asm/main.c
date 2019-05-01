@@ -6,12 +6,13 @@
 /*   By: npiatiko <npiatiko@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 11:47:27 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/04/26 19:02:11 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/05/01 18:41:55 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
 #include "lexer.h"
+
 
 void	ft_write(int fd, void *data, size_t size)
 {
@@ -42,11 +43,14 @@ int		main(int argc, char **argv)
 	print_identifiers(oplist);
 	ft_printf("\n\n\n");
 	ft_validation(oplist, header);
-	ft_printf("%hx", -19);
+	ft_calcsizes(oplist);
+	ft_replacelable(oplist);
 //	if ((fd = open("test", O_RDWR | O_CREAT | O_TRUNC, 0755)) < 0)
 //		ft_exit(strerror(errno), errno);
 //	ft_writehead(fd, header);
 //	close(fd);
 	return (0);
 }
+
+
 

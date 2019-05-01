@@ -6,7 +6,7 @@
 /*   By: npiatiko <npiatiko@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 12:19:23 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/04/26 16:10:38 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/05/01 19:04:26 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ typedef struct	s_fsm
 typedef struct	s_op_list					//Структура для зберігання списку операцій (одна строка - одна операція)
 {
 	struct s_token_list	*token_list;		//Для зберігання списку з токенами
+	int 				instrsize;
+	int 				instrstart;
 	struct s_op_list	*next;				//Перехід на наступний токен
 }				t_op_list;
 
@@ -125,6 +127,11 @@ static t_op		g_op_tab[17] =
 	{"aff", 1, {T_REG}, 16, 2, "aff", 1, DIR_SIZE},
 	{0, 0, {0}, 0, 0, 0, 0, 0}
 };
-void ft_validation(t_op_list *oplist, t_header *header);
+void	ft_validation(t_op_list *oplist, t_header *header);
 void	ft_exit(char *stre, int e);
+void 	ft_calcsizes(t_op_list *oplist);
+t_op	*ft_checkname(t_token_list *toklst);
+void	ft_replacelable(t_op_list *oplist);
+int		ft_searchlable(t_op_list *oplist, char *data);
+
 #endif
