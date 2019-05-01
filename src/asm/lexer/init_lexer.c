@@ -40,7 +40,7 @@ void	init_id_states(t_asm *a)
 void	init_fsm(t_asm *a, char *name)
 {
 	a->fsm->code = read_text_from(name);
-	read_table("machine", a->fsm);
+	read_table("./src/asm/lexer/graph/machine", a->fsm);
 	a->fsm->state = 1;
 }
 

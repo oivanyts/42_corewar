@@ -16,7 +16,7 @@ void	finite_state_machine(t_asm *a, t_fsm *fsm);
 void	*lexer(t_asm *a);
 int		str_cmp(char *str, char *src);
 
-t_op_list	*get_op_list(char *file_name);             
+t_op_list	*get_op_list(char *file_name);
 void		*print_identifiers(t_op_list *op_list);
 
 #endif
