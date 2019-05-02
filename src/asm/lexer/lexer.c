@@ -3,34 +3,36 @@
 #include "id_states.h"
 #include "lexer.h"
 
-void	*lexer(t_asm *a)
+static void	check_errors(t_asm *a)
 {
-	t_fsm	*fsm;
+	if (a->token_list != NULL)
+		a->errors[1](a);
+	if (a->op_list == NULL)
+		a->errors[3](a);
+}
+
+void		lexer(t_asm *a)
+{
+	t_fsm			*fsm;
 
 	fsm = a->fsm;
 	fsm->curr = fsm->code;
 	while (*fsm->curr != '\0')
-	{
 		finite_state_machine(a, fsm);
-	}
-	if (a->token_list != NULL)
-	{
-		ft_printf("Syntax error - unexpected end of input (Perhaps you forgot to end with a newline ?)");
-		exit(1);
-	}
+	check_errors(a);
 	reverse_op_list(&a->op_list);
 }
 
 t_op_list	*get_op_list(char *file_name)
 {
-	t_asm	a;
+	t_asm			a;
 
 	init_asm(&a, file_name);
 	lexer(&a);
 	return (a.op_list);
 }
 
-void		*print_identifiers(t_op_list *op_list)
+void		print_identifiers(t_op_list *op_list)
 {
 	t_token_list	*token;
 

@@ -23,5 +23,7 @@ int		lex_zero(char *c)
 
 int		lex_other(char *c)
 {
+	if (c)
+		;
 	return (1);
 }

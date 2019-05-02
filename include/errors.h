@@ -6,5 +6,6 @@
 void	err_lex(t_asm *a);
 void	err_no_endline(t_asm *a);
 void	err_no_closed_quote(t_asm *a);
+void	err_empty_file(t_asm *a);
 
 #endif

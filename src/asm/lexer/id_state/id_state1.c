@@ -49,6 +49,8 @@ int		id_indirect_label(t_asm *a)
 
 int		id_commentary(t_asm *a)
 {
+	if (a)
+		;
 	return (0);
 }
 

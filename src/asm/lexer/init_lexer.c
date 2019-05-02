@@ -4,7 +4,7 @@
 #include "errors.h"
 #include "lexer.h"
 
-void	init_lex_conditions(t_asm *a)
+static void	init_lex_conditions(t_asm *a)
 {
 	a->lex_condition[0] = lex_whitespace;
 	a->lex_condition[1] = lex_num;
@@ -23,7 +23,7 @@ void	init_lex_conditions(t_asm *a)
 	a->lex_condition[14] = lex_other;
 }
 
-void	init_id_states(t_asm *a)
+static void	init_id_states(t_asm *a)
 {
 	a->id_state[1] = id_indirect;
 	a->id_state[2] = id_label;
@@ -41,15 +41,16 @@ void	init_id_states(t_asm *a)
 	a->id_state[14] = id_zero;
 }
 
-void	init_errors(t_asm *a)
+static void	init_errors(t_asm *a)
 {
 	a->errors[0] = err_lex;
 	a->errors[1] = err_no_endline;
 	a->errors[2] = err_no_closed_quote;
+	a->errors[3] = err_empty_file;
 }
 
 
-void	init_fsm(t_asm *a, char *name)
+static void	init_fsm(t_asm *a, char *name)
 {
 	a->fsm->code = read_text_from(name);
 	read_table("./src/asm/lexer/graph/fsm", a->fsm);

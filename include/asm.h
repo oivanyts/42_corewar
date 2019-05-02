@@ -31,7 +31,7 @@ typedef struct  s_asm
     struct s_token_list	*token_list;
     int 				(*lex_condition[15])(char *c);
 	int 				(*id_state[15])(struct s_asm *a);
-	void				(*errors[3])(struct s_asm *a);
+	void				(*errors[4])(struct s_asm *a);
 }               t_asm;
 
 typedef struct	s_fsm

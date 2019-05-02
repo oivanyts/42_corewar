@@ -42,5 +42,7 @@ int		id_endline(t_asm *a)
 
 int		id_zero(t_asm *a)
 {
+	if (a)
+		;
 	return (0);
 }

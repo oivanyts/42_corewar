@@ -22,9 +22,7 @@ char		*read_text_from(char *name) //Don't check '\n' at EOF
 	text = (char*)ft_memalloc(get_file_len(fd) + 1);
 	p_text = text;
 	while (read(fd, p_text, 1) == 1)
-	{
 		p_text++;
-	}
 	close(fd);
 	return (text);
 }
