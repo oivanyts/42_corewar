@@ -6,7 +6,7 @@
 /*   By: myaremen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/26 17:14:27 by myaremen          #+#    #+#             */
-/*   Updated: 2019/05/01 22:52:15 by oivanyts         ###   ########.fr       */
+/*   Updated: 2019/05/02 01:46:40 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,14 @@ typedef struct	s_op
 
 typedef struct s_thread
 {
-	uint32_t ip;
-	bool cf;
-	uint32_t id;
-	uint32_t reg[16];
-	uint8_t  *vm_memory;
-	uint32_t lives;
-	bool alive;
-	uint16_t wait;
+	uint32_t ip;		//номер каретки
+	bool cf;			//Флаг, который могут изменять некоторые операции
+	uint32_t id;		//код операции, на которой стоит каретка
+	uint32_t reg[16];	//регистры, количество которых задано в константе
+	uint8_t  *vm_memory;//
+	uint32_t lives;		//
+	bool alive;			//
+	uint16_t wait;		//
 } t_thread;
 
 typedef struct s_opcall

@@ -6,7 +6,7 @@
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 08:55:42 by oivanyts          #+#    #+#             */
-/*   Updated: 2019/04/26 06:18:28 by oivanyts         ###   ########.fr       */
+/*   Updated: 2019/05/02 01:59:29 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,31 +30,32 @@ void	output_binary(uint8_t *bytecode, size_t size)
 
 unsigned int reverse_byte(unsigned int old)
 {
-	return ((old >> 24) | ((old >> 8) & 0xff00) | ((old << 8) & 0xff0000) | old << 24);
+	return ((old >> 24) | ((old >> 8) & 0xff00) | ((old << 8) & 0xff0000) |
+	old << 24);
 }
 
 bool load_from_file(char *filename, t_player *player, uint8_t memory[])
 {
 	int		fd;
 	size_t	ret;
-	uint8_t	bitecode[MEM_SIZE];
+	uint8_t	bytes[MEM_SIZE];
 
 	(fd = open(filename, O_RDONLY)) ? 0 : handle_error(3);
-	ft_printf("opened %s\n", filename);
-	(ret = (size_t)read(fd, bitecode, MEM_SIZE)) ? 0 : handle_error(4);
-//	output_binary(bitecode, ret);
-	player->header.magic = *(uint32_t *)&bitecode;
+//	ft_printf("opened %s\n", filename);
+	(ret = (size_t)read(fd, bytes, MEM_SIZE)) ? 0 : handle_error(4);
+//	output_binary(bytes, ret);
+	player->header.magic = *(uint32_t *)&bytes;
 	if ((IS_BIG_ENDIAN && COREWAR_EXEC_MAGIC != player->header.magic)
 		|| (!IS_BIG_ENDIAN &&
 			reverse_byte(COREWAR_EXEC_MAGIC) != player->header.magic))
 		handle_error(5);
-	ft_memcpy(player->header.prog_name, &bitecode[4], PROG_NAME_LENGTH);
-	player->header.prog_size = *(uint32_t *)&bitecode[8 + PROG_NAME_LENGTH];
+	ft_memcpy(player->header.prog_name, &bytes[4], PROG_NAME_LENGTH);
+	player->header.prog_size = *(uint32_t *)&bytes[8 + PROG_NAME_LENGTH];
 	if (!IS_BIG_ENDIAN)
-		player->header.prog_size = (unsigned int)reverse_byte(player->header.prog_size);
-	ft_memcpy(player->header.comment, &bitecode[12 + PROG_NAME_LENGTH], COMMENT_LENGTH);
-	ft_printf("NAME [%s]\nSIZE [%d]\nCOMMENT [%s]\n\n", player->header.prog_name, player->header.prog_size, player->header.comment);
-	ft_memcpy(memory, &bitecode[12 + PROG_NAME_LENGTH + COMMENT_LENGTH + 4],
+		player->header.prog_size = reverse_byte(player->header.prog_size);
+	ft_memcpy(player->header.comment, &bytes[12 + PROG_NAME_LENGTH], COMMENT_LENGTH);
+	ft_memcpy(memory, &bytes[12 + PROG_NAME_LENGTH + COMMENT_LENGTH + 4],
 			  (size_t)player->header.prog_size);
+//	ft_printf("NAME [%s]\nSIZE [%d]\nCOMMENT [%s]\n\n", player->header.prog_name, player->header.prog_size, player->header.comment);
 	return (true);
 }
