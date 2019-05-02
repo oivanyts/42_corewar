@@ -1,11 +1,12 @@
 #include <op.h>
 #include "vm.h"
 
-void poor_mans_visualization(uint8_t *bytecode, size_t size, t_player *players, int num_players)
+void poor_mans_visualization(uint8_t *bytecode, t_player *players, int num_players)
 {
-	size_t i;
-	int			player_gap;
-	t_thread	*tmp;
+	size_t   i;
+	int      player_gap;
+	t_thread *tmp;
+	int    color[4] = {31,34,36,32};
 
 	i = 0;
 	player_gap = MEM_SIZE / num_players;
@@ -19,17 +20,22 @@ void poor_mans_visualization(uint8_t *bytecode, size_t size, t_player *players, 
 		i++;
 	}
 	i = 0;
-	ft_printf("{green}%c", 1);
-	while (i < size)
+	while (i < MEM_SIZE)
 	{
-		ft_printf("%.2x ", bytecode[i]);
-		i++;
 		if (!(i % 64))
+		{
 			ft_printf("\n");
-		if (i == players[i / player_gap].header.prog_size  + (i / player_gap) * player_gap)
-			ft_printf("\033[0m");
-		if (!(i % player_gap))
-			ft_printf("{green}%c", 1);
+		}
+		if (i == ((t_thread *)players[i / player_gap].threads.arr.arr)->id)
+		{
+			ft_printf("\033[48;05;%dm", color[i / player_gap] + 10);
+		}
+		else if (i < players[i / player_gap].header.prog_size + (i / player_gap) * player_gap)
+		{
+			ft_printf("\033[38;05;%dm", color[i / player_gap]);
+		}
+		ft_printf("%.2x\033[m ", bytecode[i]);
+		i++;
 	}
 	ft_printf("\n");
 }
@@ -84,7 +90,7 @@ int		main(int argc, char *argv[])
 	ft_bzero(players, sizeof(t_player) * (argc - 1));
 	ft_bzero(memory, sizeof(uint8_t) * MEM_SIZE);
 	parce_all_players(argc - 1, argv, &players[0], &memory[0]);
-	poor_mans_visualization(memory, MEM_SIZE, &players[0], argc - 1);
+	poor_mans_visualization(memory, &players[0], argc - 1);
 	vm_cycle(&players[0], (uint32_t)(argc - 1));
 	return 0;
 }
