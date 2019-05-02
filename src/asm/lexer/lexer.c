@@ -29,6 +29,9 @@ t_op_list	*get_op_list(char *file_name)
 
 	init_asm(&a, file_name);
 	lexer(&a);
+	free(a.fsm->code);
+	del_2d_masint(a.fsm->table, a.fsm);
+	free(a.fsm);
 	return (a.op_list);
 }
 

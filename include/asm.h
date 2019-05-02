@@ -61,13 +61,6 @@ typedef struct	s_token_list
 	int					row;				//Номер рядка
 	struct s_token_list	*next;
 }				t_token_list;
- 
-typedef struct  s_label_list
-{
-    char                *name;
-    struct s_op_list    *op;
-    struct s_label_list *next;
-}               t_label_list;
 
 // COMMENT - NULL
 // NAME	- NULL
@@ -105,7 +98,7 @@ static t_op		g_op_tab[17] =
 	{"ld", 2, {T_DIR | T_IND, T_REG}, 2, 5, "load", 1, 0},
 	{"st", 2, {T_REG, T_IND | T_REG}, 3, 5, "store", 1, 0},
 	{"add", 3, {T_REG, T_REG, T_REG}, 4, 10, "addition", 1, 0},
-	{"sub", 3, {T_REG, T_REG, T_REG}, 5, 10, "soustraction", 1, 0},
+	{"sub", 3, {T_REG, T_REG, T_REG}, 5, 10, "sobstraction", 1, 0},
 	{"and", 3, {T_REG | T_DIR | T_IND, T_REG | T_IND | T_DIR, T_REG},
 		6, 6, "et (and  r1, r2, r3   r1&r2 -> r3", 1, 0},
 	{"or", 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG},
@@ -126,4 +119,5 @@ static t_op		g_op_tab[17] =
 	{0, 0, {0}, 0, 0, 0, 0, 0}
 };
 int		ft_listlen(t_token_list *lst);
+
 #endif

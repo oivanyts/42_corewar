@@ -30,6 +30,16 @@ static void	del_2d_maschar(char **mas)
 	free(mas);
 }
 
+void	del_2d_masint(int **mas, t_fsm *fsm)
+{
+	int		i;
+
+	i = 0;
+	while (i < fsm->tab_row)
+		free(mas[i++]);
+	free(mas);
+}
+
 static void	fill_table(int fd, t_fsm *fsm)
 {
 	int		col;
