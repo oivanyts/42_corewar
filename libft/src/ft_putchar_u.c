@@ -6,7 +6,7 @@
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/15 13:13:31 by oivanyts          #+#    #+#             */
-/*   Updated: 2019/01/15 13:13:35 by oivanyts         ###   ########.fr       */
+/*   Updated: 2019/05/01 22:52:15 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	ft_putchar_u(int c, int fd)
 	char	ustr[4];
 	int		size;
 
-	if ((size_t)(size = ft_charlen(c)) > MB_CUR_MAX)
+	if ((size_t)(size = ft_charlen(c)) > 4)
 		return (-1);
 	if (size <= 1)
 		return ((int)write(fd, &c, 1));

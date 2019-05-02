@@ -6,7 +6,7 @@
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/30 15:40:37 by oivanyts          #+#    #+#             */
-/*   Updated: 2018/11/30 15:40:45 by oivanyts         ###   ########.fr       */
+/*   Updated: 2019/05/01 22:52:15 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int		format_string_u(va_list arg, t_format fx, int fd)
 	empty = (wchar_t)(fx.flag[3] == '0' && fx.flag[0] != '-' ? L'0' : L' ');
 	if (!(tmp = va_arg(arg, int *)))
 		tmp = L"(null)";
-	if ((MB_CUR_MAX < (size_t)ft_charlen(*tmp)))
+	if ((4 < (size_t)ft_charlen(*tmp)))
 		return (-1);
 	if (fx.precs >= 0)
 		tmp = ft_strndup_u(tmp, fx.precs);
