@@ -6,7 +6,7 @@
 /*   By: npiatiko <npiatiko@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 11:47:27 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/05/01 18:41:55 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/05/02 16:56:13 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,72 @@ void	ft_writehead(int fd, t_header *header)
 	write(fd, "\0\0\0\0", 4);
 }
 
+int 	ft_getcodeargs(t_token_list *toklist)
+{
+	int			codeargs;
+	char		argnum;
+	char 		argtype;
+
+	argnum = 6;
+	codeargs = 0;
+	while (toklist)
+	{
+		if ((argtype = ft_typearg(toklist->ident)))
+		{
+			if (argtype == T_REG)
+				codeargs = (codeargs) | (REG_CODE << argnum);
+			else if (argtype == T_DIR)
+				codeargs = (codeargs) | (DIR_CODE << argnum);
+			else if (argtype == T_IND)
+				codeargs = (codeargs) | (IND_CODE << argnum);
+			argnum -= 2;
+		}
+		toklist = toklist->next;
+	}
+	return (codeargs);
+}
+
+void	ft_writebcode(int fd, t_token_list *toklst)
+{
+	int				codearg;
+	static t_op		*op;
+
+	if (toklst->ident == INSTRUCTION)
+	{
+		op = ft_checkname(toklst);
+		write(fd, &op->opcode, 1);
+		if (op->codoctal)
+		{
+			codearg = ft_getcodeargs(toklst);
+			write(fd, &codearg, 1);
+		}
+	}
+	else if (toklst->ident == DIRECT)
+		ft_write(fd, toklst->data, op->dirsize);
+	else if (toklst->ident == INDIRECT)
+		ft_write(fd, toklst->data, IND_SIZE);
+	else if (toklst->ident == REGISTER)
+		ft_write(fd, toklst->data, 1);
+}
+
+void	ft_asmtobcode(int fd, t_op_list *oplist)
+{
+	t_token_list	*toklst;
+	int				codearg;
+	static t_op		*op;
+
+	while (oplist)
+	{
+		toklst = oplist->token_list;
+		while (toklst)
+		{
+			ft_writebcode(fd, toklst);
+			toklst = toklst->next;
+		}
+		oplist = oplist->next;
+	}
+}
+
 int		main(int argc, char **argv)
 {
 	t_op_list *oplist;
@@ -40,15 +106,18 @@ int		main(int argc, char **argv)
 
 	header = ft_memalloc(sizeof(t_header));
 	oplist = get_op_list("vm_champs/champs/ex.s");
-	print_identifiers(oplist);
-	ft_printf("\n\n\n");
+//	system("leaks -q asm");
+//	print_identifiers(oplist);
+//	ft_printf("===============================\n");
 	ft_validation(oplist, header);
-	ft_calcsizes(oplist);
+	header->prog_size = ft_calcprogsize(oplist);
 	ft_replacelable(oplist);
-//	if ((fd = open("test", O_RDWR | O_CREAT | O_TRUNC, 0755)) < 0)
-//		ft_exit(strerror(errno), errno);
-//	ft_writehead(fd, header);
-//	close(fd);
+	if ((fd = open("test", O_RDWR | O_CREAT | O_TRUNC, 0755)) < 0)
+		ft_exit(strerror(errno), errno);
+	ft_writehead(fd, header);
+	ft_asmtobcode(fd, oplist);
+//	ft_printf("\n%hhb\n", (3 << 2) | 1);
+	close(fd);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: npiatiko <npiatiko@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 12:19:23 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/05/01 19:04:26 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/05/02 11:42:36 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,9 +129,9 @@ static t_op		g_op_tab[17] =
 };
 void	ft_validation(t_op_list *oplist, t_header *header);
 void	ft_exit(char *stre, int e);
-void 	ft_calcsizes(t_op_list *oplist);
+int ft_calcprogsize(t_op_list *oplist);
 t_op	*ft_checkname(t_token_list *toklst);
 void	ft_replacelable(t_op_list *oplist);
 int		ft_searchlable(t_op_list *oplist, char *data);
-
+int		ft_typearg(t_identifier ident);
 #endif

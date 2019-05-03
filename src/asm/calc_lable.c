@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   calcinstructionsize.c                              :+:      :+:    :+:   */
+/*   calc_lable.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: npiatiko <npiatiko@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/01 16:27:07 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/05/01 19:25:59 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/05/02 11:57:15 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int ft_instrsize(struct s_token_list *tokenlist)
 	return size;
 }
 
-void 	ft_calcsizes(t_op_list *oplist)
+int ft_calcprogsize(t_op_list *oplist)
 {
 	int		instrstart;
 
@@ -46,6 +46,7 @@ void 	ft_calcsizes(t_op_list *oplist)
 		instrstart += oplist->instrsize;
 		oplist = oplist->next;
 	}
+	return instrstart;
 }
 
 void ft_replacelable(t_op_list *oplist)
@@ -62,12 +63,11 @@ void ft_replacelable(t_op_list *oplist)
 		{
 			if (toklst->ident == INDIRECT_LABEL || toklst->ident == DIRECT_LABEL)
 			{
+				toklst->ident = toklst->ident == INDIRECT_LABEL ? INDIRECT : DIRECT;
 				tmpdata = toklst->data;
-				ft_printf("\nlablename :%s\n", toklst->data);
 				toklst->data = ft_memalloc(4);
 				*((int *)(toklst->data)) = ft_searchlable(oplist, tmpdata) - tmpoplist->instrstart;
 				free(tmpdata);
-				ft_printf("%d\n", *((int *)(toklst->data)));
 			}
 			toklst = toklst->next;
 		}
@@ -89,5 +89,5 @@ int		ft_searchlable(t_op_list *oplist, char *data)
 		oplist = oplist->next;
 	}
 	ft_exit("Unknown lable.", 111);
-	return -1;
+	return (-1);
 }
