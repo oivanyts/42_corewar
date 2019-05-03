@@ -5,14 +5,14 @@ set(CMAKE_C_COMPILER clang)
 set(CMAKE_C_STANDARD 99)
 #set(CMAKE_C_FLAGS "-Wall -Wextra -Werror -O3")
 
-add_subdirectory(./libft)
+add_subdirectory(libft)
 
 AUX_SOURCE_DIRECTORY(./src/vm/ SOURCE_FILES_VM)
 AUX_SOURCE_DIRECTORY(./src/asm/ SOURCE_FILES_ASM)
 
 
 add_executable(vm ${SOURCE_FILES_VM})
-add_executable(asm ${SOURCE_FILES_ASM} src/asm/lexer/lexer.c src/asm/lexer/read_text.c include/lexer.h src/asm/lexer/main.c src/asm/lexer/read_table_from.c src/asm/lexer/lex_condition/lex_condition0.c src/asm/lexer/lex_condition/lex_condition1.c src/asm/lexer/lex_condition/lex_condition2.c src/asm/lexer/id_state/id_state0.c src/asm/lexer/list_operations/op_list_operations.c src/asm/lexer/list_operations/token_list_operations.c src/asm/lexer/list_operations/label_list_operations.c src/asm/lexer/id_state/id_state1.c src/asm/lexer/id_state/id_state2.c include/lex_conditions.h include/id_states.h src/asm/lexer/finite_state_machine.c src/asm/lexer/str_cmp.c src/asm/lexer/init_lexer.c src/asm/lexer/error.c include/errors.h include/disassembler.h src/asm/disassembler/disassembler.c src/asm/disassembler/read_binary.c src/asm/disassembler/get_header.c)
+add_executable(asm ${SOURCE_FILES_ASM} src/asm/lexer/lexer.c src/asm/lexer/read_text.c include/lexer.h src/asm/lexer/main.c src/asm/lexer/read_table_from.c src/asm/lexer/lex_condition/lex_condition0.c src/asm/lexer/lex_condition/lex_condition1.c src/asm/lexer/lex_condition/lex_condition2.c src/asm/lexer/id_state/id_state0.c src/asm/lexer/list_operations/op_list_operations.c src/asm/lexer/list_operations/token_list_operations.c src/asm/lexer/list_operations/label_list_operations.c src/asm/lexer/id_state/id_state1.c src/asm/lexer/id_state/id_state2.c include/lex_conditions.h include/id_states.h src/asm/lexer/finite_state_machine.c src/asm/lexer/str_cmp.c src/asm/lexer/init_lexer.c src/asm/lexer/error.c include/errors.h include/disassembler.h src/asm/disassembler/disassembler.c src/asm/disassembler/read_binary.c src/asm/disassembler/get_header.c src/asm/disassembler/get_big_endian_num.c src/asm/disassembler/get_type_arg.c src/asm/disassembler/do_operation.c)
 
 target_include_directories(vm PUBLIC ./include)
 target_include_directories(asm PUBLIC ./include)

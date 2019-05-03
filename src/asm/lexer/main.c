@@ -4,11 +4,11 @@
 
 int main()
 {
-	t_op_list	*op_list;
+//	t_op_list	*op_list;
 
 //	op_list = get_op_list("bots/42.s");
 //	print_identifiers(op_list);
-
+//	system("leaks -q asm");
 	disassembler("bin/42.cor");
 
 
