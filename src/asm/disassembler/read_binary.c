@@ -14,7 +14,7 @@ static int	get_file_len(fd)
 	return (len);
 }
 
-char	*reverse_string(char *name)
+static char	*reverse_string(char *name)
 {
 	char	*str;
 	int		i;
@@ -28,7 +28,7 @@ char	*reverse_string(char *name)
 	return (str);
 }
 
-void	validation(char *name, t_dasm *dasm)
+static void	validation(char *name, t_dasm *dasm)
 {
 	char	*rev_name;
 	char	*tmp;
@@ -53,7 +53,7 @@ void		read_binaryy(char *name, t_dasm *dasm)
 	fd = open(name, O_RDONLY);
 	if (fd < 0)
 	{
-		ft_printf("File does not exist!\n");
+		ft_printf("File \"%s\" does not exist!\n", name);
 		exit(1);
 	}
 	validation(name, dasm);
