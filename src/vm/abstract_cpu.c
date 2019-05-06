@@ -70,12 +70,16 @@ void    memory_xor(t_memory *dst, t_memory *param1, t_memory *param2)
 
 void    memory_add(t_memory *dst, t_memory *param1, t_memory *param2)
 {
-	//смакотелик
+	(void)dst;
+	(void)param1;
+	(void)param2;
 }
 
 void    memory_subtract(t_memory *dst, t_memory *param1, t_memory *param2)
 {
-	//смакотелик
+	(void)dst;
+	(void)param1;
+	(void)param2;
 }
 
 void    memory_xprintf(t_memory *mem)
