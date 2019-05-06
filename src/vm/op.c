@@ -161,13 +161,13 @@ uint8_t	decode_tparams(struct s_thread *pc, t_opcode opcode)
 	return (tparams);
 }
 
-void	*decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t param_number)
+t_memory decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t param_number)
 {
-	void *param;
+	t_memory param;
 	uint8_t  tparam;
 	uint8_t reg_number;
 
-	param = 0;
+	memory_init(&param, 0, 0);
 	if (param_number <= op_tab[opcode].args)
 	{
 		if (param_number == 1)
@@ -188,32 +188,34 @@ void	*decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t param
 			if (reg_number >= REG_NUMBER)
 			{
 				pc->alive = 0;
-				return (0);
+				return (param);
 			}
-			param = &pc->reg[reg_number];
+			memory_init(&param, &pc->reg[reg_number], REG_SIZE);
 		}
 		else if (tparam == T_DIR)
 		{
-			param = &pc->vm_memory[pc->ip];
 			if (op_tab[opcode].tdir_size == 0)
 			{
-				pc->ip += 4;
+				memory_init(&param, &pc->vm_memory[pc->ip], DIR_SIZE);
+				pc->ip += DIR_SIZE;
 			}
 			else
 			{
-				pc->ip += 2;
+				memory_init(&param, &pc->vm_memory[pc->ip], IND_SIZE);
+				pc->ip += IND_SIZE;
 			}
 		}
 		else if (tparam == T_IND)
 		{
 			//shrink IND address
-			param = (uint32_t*)&as_byte(pc->vm_memory)[pc->ip + *(int16_t*)&pc->vm_memory[pc->ip]];
+			//param = (uint32_t*)&as_byte(pc->vm_memory)[pc->ip + *(int16_t*)&pc->vm_memory[pc->ip]];
+			memory_init(&param, &as_byte(pc->vm_memory)[pc->ip + *(int16_t*)&pc->vm_memory[pc->ip]], 2); //not exactly
 			pc->ip += 2;
 		}
 		else
 		{
 			pc->alive = 0;
-			return (0);
+			return (param);
 		}
 	}
 	return (param);
@@ -245,7 +247,7 @@ void	op_exec(struct s_thread *pc)
 		return ;
 	}
 	op = op_decode(pc);
-	opcalls[op.opcode].opfunc(pc, op.args[0], op.args[1], op.args[2]);
+	opcalls[op.opcode].opfunc(pc, &op.args[0], &op.args[1], &op.args[2]);
 }
 
 t_vm *get_vm(t_vm *vm)

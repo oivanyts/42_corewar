@@ -26,7 +26,7 @@ void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	(void)p2;
 	(void)p3;
 	sp->lives += 1;
-	get_vm(0)->last_alive = *(uint32_t*)p1;
+	get_vm(0)->last_alive = memory_tou32(p1);
 }
 
 void f_ld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
@@ -47,7 +47,8 @@ void f_add(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 void f_sub(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-	(void)sp;(void)p1;(void)p2;(void)p3;
+	memory_subtract(p3, p1, p2);
+	sp->cf = memory_iszero(p3);
 }
 
 void f_and(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)

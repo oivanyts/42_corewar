@@ -106,6 +106,11 @@ bool    memory_iszero(t_memory *mem)
 	return *(uint32_t*)(mem->memory) == 0;
 }
 
+uint32_t memory_tou32(t_memory *mem)
+{
+	return *(uint32_t*)(mem->memory);
+}
+
 void    memory_xprintf(t_memory *mem)
 {
 	size_t i;

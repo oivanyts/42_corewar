@@ -33,6 +33,8 @@ void    memory_subtract(t_memory *dst, t_memory *param1, t_memory *param2);
 
 bool    memory_iszero(t_memory *mem);
 
+uint32_t memory_tou32(t_memory *mem);
+
 void    memory_xprintf(t_memory *mem);
 
 #endif

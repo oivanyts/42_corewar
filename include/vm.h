@@ -41,7 +41,7 @@ typedef struct s_player
 typedef struct s_decoded_op
 {
 	t_opcode opcode;
-	void *args[3];
+	t_memory args[3];
 } t_decoded_op;
 
 t_vm *get_vm(t_vm *vm);
@@ -54,7 +54,7 @@ void	vm_cycle(t_player *players, uint32_t nplayers);
 
 uint8_t decode_tparams(struct s_thread *pc, t_opcode opcode);
 
-void *decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t param_number);
+t_memory decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t param_number);
 
 t_decoded_op	op_decode(struct s_thread *pc);
 
