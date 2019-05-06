@@ -248,6 +248,17 @@ void	op_exec(struct s_thread *pc)
 	opcalls[op.opcode].opfunc(pc, op.args[0], op.args[1], op.args[2]);
 }
 
+t_vm *get_vm(t_vm *vm)
+{
+	static t_vm *m_vm = 0;
+
+	if (m_vm == 0)
+	{
+		m_vm = vm;
+	}
+	return (m_vm);
+}
+
 t_op    op_tab[17] =
 				{
 						{"live", 1, {T_DIR}, 1, 10, "alive", 0, 0},

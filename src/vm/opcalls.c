@@ -21,86 +21,86 @@ t_opcall opcalls[ophighborder - 1] =
 	{opaff, f_aff},
 };
 
-void f_live(t_thread *sp, void *p1, void *p2, void *p3)
+void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
 	(void)p2;
 	(void)p3;
 	sp->lives += 1;
-	get_vm()->last_alive = *(uint32_t*)p1;
+	get_vm(0)->last_alive = *(uint32_t*)p1;
 }
 
-void f_ld(t_thread *sp, void *p1, void *p2, void *p3)
+void f_ld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
 	(void)sp;(void)p1;(void)p2;(void)p3;
 }
 
-void f_st(t_thread *sp, void *p1, void *p2, void *p3)
+void f_st(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
 	(void)sp;(void)p1;(void)p2;(void)p3;
 }
 
-void f_add(t_thread *sp, void *p1, void *p2, void *p3)
+void f_add(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-	sp->reg[*(uint32_t*)p3] = sp->reg[*(uint32_t*)p1] + sp->reg[*(uint32_t*)p2];
-	sp->cf = !sp->reg[*(uint32_t*)p3];
+	memory_add(p3, p1, p2);
+	sp->cf = memory_iszero(p3);
 }
 
-void f_sub(t_thread *sp, void *p1, void *p2, void *p3)
-{
-	(void)sp;(void)p1;(void)p2;(void)p3;
-}
-
-void f_and(t_thread *sp, void *p1, void *p2, void *p3)
+void f_sub(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
 	(void)sp;(void)p1;(void)p2;(void)p3;
 }
 
-void f_or(t_thread *sp, void *p1, void *p2, void *p3)
+void f_and(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
 	(void)sp;(void)p1;(void)p2;(void)p3;
 }
 
-void f_xor(t_thread *sp, void *p1, void *p2, void *p3)
+void f_or(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
 	(void)sp;(void)p1;(void)p2;(void)p3;
 }
 
-void f_zjmp(t_thread *sp, void *p1, void *p2, void *p3)
+void f_xor(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
 	(void)sp;(void)p1;(void)p2;(void)p3;
 }
 
-void f_ldi(t_thread *sp, void *p1, void *p2, void *p3)
+void f_zjmp(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
 	(void)sp;(void)p1;(void)p2;(void)p3;
 }
 
-void f_sti(t_thread *sp, void *p1, void *p2, void *p3)
+void f_ldi(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
 	(void)sp;(void)p1;(void)p2;(void)p3;
 }
 
-void f_fork(t_thread *sp, void *p1, void *p2, void *p3)
+void f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
 	(void)sp;(void)p1;(void)p2;(void)p3;
 }
 
-void f_lld(t_thread *sp, void *p1, void *p2, void *p3)
+void f_fork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
 	(void)sp;(void)p1;(void)p2;(void)p3;
 }
 
-void f_lldi(t_thread *sp, void *p1, void *p2, void *p3)
+void f_lld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
 	(void)sp;(void)p1;(void)p2;(void)p3;
 }
 
-void f_lfork(t_thread *sp, void *p1, void *p2, void *p3)
+void f_lldi(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
 	(void)sp;(void)p1;(void)p2;(void)p3;
 }
 
-void f_aff(t_thread *sp, void *p1, void *p2, void *p3)
+void f_lfork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
+{
+	(void)sp;(void)p1;(void)p2;(void)p3;
+}
+
+void f_aff(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
 	(void)sp;(void)p1;(void)p2;(void)p3;
 }
