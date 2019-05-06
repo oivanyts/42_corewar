@@ -15,6 +15,7 @@
 
 # include <stdint.h>
 # include <stdbool.h>
+# include "vm.h"
 
 typedef enum e_opcode
 {
@@ -60,6 +61,7 @@ typedef struct s_thread
 	uint32_t lives;		//
 	bool alive;			//
 	uint16_t wait;		//
+	t_decoded_op op;
 } t_thread;
 
 typedef struct s_opcall

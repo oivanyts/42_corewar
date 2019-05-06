@@ -1,4 +1,5 @@
 #include "opcalls.h"
+#include "vm.h"
 
 t_opcall opcalls[ophighborder - 1] =
 {
@@ -22,10 +23,10 @@ t_opcall opcalls[ophighborder - 1] =
 
 void f_live(t_thread *sp, void *p1, void *p2, void *p3)
 {
-	(void)p1;
 	(void)p2;
 	(void)p3;
 	sp->lives += 1;
+	get_vm()->last_alive = *(uint32_t*)p1;
 }
 
 void f_ld(t_thread *sp, void *p1, void *p2, void *p3)
@@ -40,7 +41,8 @@ void f_st(t_thread *sp, void *p1, void *p2, void *p3)
 
 void f_add(t_thread *sp, void *p1, void *p2, void *p3)
 {
-	(void)sp;(void)p1;(void)p2;(void)p3;
+	sp->reg[*(uint32_t*)p3] = sp->reg[*(uint32_t*)p1] + sp->reg[*(uint32_t*)p2];
+	sp->cf = !sp->reg[*(uint32_t*)p3];
 }
 
 void f_sub(t_thread *sp, void *p1, void *p2, void *p3)

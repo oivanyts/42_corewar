@@ -86,6 +86,7 @@ int		main(int argc, char *argv[])
 {
 	t_player	players[argc - 1];
 	uint8_t 	memory[MEM_SIZE];
+	t_vm vm;
 
 	ft_bzero(players, sizeof(t_player) * (argc - 1));
 	ft_bzero(memory, sizeof(uint8_t) * MEM_SIZE);

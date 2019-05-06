@@ -26,11 +26,16 @@
 # define T_SECOND_PARAM (uint8_t)0x30
 # define T_THIRD_PARAM (uint8_t)0x0C
 
+typedef struct s_vm
+{
+	uint32_t last_alive;
+}t_vm;
 
 typedef struct s_player
 {
 	t_threads threads;
 	t_header header;
+	uint32_t number;
 } t_player;
 
 typedef struct s_decoded_op
@@ -38,6 +43,8 @@ typedef struct s_decoded_op
 	t_opcode opcode;
 	void *args[3];
 } t_decoded_op;
+
+t_vm *get_vm();
 
 bool load_from_file(char *filename, t_player *player, uint8_t memory[]);
 

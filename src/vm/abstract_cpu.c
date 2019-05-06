@@ -70,9 +70,29 @@ void    memory_xor(t_memory *dst, t_memory *param1, t_memory *param2)
 
 void    memory_add(t_memory *dst, t_memory *param1, t_memory *param2)
 {
-	(void)dst;
-	(void)param1;
-	(void)param2;
+	size_t i;
+	size_t size;
+	bool carry;
+	uint8_t res_byte;
+
+	carry = 0;
+	size = ft_ullmin(param1->memory_size, param2->memory_size);
+	size = ft_ullmin(size, dst->memory_size);
+	i = size - 1;
+	while (i)
+	{
+		res_byte = as_byte(param1->memory)[i] + as_byte(param2->memory)[i] + carry;
+		carry = ((uint32_t)as_byte(param1->memory)[i] + as_byte(param2->memory)[i] + carry) > 0xFF;
+		as_byte(dst->memory)[i] = res_byte;
+		--i;
+	}
+	res_byte = as_byte(param1->memory)[i] + as_byte(param2->memory)[i] + carry;
+	carry = ((uint32_t)as_byte(param1->memory)[i] + as_byte(param2->memory)[i] + carry) > 0xFF;
+	as_byte(dst->memory)[i] = res_byte;
+	/*while (carry)
+	{
+
+	}*/
 }
 
 void    memory_subtract(t_memory *dst, t_memory *param1, t_memory *param2)
