@@ -17,6 +17,7 @@
 # include <stdbool.h>
 # include <stddef.h>
 # include "libft.h"
+# include "utils.h"
 
 # define NPOS ((size_t)-1)
 
@@ -29,8 +30,6 @@ struct	s_array
 	void	(*alloc_func)(void *ptr, const void *elem);
 	void	(*destroy_func)(void *ptr);
 };
-
-void	ft_memswap(void *dest, void *src, void *buffer, size_t size);
 
 void	array_init(struct s_array *sarr, size_t elem_size,
 		void (*alloc_elem)(void *ptr, const void *elem),

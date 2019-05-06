@@ -18,6 +18,7 @@
 # include "libft.h"
 # include "thread_array.h"
 # include "error.h"
+# include "utils.h"
 
 #define IS_BIG_ENDIAN (*(uint16_t *)"\0\xff" < 0x100)
 
@@ -51,8 +52,6 @@ void *decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t param
 t_decoded_op	op_decode(struct s_thread *pc);
 
 void	op_exec(struct s_thread *pc);
-
-uint8_t	*as_byte(void *ptr);
 
 uint32_t threads_alive(t_player *players, uint32_t nplayers);
 t_op    op_tab[17];
