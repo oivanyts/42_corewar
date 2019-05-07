@@ -53,7 +53,8 @@ void f_sub(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 void f_and(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-	(void)sp;(void)p1;(void)p2;(void)p3;
+	memory_and(p3, p1, p2);
+	sp->cf = memory_iszero(p3);
 }
 
 void f_or(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
