@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   subfunctions.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npiatiko <npiatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npiatiko <npiatiko@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/06 13:31:30 by npiatiko          #+#    #+#             */
 /*   Updated: 2019/05/06 17:07:39 by npiatiko         ###   ########.fr       */
