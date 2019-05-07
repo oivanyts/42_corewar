@@ -1,7 +1,7 @@
 #include "opcalls.h"
 #include "vm.h"
 
-t_opcall opcalls[ophighborder - 1] =
+t_opcall opcalls[ophighborder] =
 {
 	{oplive, f_live},
 	{opld, f_ld},

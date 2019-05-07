@@ -8,6 +8,7 @@
 
 void    memory_init(t_memory *mem, void *ptr, size_t size)
 {
+
 	mem->memory = ptr;
 	mem->memory_size = size;
 }

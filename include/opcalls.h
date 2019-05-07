@@ -15,13 +15,12 @@
 
 # include <stdint.h>
 # include <stdbool.h>
-# include "vm.h"
 #include "abstract_cpu.h"
 
 typedef enum e_opcode
 {
 	oplowborder = 0,
-	oplive = 1,
+	oplive = 0,
 	opld,
 	opst,
 	opadd,
@@ -70,7 +69,7 @@ typedef struct s_opcall
 	void (*opfunc)(t_thread*, t_memory*, t_memory*, t_memory*);
 } t_opcall;
 
-t_opcall opcalls[ophighborder - 1];
+t_opcall opcalls[ophighborder];
 
 void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3);
 

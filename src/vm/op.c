@@ -114,7 +114,7 @@ t_opcode decode_opcode(struct s_thread *pc)
 	t_opcode opcode;
 
 	opcode = as_byte(pc->vm_memory)[pc->ip % MEM_SIZE];
-	if (opcode <= oplowborder || opcode >= ophighborder)
+	if (opcode < oplowborder || opcode >= ophighborder)
 	{
 		pc->alive = 0;
 		return (opcode);
@@ -125,15 +125,15 @@ t_opcode decode_opcode(struct s_thread *pc)
 
 bool	check_op_params(t_opcode opcode, uint8_t tparams)
 {
-	if ((op_tab[opcode].targs[0] & (tparams & T_FIRST_PARAM)) == 0)
+	if ((op_tab[opcode].targs[0] & (tparams >> 6)) == 0)
 	{
 		return (0);
 	}
-	else if ((op_tab[opcode].targs[1] & (tparams & T_SECOND_PARAM)) == 0)
+	else if ((op_tab[opcode].targs[1] & (tparams  >> 4)) == 0)
 	{
 		return (0);
 	}
-	else if ((op_tab[opcode].targs[0] & (tparams & T_FIRST_PARAM)) == 0)
+	else if ((op_tab[opcode].targs[2] & (tparams >> 2)) == 0)
 	{
 		return (0);
 	}
@@ -147,8 +147,7 @@ uint8_t	decode_tparams(struct s_thread *pc, t_opcode opcode)
 {
 	uint8_t tparams;
 
-	tparams = (1 << 7);
-	if (op_tab[opcode].codoctal == 1)
+	if ((op_tab[opcode].targs[0] & T_IND) || (op_tab[opcode].targs[1] & T_IND) || (op_tab[opcode].targs[2] & T_IND))
 	{
 		tparams = as_byte(pc->vm_memory)[pc->ip % MEM_SIZE];
 		if (!check_op_params(opcode, tparams))
@@ -158,7 +157,22 @@ uint8_t	decode_tparams(struct s_thread *pc, t_opcode opcode)
 		}
 		pc->ip += 1;
 	}
+	else
+	{
+		tparams = (op_tab[opcode].targs[0] << 6) | (op_tab[opcode].targs[1] << 4) | (op_tab[opcode].targs[2] << 2);
+	}
 	return (tparams);
+}
+
+uint32_t swap32(uint32_t *toswap)
+{
+	return (*toswap >> 24 | ((*toswap >> 8) & 0xff00 ) | ((*toswap << 8) & 0xff0000 ) | *toswap << 24);
+}
+
+
+uint16_t swap16(uint16_t *toswap)
+{
+	return (*toswap >> 8 | *toswap << 8);
 }
 
 t_memory decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t param_number)
@@ -172,15 +186,15 @@ t_memory decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t pa
 	{
 		if (param_number == 1)
 		{
-			tparam = tparams & T_FIRST_PARAM;
+			tparam = ((tparams & T_FIRST_PARAM) >> 6) & 0x3;
 		}
 		else if (param_number == 2)
 		{
-			tparam = tparams & T_SECOND_PARAM;
+			tparam = ((tparams & T_SECOND_PARAM) >> 4) & 0x3;
 		}
 		else
 		{
-			tparam = tparams & T_THIRD_PARAM;
+			tparam = ((tparams & T_THIRD_PARAM) >> 2) & 0x3;
 		}
 		if (tparam == T_REG)
 		{
@@ -190,18 +204,19 @@ t_memory decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t pa
 				pc->alive = 0;
 				return (param);
 			}
+			pc->ip += 1;
 			memory_init(&param, &pc->reg[reg_number], REG_SIZE);
 		}
 		else if (tparam == T_DIR)
 		{
 			if (op_tab[opcode].tdir_size == 0)
 			{
-				memory_init(&param, &pc->vm_memory[pc->ip], DIR_SIZE);
+				memory_init(&param,  &pc->vm_memory[swap32((uint32_t*)&pc->vm_memory[pc->ip])], DIR_SIZE);
 				pc->ip += DIR_SIZE;
 			}
 			else
 			{
-				memory_init(&param, &pc->vm_memory[pc->ip], IND_SIZE);
+				memory_init(&param,  &pc->vm_memory[swap16((uint16_t*)&pc->vm_memory[pc->ip])], IND_SIZE);
 				pc->ip += IND_SIZE;
 			}
 		}
@@ -226,7 +241,7 @@ t_decoded_op	op_decode(struct s_thread *pc)
 	t_decoded_op op;
 	uint8_t tparams;
 
-	op.opcode = decode_opcode(pc);
+	op.opcode = decode_opcode(pc) - 1;
 	if (pc->alive == 0)
 	{
 		return (op);
@@ -247,6 +262,10 @@ void	op_exec(struct s_thread *pc)
 		return ;
 	}
 	op = op_decode(pc);
+	if (pc->alive == 0)
+	{
+		return ;
+	}
 	opcalls[op.opcode].opfunc(pc, &op.args[0], &op.args[1], &op.args[2]);
 }
 
