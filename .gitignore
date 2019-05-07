@@ -11,3 +11,5 @@ cmake-build-debug
 vm_champs
 asm
 !src/*
+.idea
+.DS_Store
