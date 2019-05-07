@@ -19,6 +19,11 @@ char		*read_text_from(char *name) //Don't check '\n' at EOF
 	char	*p_text;
 
 	fd = open(name, O_RDONLY);
+	if (fd < 0)
+	{
+		ft_printf("File does not exist!");
+		exit(1);
+	}
 	text = (char*)ft_memalloc(get_file_len(fd) + 1);
 	p_text = text;
 	while (read(fd, p_text, 1) == 1)

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: npiatiko <npiatiko@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/05/06 13:31:30 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/05/06 17:07:39 by npiatiko         ###   ########.fr       */
+/*   Created: 2019/05/07 15:16:43 by npiatiko          #+#    #+#             */
+/*   Updated: 2019/05/07 15:17:51 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	ft_exit(char *stre, int e)
 void	ft_errhandler(t_token_list *toklst)
 {
 	ft_printf("Syntax error at token [TOKEN][%03d:%03d] %s\n",
-			  toklst->row, toklst->col, g_ident_str[toklst->ident]);
+			toklst->row, toklst->col, g_ident_str[toklst->ident]);
 	system("leaks -q asm");
 	exit(8);
 }
@@ -40,7 +40,7 @@ int		ft_toklistlen(t_token_list *toklst)
 		i++;
 		toklst = toklst->next;
 	}
-	return i;
+	return (i);
 }
 
 int		ft_oplistlen(t_op_list *oplist)

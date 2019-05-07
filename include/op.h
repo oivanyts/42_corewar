@@ -6,7 +6,7 @@
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/23 03:45:53 by oivanyts          #+#    #+#             */
-/*   Updated: 2019/05/06 11:16:26 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/05/07 14:47:26 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 
 # define COMMENT_CHAR			'#'
 # define LABEL_CHAR				':'
-# define DIRECT_CHAR				'%'
+# define DIRECT_CHAR			'%'
 # define SEPARATOR_CHAR			','
 # define ALT_COMMENT_CHAR		';'
 

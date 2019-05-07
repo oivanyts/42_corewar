@@ -3,20 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   validation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npiatiko <npiatiko@student.unit.ua>          +#+  +:+       +#+      */
+/*   By: npiatiko <npiatiko@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/25 14:37:25 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/05/07 11:55:54 by npiatiko         ###   ########.fr       */
+/*   Created: 2019/05/07 15:20:05 by npiatiko          #+#    #+#             */
+/*   Updated: 2019/05/07 15:20:07 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
 
-
-t_op	*ft_getfuncname(t_token_list *toklst)
+t_op		*ft_getfuncname(t_token_list *toklst)
 {
-	int i;
-	t_op *op;
+	int		i;
+	t_op	*op;
 
 	i = -1;
 	toklst->ident == LABEL ? toklst = toklst->next : 0;
@@ -29,7 +28,7 @@ t_op	*ft_getfuncname(t_token_list *toklst)
 	return (op);
 }
 
-void 	ft_chekargs(t_token_list *toklst, t_op *op)
+void		ft_chekargs(t_token_list *toklst, t_op *op)
 {
 	int				i;
 	int				argnum;
@@ -44,7 +43,8 @@ void 	ft_chekargs(t_token_list *toklst, t_op *op)
 			ft_errhandler(toklst);
 		if (i > 1 && (i % 2) && toklst->ident != SEPARATOR)
 			ft_errhandler(toklst);
-		else if (i > 1 && !(i % 2) && !(ft_gettypearg(toklst->ident) & op->targs[argnum++]))
+		else if (i > 1 && !(i % 2) &&
+		!(ft_gettypearg(toklst->ident) & op->targs[argnum++]))
 			ft_errhandler(toklst);
 		tmp = toklst;
 		toklst = toklst->next;
@@ -53,12 +53,12 @@ void 	ft_chekargs(t_token_list *toklst, t_op *op)
 	if (i <= op->args * 2)
 	{
 		ft_printf("Syntax error at token [TOKEN][%03d:%03d] %s\n",
-				  tmp->row, tmp->col + 1, "ENDLINE");
+				tmp->row, tmp->col + 1, "ENDLINE");
 		ft_exit("Argument not found.", 16);
 	}
 }
 
-void	ft_copystring(char *dst, t_token_list *src)
+void		ft_copystring(char *dst, t_token_list *src)
 {
 	if (ft_toklistlen(src) == 2)
 	{
@@ -70,7 +70,7 @@ void	ft_copystring(char *dst, t_token_list *src)
 			else
 			{
 				ft_printf("Syntax error at token [TOKEN][%03d:%03d] %s\n",
-						  src->next->row, src->next->col, g_ident_str[src->next->ident]);
+				src->next->row, src->next->col, g_ident_str[src->next->ident]);
 				ft_exit("String to long.", 16);
 			}
 		}
@@ -82,12 +82,12 @@ void	ft_copystring(char *dst, t_token_list *src)
 	else
 	{
 		ft_printf("Syntax error at token [TOKEN][%03d:%03d] %s\n",
-				  src->row, src->col + 1, "ENDLINE");
+				src->row, src->col + 1, "ENDLINE");
 		ft_exit("String not found.", 16);
 	}
 }
 
-void	ft_checkheader(t_op_list **oplist, t_header *header)
+void		ft_checkheader(t_op_list **oplist, t_header *header)
 {
 	if ((*oplist)->token_list->ident == NAME)
 		if ((*oplist)->next->token_list->ident == COMMENT)
@@ -97,7 +97,7 @@ void	ft_checkheader(t_op_list **oplist, t_header *header)
 		}
 		else
 			ft_errhandler((*oplist)->next->token_list);
-	else if  ((*oplist)->next->token_list->ident == NAME)
+	else if ((*oplist)->next->token_list->ident == NAME)
 		if ((*oplist)->token_list->ident == COMMENT)
 		{
 			ft_copystring(header->comment, (*oplist)->token_list);
@@ -110,7 +110,7 @@ void	ft_checkheader(t_op_list **oplist, t_header *header)
 	*oplist = (*oplist)->next->next;
 }
 
-t_header *ft_validation(t_op_list *oplist)
+t_header	*ft_validation(t_op_list *oplist)
 {
 	t_op		*op;
 	t_header	*header;
