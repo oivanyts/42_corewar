@@ -26,3 +26,23 @@ int		id_comment(t_asm *a)
 	add_to_token_list(&a->token_list, COMMENT, NULL, a);
 	return ((int)ft_strlen(COMMENT_CMD_STRING));
 }
+
+int		id_endline(t_asm *a)
+{
+	if (a->token_list != NULL)
+	{
+		reverse_token_list(&a->token_list);
+		add_to_op_list(&a->op_list, a->token_list);
+		a->token_list = NULL;
+	}
+	a->row++;
+	a->col = 0;
+	return (1);
+}
+
+int		id_zero(t_asm *a)
+{
+	if (a)
+		;
+	return (0);
+}

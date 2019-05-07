@@ -1,7 +1,7 @@
 #include "asm.h"
 #define ABS(n) (n) < 0 ? ((n) * -1) : (n)
 
-int 	check_condition(t_asm *a)
+static int 	check_condition(t_asm *a)
 {
 	int		condition;
 
@@ -11,13 +11,24 @@ int 	check_condition(t_asm *a)
 	return (condition);
 }
 
-void	first_state_init(t_asm *a, t_fsm *fsm)
+static void	first_state_init(t_asm *a, t_fsm *fsm)
 {
 	if (fsm->state == 1)
 	{
 		fsm->start = fsm->curr;
 		fsm->st_col = a->col;
 		fsm->st_row = a->row;
+	}
+}
+
+static void	check_errors(t_asm *a)
+{
+	if (a->fsm->state == 0)
+		a->errors[0](a);
+	else if (a->fsm->state < -100)
+	{
+		a->fsm->state += 100;
+		a->errors[ABS(a->fsm->state)](a);
 	}
 }
 
@@ -34,6 +45,7 @@ void	finite_state_machine(t_asm *a, t_fsm *fsm)
 		fsm->state = fsm->table[fsm->state - 1][cond];
 		if (fsm->state <= 0)
 		{
+			check_errors(a);
 			id_ret = a->id_state[ABS(fsm->state)](a);
 			fsm->curr += id_ret;
 			a->col += id_ret;
@@ -41,12 +53,10 @@ void	finite_state_machine(t_asm *a, t_fsm *fsm)
 		}
 		if (*fsm->curr == '\n')
 		{
-			a->col = 1;
+			a->col = 0;
 			a->row++;
 		}
 		fsm->curr++;
 		a->col++;
-		if (*fsm->curr == '\0')
-			break ;
 	}
 }

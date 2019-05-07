@@ -6,46 +6,14 @@
 /*   By: npiatiko <npiatiko@student.unit.ua>          +#+  +:+       +#+      */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 14:37:25 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/04/26 18:31:35 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/05/07 11:55:54 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
 
-void	ft_exit(char *stre, int e)
-{
-	ft_printf("Error: %s\n", stre);
-	exit(e);
-}
 
-int		ft_toklistlen(t_token_list *toklst)
-{
-	int i;
-
-	i = 0;
-	toklst->ident == LABEL ? toklst = toklst->next : 0;
-	while (toklst)
-	{
-		i++;
-		toklst = toklst->next;
-	}
-	return i;
-}
-
-int		ft_oplistlen(t_op_list *oplist)
-{
-	int i;
-
-	i = 0;
-	while (oplist)
-	{
-		i++;
-		oplist = oplist->next;
-	}
-	return (i);
-}
-
-t_op	*ft_checkname(t_token_list *toklst)
+t_op	*ft_getfuncname(t_token_list *toklst)
 {
 	int i;
 	t_op *op;
@@ -56,36 +24,37 @@ t_op	*ft_checkname(t_token_list *toklst)
 	if (toklst && toklst->ident == INSTRUCTION)
 		while (++i < 16)
 			ft_strequ(toklst->data, g_op_tab[i].name) ? op = &g_op_tab[i] : 0;
+	if (!op)
+		ft_errhandler(toklst);
 	return (op);
-}
-
-int		ft_typearg(t_identifier ident)
-{
-	if (ident == REGISTER)
-		return (T_REG);
-	else if (ident == INDIRECT || ident == INDIRECT_LABEL)
-		return (T_IND);
-	else if (ident == DIRECT || ident == DIRECT_LABEL)
-		return (T_DIR);
-	return (0);
 }
 
 void 	ft_chekargs(t_token_list *toklst, t_op *op)
 {
-	int i;
-	int argnum;
+	int				i;
+	int				argnum;
+	t_token_list	*tmp;
 
 	i = 1;
 	argnum = 0;
 	toklst->ident == LABEL ? toklst = toklst->next : 0;
 	while (toklst)
 	{
+		if (i > op->args * 2)
+			ft_errhandler(toklst);
 		if (i > 1 && (i % 2) && toklst->ident != SEPARATOR)
-			ft_exit("Error format of arguments.", 6);
-		else if (i > 1 && !(i % 2) && !(ft_typearg(toklst->ident) & op->targs[argnum++]))
-			ft_exit("Wrong type of argument.", 9);
+			ft_errhandler(toklst);
+		else if (i > 1 && !(i % 2) && !(ft_gettypearg(toklst->ident) & op->targs[argnum++]))
+			ft_errhandler(toklst);
+		tmp = toklst;
 		toklst = toklst->next;
 		i++;
+	}
+	if (i <= op->args * 2)
+	{
+		ft_printf("Syntax error at token [TOKEN][%03d:%03d] %s\n",
+				  tmp->row, tmp->col + 1, "ENDLINE");
+		ft_exit("Argument not found.", 16);
 	}
 }
 
@@ -96,18 +65,26 @@ void	ft_copystring(char *dst, t_token_list *src)
 		if (src->next->ident == STRING)
 		{
 			if (ft_strlen(src->next->data) <= (src->ident == NAME ?
-			PROG_NAME_LENGTH : COMMENT_LENGTH))
-			{
+											PROG_NAME_LENGTH : COMMENT_LENGTH))
 				ft_memcpy(dst, src->next->data, ft_strlen(src->next->data));
-			}
 			else
+			{
+				ft_printf("Syntax error at token [TOKEN][%03d:%03d] %s\n",
+						  src->next->row, src->next->col, g_ident_str[src->next->ident]);
 				ft_exit("String to long.", 16);
+			}
 		}
 		else
-			ft_exit("String not found.", 17);
+			ft_errhandler(src->next);
 	}
+	else if (ft_toklistlen(src) > 2)
+		ft_errhandler(src->next->next);
 	else
-		ft_exit("Wrong format of file.", 18);
+	{
+		ft_printf("Syntax error at token [TOKEN][%03d:%03d] %s\n",
+				  src->row, src->col + 1, "ENDLINE");
+		ft_exit("String not found.", 16);
+	}
 }
 
 void	ft_checkheader(t_op_list **oplist, t_header *header)
@@ -119,7 +96,7 @@ void	ft_checkheader(t_op_list **oplist, t_header *header)
 			ft_copystring(header->comment, (*oplist)->next->token_list);
 		}
 		else
-			ft_exit(".comment not found", 14);
+			ft_errhandler((*oplist)->next->token_list);
 	else if  ((*oplist)->next->token_list->ident == NAME)
 		if ((*oplist)->token_list->ident == COMMENT)
 		{
@@ -127,26 +104,30 @@ void	ft_checkheader(t_op_list **oplist, t_header *header)
 			ft_copystring(header->prog_name, (*oplist)->next->token_list);
 		}
 		else
-			ft_exit(".comment not found", 14);
+			ft_errhandler((*oplist)->token_list);
 	else
-		ft_exit(".name not found", 15);
+		ft_errhandler((*oplist)->next->token_list);
 	*oplist = (*oplist)->next->next;
 }
 
-void	ft_validation(t_op_list *oplist, t_header *header)
+t_header *ft_validation(t_op_list *oplist)
 {
-	t_op *op;
+	t_op		*op;
+	t_header	*header;
+	t_op_list	*tmp;
 
-	ft_oplistlen(oplist) > 2 ? 0 : ft_exit("File to short.", 13);
+	tmp = oplist;
+	header = ft_memalloc(sizeof(t_header));
+	ft_oplistlen(oplist) >= 2 ? 0 : ft_exit("File to short.", 13);
 	ft_checkheader(&oplist, header);
 	header->magic = COREWAR_EXEC_MAGIC;
 	while (oplist)
 	{
-		if (!(op = ft_checkname(oplist->token_list)))
-			ft_exit("Unknown instruction", 8);
-		if (ft_toklistlen(oplist->token_list) != op->args * 2)
-			ft_exit("Error number of arguments.", 7);
+		op = ft_getfuncname(oplist->token_list);
 		ft_chekargs(oplist->token_list, op);
 		oplist = oplist->next;
 	}
+	header->prog_size = ft_getprogsize(tmp);
+	ft_replacelable(tmp);
+	return (header);
 }

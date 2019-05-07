@@ -6,7 +6,7 @@
 /*   By: npiatiko <npiatiko@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 12:19:23 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/05/03 12:28:24 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/05/07 12:13:46 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,9 @@ typedef struct  s_asm
 	struct s_fsm		*fsm;
     struct s_op_list	*op_list;
     struct s_token_list	*token_list;
-    int 				(*lex_condition[13])(char *c);
-	int 				(*id_state[13])(struct s_asm *a);
+    int 				(*lex_condition[15])(char *c);
+	int 				(*id_state[15])(struct s_asm *a);
+	void				(*errors[4])(struct s_asm *a);
 }               t_asm;
 
 typedef struct	s_fsm
@@ -63,13 +64,6 @@ typedef struct	s_token_list
 	int					row;				//Номер рядка
 	struct s_token_list	*next;
 }				t_token_list;
- 
-typedef struct  s_label_list
-{
-    char                *name;
-    struct s_op_list    *op;
-    struct s_label_list *next;
-}               t_label_list;
 
 // COMMENT - NULL
 // NAME	- NULL
@@ -127,11 +121,20 @@ static t_op		g_op_tab[17] =
 	{"aff", 1, {T_REG}, 16, 2, "aff", 1, DIR_SIZE},
 	{0, 0, {0}, 0, 0, 0, 0, 0}
 };
-void	ft_validation(t_op_list *oplist, t_header *header);
-void	ft_exit(char *stre, int e);
-int ft_calcprogsize(t_op_list *oplist);
-t_op	*ft_checkname(t_token_list *toklst);
-void	ft_replacelable(t_op_list *oplist);
-int		ft_searchlable(t_op_list *oplist, char *data);
-int		ft_typearg(t_identifier ident);
+
+t_header	*ft_validation(t_op_list *oplist);
+void		ft_exit(char *stre, int e);
+int			ft_getprogsize(t_op_list *oplist);
+t_op		*ft_getfuncname(t_token_list *toklst);
+void		ft_replacelable(t_op_list *oplist);
+int			ft_searchlable(t_op_list *oplist, char *data);
+int			ft_gettypearg(t_identifier ident);
+void		ft_errhandler(t_token_list *toklst);
+int			ft_toklistlen(t_token_list *toklst);
+int			ft_oplistlen(t_op_list *oplist);
+char		*ft_getfilename(int ac, char **av);
+char		*ft_getoutputfilename(char *filename);
+void		ft_asmtobcode(int fd, t_op_list *oplist);
+void		ft_writehead(int fd, t_header *header);
+void		ft_free(t_op_list *oplist, char *filename);
 #endif

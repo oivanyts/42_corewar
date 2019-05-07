@@ -12,7 +12,7 @@ static void	create_table(int fd, t_fsm *fsm)
 	while (ft_isdigit(*tmp))
 		tmp++;
 	fsm->tab_col = ft_atoi(tmp);
-//	free(line);
+	free(line);
 	fsm->table = (int**)malloc(sizeof(int**) * fsm->tab_row);
 	i = 0;
 	while (i < fsm->tab_row)
@@ -30,6 +30,16 @@ static void	del_2d_maschar(char **mas)
 	free(mas);
 }
 
+void	del_2d_masint(int **mas, t_fsm *fsm)
+{
+	int		i;
+
+	i = 0;
+	while (i < fsm->tab_row)
+		free(mas[i++]);
+	free(mas);
+}
+
 static void	fill_table(int fd, t_fsm *fsm)
 {
 	int		col;
@@ -42,7 +52,7 @@ static void	fill_table(int fd, t_fsm *fsm)
 	{
 		col = 0;
 		get_next_line(fd, &line);
-		tmp = ft_strsplit(line, ' ');
+		tmp = ft_strsplit(line, '\t');
 		free(line);
 		while (col < fsm->tab_col)
 		{
