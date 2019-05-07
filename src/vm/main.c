@@ -54,6 +54,7 @@ void init_carridge(t_player *player, uint8_t i, uint8_t *memory, int gap)
 	ft_bzero(&tmp, sizeof(t_thread));
 	tmp.id = i;
 	tmp.alive = 1;
+	tmp.op.opcode = -1;
 	player->number = i;
 	tmp.vm_memory = memory;
 	tmp.ip = (uint32_t)(gap * i);

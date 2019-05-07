@@ -19,6 +19,7 @@
 
 typedef enum e_opcode
 {
+	no_op = -1,
 	oplowborder = 0,
 	oplive = 0,
 	opld,
@@ -51,6 +52,12 @@ typedef struct	s_op
 	bool		tdir_size;
 }				t_op;
 
+typedef struct s_decoded_op
+{
+	t_opcode opcode;
+	t_memory args[3];
+} t_decoded_op;
+
 typedef struct s_thread
 {
 	uint32_t ip;		//код операции, на которой стоит каретка
@@ -61,6 +68,7 @@ typedef struct s_thread
 	uint32_t lives;		//
 	bool alive;			//
 	uint16_t wait;		//
+	t_decoded_op op;	//
 } t_thread;
 
 typedef struct s_opcall

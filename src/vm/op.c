@@ -255,18 +255,21 @@ t_decoded_op	op_decode(struct s_thread *pc)
 
 void	op_exec(struct s_thread *pc)
 {
-	t_decoded_op op;
-
+	if (pc->op.opcode == no_op)
+	{
+		pc->op = op_decode(pc);
+		pc->wait = op_tab[pc->op.opcode].cycle;
+	}
 	if (pc->wait)
 	{
 		return ;
 	}
-	op = op_decode(pc);
 	if (pc->alive == 0)
 	{
 		return ;
 	}
-	opcalls[op.opcode].opfunc(pc, &op.args[0], &op.args[1], &op.args[2]);
+	opcalls[pc->op.opcode].opfunc(pc, &pc->op.args[0], &pc->op.args[1], &pc->op.args[2]);
+	pc->op.opcode = no_op;
 }
 
 t_vm *get_vm(t_vm *vm)

@@ -38,12 +38,6 @@ typedef struct s_player
 	uint32_t number;
 } t_player;
 
-typedef struct s_decoded_op
-{
-	t_opcode opcode;
-	t_memory args[3];
-} t_decoded_op;
-
 t_vm *get_vm(t_vm *vm);
 
 bool load_from_file(char *filename, t_player *player, uint8_t memory[]);
