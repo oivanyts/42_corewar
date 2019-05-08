@@ -59,27 +59,39 @@ void f_and(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 void f_or(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-	(void)sp;(void)p1;(void)p2;(void)p3;
+	memory_or(p3, p1, p2);
+	sp->cf = memory_iszero(p3);
 }
 
 void f_xor(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-	(void)sp;(void)p1;(void)p2;(void)p3;
+	memory_xor(p3, p1, p2);
+	sp->cf = memory_iszero(p3);
 }
 
 void f_zjmp(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-	(void)sp;(void)p1;(void)p2;(void)p3;
+	(void)p1;(void)p2;(void)p3;
+	if (sp->cf)
+		sp->ip = memory_tou32(p1) % IDX_MOD;
 }
 
 void f_ldi(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-	(void)sp;(void)p1;(void)p2;(void)p3;
+	t_memory ldi;
+	uint16_t position;
+
+	position = (sp->ip + memory_tou32(p1) + memory_tou32(p2)) % IDX_MOD;
+	memory_init(&ldi, &sp->vm_memory[position], 4);
+	memory_memmove(&ldi, p3);
 }
 
 void f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
 	(void)sp;(void)p1;(void)p2;(void)p3;
+//	uint16_t position;
+//
+//	position = (sp->ip + memory_tou32(p2) + memory_tou32(p3)) % IDX_MOD;
 }
 
 void f_fork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
@@ -104,5 +116,7 @@ void f_lfork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 void f_aff(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-	(void)sp;(void)p1;(void)p2;(void)p3;
+	p1;
+	(void)p2;(void)p3;
+
 }

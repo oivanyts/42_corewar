@@ -26,7 +26,7 @@ void poor_mans_visualization(uint8_t *bytecode, t_player *players, int num_playe
 		{
 			ft_printf("\n");
 		}
-		if (i == ((t_thread *)players[i / player_gap].threads.arr.arr)->id)
+		if (i == ((t_thread *)players[i / player_gap].threads.arr.arr)->ip)
 		{
 			ft_printf("\033[48;05;%dm", color[i / player_gap] + 10);
 		}
