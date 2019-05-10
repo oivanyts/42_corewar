@@ -27,7 +27,7 @@ uint32_t player_threads_alive(t_player *player)
 	thread = 0;
 	while (thread < threads_size(&player->threads))
 	{
-		if (threads_pat(&player->threads, thread)->alive)
+		if (threads_at(&player->threads, thread)->alive)
 		{
 			++alive;
 		}
@@ -74,7 +74,7 @@ void    foreach_thread(t_player *players, uint32_t nplayers, void(*func)(t_threa
 		player_thread = 0;
 		while (player_thread < threads_size(&players[player].threads))
 		{
-			func(threads_pat(&players[player].threads, player_thread));
+			func(threads_at(&players[player].threads, player_thread));
 			++player_thread;
 		}
 		++player;
@@ -222,10 +222,10 @@ t_memory decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t pa
 		}
 		else if (tparam == T_IND)
 		{
-			//shrink IND address
+			//shrink by IDX_MOD?
 			//param = (uint32_t*)&as_byte(pc->vm_memory)[pc->ip + *(int16_t*)&pc->vm_memory[pc->ip]];
-			memory_init(&param, &as_byte(pc->vm_memory)[pc->ip + *(int16_t*)&pc->vm_memory[pc->ip]], 2); //not exactly
-			pc->ip += 2;
+			memory_init(&param, &as_byte(pc->vm_memory)[(pc->ip + *(int16_t*)&pc->vm_memory[pc->ip]) % MEM_SIZE], IND_SIZE); //not exactly
+			pc->ip += IND_SIZE;
 		}
 		else
 		{

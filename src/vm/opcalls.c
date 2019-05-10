@@ -31,12 +31,16 @@ void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 void f_ld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-	(void)sp;(void)p1;(void)p2;(void)p3;
+    (void)p3;
+	memory_memmove(p2, p1);
+    sp->cf = memory_iszero(p2);
 }
 
 void f_st(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-	(void)sp;(void)p1;(void)p2;(void)p3;
+    (void)sp;
+    (void)p3;
+    memory_memmove(p2, p1);
 }
 
 void f_add(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
@@ -71,52 +75,91 @@ void f_xor(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 void f_zjmp(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-	(void)p1;(void)p2;(void)p3;
+	(void)p2;
+	(void)p3;
 	if (sp->cf)
 		sp->ip = memory_tou32(p1) % IDX_MOD;
 }
 
 void f_ldi(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-	t_memory ldi;
-	uint16_t position;
+    t_memory mem;
 
-	position = (sp->ip + memory_tou32(p1) + memory_tou32(p2)) % IDX_MOD;
-	memory_init(&ldi, &sp->vm_memory[position], 4);
-	memory_memmove(&ldi, p3);
+    memory_init(&mem, &sp->vm_memory[(sp->ip + memory_tou32(p1) + memory_tou32(p2)) % IDX_MOD], 4); //not exactly 4
+	memory_memmove(p3, &mem);
 }
 
 void f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-	(void)sp;(void)p1;(void)p2;(void)p3;
-//	uint16_t position;
-//
-//	position = (sp->ip + memory_tou32(p2) + memory_tou32(p3)) % IDX_MOD;
+    t_memory mem;
+
+    memory_init(&mem, &sp->vm_memory[(sp->ip + memory_tou32(p2) + memory_tou32(p3)) % IDX_MOD], 4); //not exactly 4
+    memory_memmove(&mem, p1);
 }
 
 void f_fork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-	(void)sp;(void)p1;(void)p2;(void)p3;
+    t_player *player;
+    t_thread	tmp;
+
+    (void)p2;
+    (void)p3;
+    player = sp->player;
+    ft_bzero(&tmp, sizeof(t_thread));
+    tmp.player = sp->player;
+    tmp.id = threads_back(&player->threads)->id + 1;
+    tmp.alive = 1;
+    tmp.op.opcode = -1;
+    //player->number = i;
+    tmp.vm_memory = sp->vm_memory;
+    tmp.ip = (uint8_t*)p1->memory - sp->vm_memory;
+    tmp.reg[0] = (uint32_t) - (threads_back(&player->threads)->id + 1);
+    threads_init(&player->threads);
+    if (!array_push_back(&player->threads.arr, &tmp))
+        handle_error(error_array_add);
 }
 
-void f_lld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
+void f_lld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3) //not sure if working
 {
-	(void)sp;(void)p1;(void)p2;(void)p3;
+    (void)p3;
+    memory_memmove(p2, p1);
+    sp->cf = memory_iszero(p2);
 }
 
 void f_lldi(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-	(void)sp;(void)p1;(void)p2;(void)p3;
+    t_memory mem;
+
+    memory_init(&mem, &sp->vm_memory[(sp->ip + memory_tou32(p1) + memory_tou32(p2))], 4); //not exactly 4
+    memory_memmove(p3, &mem);
 }
 
 void f_lfork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-	(void)sp;(void)p1;(void)p2;(void)p3;
+    t_player *player;
+    t_thread	tmp;
+
+    (void)p2;
+    (void)p3;
+    player = sp->player;
+    ft_bzero(&tmp, sizeof(t_thread));
+    tmp.player = sp->player;
+    tmp.id = threads_back(&player->threads)->id + 1;
+    tmp.alive = 1;
+    tmp.op.opcode = -1;
+    //player->number = i;
+    tmp.vm_memory = sp->vm_memory;
+    tmp.ip = (uint8_t*)p1->memory - sp->vm_memory;
+    tmp.reg[0] = (uint32_t) - (threads_back(&player->threads)->id + 1);
+    threads_init(&player->threads);
+    if (!array_push_back(&player->threads.arr, &tmp))
+        handle_error(error_array_add);
 }
 
 void f_aff(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-	p1;
-	(void)p2;(void)p3;
-
+    (void)sp;
+    (void)p2;
+    (void)p3;
+    ft_printf("%c", p1->memory);
 }

@@ -59,3 +59,21 @@ bool load_from_file(char *filename, t_player *player, uint8_t memory[])
 //	ft_printf("NAME [%s]\nSIZE [%d]\nCOMMENT [%s]\n\n", player->header.prog_name, player->header.prog_size, player->header.comment);
 	return (true);
 }
+
+void init_carridge(t_player *player, uint8_t i, uint8_t *memory, int gap)
+{
+    t_thread	tmp;
+
+    ft_bzero(&tmp, sizeof(t_thread));
+    tmp.player = player;
+    tmp.id = i;
+    tmp.alive = 1;
+    tmp.op.opcode = -1;
+    player->number = i;
+    tmp.vm_memory = memory;
+    tmp.ip = (uint32_t)(gap * i);
+    tmp.reg[0] = (uint32_t)-i;
+    threads_init(&player->threads);
+    if (!array_push_back(&player->threads.arr, &tmp))
+        handle_error(error_array_add);
+}

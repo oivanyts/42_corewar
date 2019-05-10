@@ -60,15 +60,16 @@ typedef struct s_decoded_op
 
 typedef struct s_thread
 {
+    void *player;       //указатель на игрока, который породил каретку
 	uint32_t ip;		//код операции, на которой стоит каретка
 	bool cf;			//Флаг, который могут изменять некоторые операции
 	uint32_t id;		//номер каретки
 	uint32_t reg[16];	//регистры, количество которых задано в константе
-	uint8_t  *vm_memory;//
-	uint32_t lives;		//
-	bool alive;			//
-	uint16_t wait;		//
-	t_decoded_op op;	//
+	uint8_t  *vm_memory;//указатель на оперативную память
+	uint32_t lives;		//сколько раз поток сообщил о том, что жив
+	bool alive;			//определяет, жив ли поток
+	uint16_t wait;		//сколько еще ждать до выполнения операции
+	t_decoded_op op;	//содержит информацию об операции, которая ожидает выполнения
 } t_thread;
 
 typedef struct s_opcall

@@ -47,23 +47,6 @@ void alloc_carridge(void *dst, const void *src)
 	ft_memcpy(dst, src, sizeof(t_thread));
 }
 
-void init_carridge(t_player *player, uint8_t i, uint8_t *memory, int gap)
-{
-	t_thread	tmp;
-
-	ft_bzero(&tmp, sizeof(t_thread));
-	tmp.id = i;
-	tmp.alive = 1;
-	tmp.op.opcode = -1;
-	player->number = i;
-	tmp.vm_memory = memory;
-	tmp.ip = (uint32_t)(gap * i);
-	tmp.reg[0] = (uint32_t)-i;
-	threads_init(&player->threads);
-	if (!array_push_back(&player->threads.arr, &tmp))
-		handle_error(error_array_add);
-}
-
 uint8_t parce_all_players(int num_players, char **filename, t_player *player, uint8_t *memory)
 {
 	uint8_t		i;
