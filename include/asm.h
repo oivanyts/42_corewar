@@ -19,7 +19,7 @@ typedef enum	e_identifier
 {
 	COMMENT, NAME, LABEL, INSTRUCTION,
 	REGISTER, INDIRECT, DIRECT, DIRECT_LABEL,
-	INDIRECT_LABEL, SEPARATOR, STRING
+	INDIRECT_LABEL, SEPARATOR, STRING, ENDLINE, END
 }				t_identifier;
 
 typedef struct  s_asm
@@ -90,7 +90,7 @@ static char 	*g_ident_str[] =
 {
 	"COMMENT", "NAME", "LABEL", "INSTRUCTION",
 	"REGISTER", "INDIRECT", "DIRECT", "DIRECT_LABEL",
-	"INDIRECT_LABEL", "SEPARATOR", "STRING"
+	"INDIRECT_LABEL", "SEPARATOR", "STRING", "ENDLINE", "END"
 };
 static t_op		g_op_tab[17] =
 {

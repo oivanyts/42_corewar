@@ -12,7 +12,7 @@ static int	get_file_len(fd)
 	return (len);
 }
 
-char		*read_text_from(char *name) //Don't check '\n' at EOF
+char		*read_text_from(char *name)
 {
 	int 	fd;
 	char	*text;

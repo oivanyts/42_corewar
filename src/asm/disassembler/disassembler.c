@@ -27,5 +27,7 @@ void		disassembler(char *name)
 	print_header(&dasm);
 	while (dasm.curr < dasm.len)
 		do_operation(&dasm, &dasm.bin[dasm.curr]);
+	free(dasm.file_name);
+	free(dasm.bin);
 	close(dasm.fd);
 }

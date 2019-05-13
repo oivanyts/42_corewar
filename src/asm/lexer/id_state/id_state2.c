@@ -31,6 +31,7 @@ int		id_endline(t_asm *a)
 {
 	if (a->token_list != NULL)
 	{
+		add_to_token_list(&a->token_list, ENDLINE, NULL, a);
 		reverse_token_list(&a->token_list);
 		add_to_op_list(&a->op_list, a->token_list);
 		a->token_list = NULL;

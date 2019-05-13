@@ -3,14 +3,6 @@
 #include "id_states.h"
 #include "lexer.h"
 
-static void	check_errors(t_asm *a)
-{
-	if (a->token_list != NULL)
-		a->errors[1](a);
-	if (a->op_list == NULL)
-		a->errors[3](a);
-}
-
 void		lexer(t_asm *a)
 {
 	t_fsm			*fsm;
@@ -19,7 +11,10 @@ void		lexer(t_asm *a)
 	fsm->curr = fsm->code;
 	while (*fsm->curr != '\0')
 		finite_state_machine(a, fsm);
-	check_errors(a);
+	add_to_token_list(&a->token_list, END, NULL, a);
+	reverse_token_list(&a->token_list);
+	add_to_op_list(&a->op_list, a->token_list);
+	a->token_list = NULL;
 	reverse_op_list(&a->op_list);
 }
 

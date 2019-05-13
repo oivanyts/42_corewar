@@ -28,9 +28,9 @@ void	disassembler(char *name);
 void	read_binaryy(char *name, t_dasm *dasm);
 void	set_header(t_dasm *dasm);
 
-int			get_int_from_pointer(void *p);
-int			get_short_from_pointer(void *p);
-int			get_char_from_pointer(void *p);
+int		get_int_from_pointer(void *p);
+int		get_short_from_pointer(void *p);
+int		get_char_from_pointer(void *p);
 
 void	set_type_arg(t_arg_type *targs, t_byte *bin);
 void	do_operation(t_dasm *dasm, t_byte *bin);
