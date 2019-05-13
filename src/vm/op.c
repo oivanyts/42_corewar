@@ -205,7 +205,7 @@ t_memory decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t pa
 				return (param);
 			}
 			pc->ip += 1;
-			memory_init(&param, &pc->reg[reg_number], REG_SIZE);
+			memory_init(&param, &pc->reg[reg_number - 1], REG_SIZE);
 		}
 		else if (tparam == T_DIR)
 		{
@@ -262,6 +262,7 @@ void	op_exec(struct s_thread *pc)
 	}
 	if (pc->wait)
 	{
+	    pc->wait -= 1;
 		return ;
 	}
 	if (pc->alive == 0)
