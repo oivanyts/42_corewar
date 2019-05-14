@@ -58,6 +58,7 @@ typedef struct s_decoded_op
 	uint8_t tparams;
 	t_opcode opcode;
 	t_memory args[3];
+	bool valid;
 } t_decoded_op;
 
 typedef struct s_thread
@@ -72,6 +73,7 @@ typedef struct s_thread
 	bool alive;			//определяет, жив ли поток
 	uint16_t wait;		//сколько еще ждать до выполнения операции
 	t_decoded_op op;	//содержит информацию об операции, которая ожидает выполнения
+	bool processing;	//
 } t_thread;
 
 typedef struct s_opcall

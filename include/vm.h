@@ -50,9 +50,9 @@ uint8_t decode_tparams(struct s_thread *pc, t_opcode opcode);
 
 t_memory decode_param(t_decoded_op op, t_thread *pc, uint8_t param_number);
 
-t_decoded_op	op_decode(struct s_thread *pc);
+void	op_decode(t_thread *pc);
 
-void	op_exec(struct s_thread *pc);
+void	op_exec(t_thread *pc);
 
 uint32_t threads_alive(t_player *players, uint32_t nplayers);
 t_op    op_tab[17];

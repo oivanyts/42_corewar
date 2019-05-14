@@ -81,7 +81,7 @@ int		main(int argc, char *argv[])
 	//poor_mans_visualization(memory, &players[0], argc - 1);
 	vm.last_alive = 3;
 	vm_cycle(&players[0], (uint32_t)(argc - 1));
-	//poor_mans_visualization(memory, &players[0], argc - 1);
+	poor_mans_visualization(memory, &players[0], argc - 1);
 	printf("Last player alive: %u\n", vm.last_alive);
 	return 0;
 }

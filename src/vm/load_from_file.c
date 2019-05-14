@@ -68,7 +68,7 @@ void init_carridge(t_player *player, uint8_t i, uint8_t *memory, int gap)
     tmp.player = player;
     tmp.id = i;
     tmp.alive = 1;
-    tmp.op.opcode = -1;
+    tmp.processing = 0;
     player->number = i;
     tmp.vm_memory = memory;
     tmp.ip = (uint32_t)(gap * i);

@@ -84,11 +84,13 @@ void    foreach_thread(t_player *players, uint32_t nplayers, void(*func)(t_threa
 void	vm_cycle(t_player *players, uint32_t nplayers)
 {
 	uint32_t cycles;
+	uint32_t global_cycles;
 	uint32_t cycles_to_die;
 	uint32_t checks;
 	uint32_t alive;
 
 	cycles = 0;
+	global_cycles = 0;
 	cycles_to_die = CYCLE_TO_DIE;
 	checks = 0;
 	while ((alive = threads_alive(players, nplayers)))
@@ -101,12 +103,20 @@ void	vm_cycle(t_player *players, uint32_t nplayers)
 		++checks;
 		foreach_thread(players, nplayers, op_exec);
 		++cycles;
+		++global_cycles;
+
+		if (global_cycles == 10)
+		{
+			return;
+		}
+
 		if (cycles == cycles_to_die)
         {
 			foreach_thread(players, nplayers, kill_thread_if_no_lives);
 		    cycles = 0;
         }
 		//poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, players, nplayers);
+		//ft_printf("\ncycle = %u ended\n", global_cycles);
 	}
 }
 
@@ -115,11 +125,6 @@ t_opcode decode_opcode(struct s_thread *pc)
 	t_opcode opcode;
 
 	opcode = as_byte(pc->vm_memory)[pc->ip % MEM_SIZE];
-	if (opcode < oplowborder || opcode >= ophighborder)
-	{
-		pc->alive = 0;
-		return (opcode);
-	}
 	pc->ip += 1;
 	return (opcode);
 }
@@ -153,8 +158,7 @@ uint8_t	decode_tparams(struct s_thread *pc, t_opcode opcode)
 		tparams = as_byte(pc->vm_memory)[pc->ip % MEM_SIZE];
 		if (!check_op_params(opcode, tparams))
 		{
-			pc->alive = 0;
-			return (tparams);
+			pc->op.valid = 0;
 		}
 		pc->ip += 1;
 	}
@@ -202,8 +206,7 @@ t_memory decode_param(t_decoded_op op, t_thread *pc, uint8_t param_number)
 			reg_number = as_byte(pc->vm_memory)[pc->ip];
 			if (reg_number >= REG_NUMBER)
 			{
-				pc->alive = 0;
-				return (param);
+				pc->op.valid = 0;
 			}
 			pc->ip += 1;
 			memory_init(&param, &pc->reg[reg_number - 1], REG_SIZE);
@@ -212,12 +215,12 @@ t_memory decode_param(t_decoded_op op, t_thread *pc, uint8_t param_number)
 		{
 			if (op_tab[op.opcode].tdir_size == 0)
 			{
-				memory_init(&param,  &pc->vm_memory[swap32((uint32_t*)&pc->vm_memory[pc->ip])], DIR_SIZE);
+				memory_init(&param,  &pc->vm_memory[swap32((uint32_t*)&pc->vm_memory[pc->ip]) % MEM_SIZE], DIR_SIZE);
 				pc->ip += DIR_SIZE;
 			}
 			else
 			{
-				memory_init(&param,  &pc->vm_memory[swap16((uint16_t*)&pc->vm_memory[pc->ip])], DIR_SIZE); //IND_SIZE?
+				memory_init(&param,  &pc->vm_memory[swap16((uint16_t*)&pc->vm_memory[pc->ip]) % MEM_SIZE], DIR_SIZE); //IND_SIZE?
 				pc->ip += IND_SIZE;
 			}
 		}
@@ -230,37 +233,42 @@ t_memory decode_param(t_decoded_op op, t_thread *pc, uint8_t param_number)
 		}
 		else
 		{
-			pc->alive = 0;
-			return (param);
+			pc->op.valid = 0;
 		}
 	}
 	return (param);
 }
 
-t_decoded_op	op_decode(struct s_thread *pc)
+void	op_decode(t_thread *pc)
 {
-	t_decoded_op op;
-
-	op.ip = pc->ip;
-	op.opcode = decode_opcode(pc) - 1;
-	if (pc->alive == 0)
+	if (pc->op.valid)
 	{
-		return (op);
+		return ;
 	}
-	op.tparams = decode_tparams(pc, op.opcode);
-	op.args[0] = decode_param(op, pc, 1);
-	op.args[1] = decode_param(op, pc, 2);
-	op.args[2] = decode_param(op, pc, 3);
-	return (op);
+	pc->op.tparams = decode_tparams(pc, pc->op.opcode);
+	pc->op.args[0] = decode_param(pc->op, pc, 1);
+	pc->op.args[1] = decode_param(pc->op, pc, 2);
+	pc->op.args[2] = decode_param(pc->op, pc, 3);
 }
 
-void	op_exec(struct s_thread *pc)
+void	op_exec(t_thread *pc)
 {
-	if (pc->op.opcode == no_op)
+	if (pc->processing == 0)
 	{
 		poor_mans_visualization(pc->vm_memory, pc->player, 1);
-		pc->op = op_decode(pc);
-		pc->wait = op_tab[pc->op.opcode].cycle;
+		pc->op.valid = 1;
+		pc->op.ip = pc->ip;
+		pc->op.opcode = decode_opcode(pc) - 1;
+		if (pc->op.opcode <= oplowborder || pc->op.opcode >= ophighborder)
+		{
+			pc->op.valid = 0;
+			pc->wait = 1;
+		}
+		else
+		{
+			pc->wait = op_tab[pc->op.opcode].cycle;
+		}
+		pc->processing = 1;
 	}
 	if (pc->wait)
 	{
@@ -271,8 +279,12 @@ void	op_exec(struct s_thread *pc)
 	{
 		return ;
 	}
-	opcalls[pc->op.opcode].opfunc(pc, &pc->op.args[0], &pc->op.args[1], &pc->op.args[2]);
-	pc->op.opcode = no_op;
+	op_decode(pc);
+	if (pc->op.valid)
+	{
+		opcalls[pc->op.opcode].opfunc(pc, &pc->op.args[0], &pc->op.args[1], &pc->op.args[2]);
+	}
+	pc->processing = 0;
 }
 
 t_vm *get_vm(t_vm *vm)
