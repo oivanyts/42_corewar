@@ -2,7 +2,7 @@
 
 void	err_lex(t_asm *a)
 {
-	ft_printf("Lexical error at [%i:%i]", a->fsm->st_row, a->fsm->st_col);
+	ft_printf("Lexical error at [%i:%i]\n", a->fsm->st_row, a->fsm->st_col);
 	exit(1);
 }
 

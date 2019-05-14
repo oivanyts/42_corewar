@@ -6,7 +6,7 @@
 /*   By: npiatiko <npiatiko@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 11:47:27 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/05/13 15:26:19 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/05/14 14:43:25 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int		main(int argc, char **argv)
 	ft_writehead(fd, header);
 	ft_asmtobcode(fd, oplist);
 	close(fd);
+	ft_printf("Writing output program to %s\n", filename);
 	ft_free(oplist, filename);
 	system("leaks -q asm");
 	return (0);
