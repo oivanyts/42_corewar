@@ -58,4 +58,5 @@ uint32_t threads_alive(t_player *players, uint32_t nplayers);
 t_op    op_tab[17];
 
 void init_carridge(t_player *player, uint8_t i, uint8_t *memory, int gap);
+void poor_mans_visualization(uint8_t *bytecode, t_player *players, int num_players);
 #endif

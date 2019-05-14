@@ -106,6 +106,7 @@ void	vm_cycle(t_player *players, uint32_t nplayers)
 			foreach_thread(players, nplayers, kill_thread_if_no_lives);
 		    cycles = 0;
         }
+		poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, players, nplayers);
 	}
 }
 
