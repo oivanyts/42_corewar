@@ -6,7 +6,7 @@
 /*   By: npiatiko <npiatiko@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/07 15:16:43 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/05/07 15:17:51 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/05/14 11:49:45 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int		ft_toklistlen(t_token_list *toklst)
 
 	i = 0;
 	toklst->ident == LABEL ? toklst = toklst->next : 0;
-	while (toklst)
+	while (toklst->ident != ENDLINE)
 	{
 		i++;
 		toklst = toklst->next;
@@ -48,11 +48,14 @@ int		ft_oplistlen(t_op_list *oplist)
 	int i;
 
 	i = 0;
-	while (oplist)
+	while (oplist->next)
 	{
 		i++;
 		oplist = oplist->next;
 	}
+	if (oplist->token_list->ident != END)
+		ft_exit("Syntax error - unexpected end of input "
+		"(Perhaps you forgot to end with a newline ?)\n", 78);
 	return (i);
 }
 

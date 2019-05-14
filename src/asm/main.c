@@ -12,6 +12,7 @@
 
 #include "asm.h"
 #include "lexer.h"
+#include "disassembler.h"
 
 int		main(int argc, char **argv)
 {
@@ -20,6 +21,8 @@ int		main(int argc, char **argv)
 	t_header	*header;
 	char		*filename;
 
+	if (argc == 3 && ft_strequ("-d", argv[1]))
+		disassembler(argv[2]);
 	filename = ft_getfilename(argc, argv);
 	oplist = get_op_list(filename);
 	header = ft_validation(oplist);

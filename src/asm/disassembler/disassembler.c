@@ -30,4 +30,5 @@ void		disassembler(char *name)
 	free(dasm.file_name);
 	free(dasm.bin);
 	close(dasm.fd);
+	exit(0);
 }

@@ -6,7 +6,7 @@
 /*   By: npiatiko <npiatiko@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/06 16:12:13 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/05/07 13:27:57 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/05/14 13:20:57 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,16 @@ char	*ft_getfilename(int ac, char **av)
 	ac < 2 ? ft_exit("To few args.", 23) : 0;
 	ac == 3 && !ft_strequ("-d", av[1]) ? ft_exit("Unknown param.", 23) : 0;
 	filename = av[ac == 2 ? 1 : 2];
-	if ((fd = open(filename, O_DIRECTORY)) > 0)
+	if ((fd = open(filename, O_RDONLY)) > 0)
 	{
-		close(fd);
-		ft_exit("File is DIR.", 24);
-	}
-	else if ((fd = open(filename, O_RDONLY)) > 0)
-	{
+		if (read(fd, NULL, 0) < 0)
+		{
+			close(fd);
+			ft_exit(strerror(errno), errno);
+		}
 		close(fd);
 		if (!ft_strequ(&filename[ft_strlen(filename) - 2], ".s"))
-			ft_exit("File must be *.s", 24);
+			ft_exit("The file must be .s extension!", 24);
 	}
 	else
 		ft_exit(strerror(errno), errno);
@@ -64,7 +64,6 @@ void	ft_free(t_op_list *oplist, char *filename)
 {
 	t_op_list		*optmp;
 
-	optmp = oplist;
 	free(filename);
 	while (oplist)
 	{

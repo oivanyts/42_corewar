@@ -127,7 +127,7 @@ void		ft_exit(char *stre, int e);
 int			ft_getprogsize(t_op_list *oplist);
 t_op		*ft_getfuncname(t_token_list *toklst);
 void		ft_replacelable(t_op_list *oplist);
-int			ft_searchlable(t_op_list *oplist, char *data);
+int			ft_searchlable(t_op_list *oplist, t_token_list *toklst);
 int			ft_gettypearg(t_identifier ident);
 void		ft_errhandler(t_token_list *toklst);
 int			ft_toklistlen(t_token_list *toklst);

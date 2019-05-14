@@ -15,7 +15,7 @@ static void	choose_arg(t_oper *oper, t_byte **bin, int i, t_dasm *dasm)
 	}
 	else
 	{
-		if (oper->op->some == 0)
+		if (oper->op->dirsize == DIR_SIZE)
 		{
 			ft_printf_fd(dasm->fd, "%c%i", DIRECT_CHAR, get_int_from_pointer(*bin));
 			*bin += REG_SIZE;

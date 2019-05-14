@@ -6,7 +6,7 @@
 /*   By: npiatiko <npiatiko@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/07 13:28:30 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/05/07 13:43:12 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/05/14 11:45:46 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	ft_replacelable(t_op_list *oplist)
 {
 	t_op_list		*tmpoplist;
 	t_token_list	*toklst;
-	char			*tmpdata;
+	int				lable;
 
 	tmpoplist = oplist;
 	while (tmpoplist)
@@ -67,13 +67,12 @@ void	ft_replacelable(t_op_list *oplist)
 			if (toklst->ident == INDIRECT_LABEL ||
 				toklst->ident == DIRECT_LABEL)
 			{
+				lable = ft_searchlable(oplist, toklst) - tmpoplist->instrstart;
+				free(toklst->data);
+				toklst->data = ft_memalloc(sizeof(int));
+				*((int *)toklst->data) = lable;
 				toklst->ident = toklst->ident ==
 						INDIRECT_LABEL ? INDIRECT : DIRECT;
-				tmpdata = toklst->data;
-				toklst->data = ft_memalloc(4);
-				*((int *)(toklst->data)) =
-						ft_searchlable(oplist, tmpdata) - tmpoplist->instrstart;
-				free(tmpdata);
 			}
 			toklst = toklst->next;
 		}
@@ -81,19 +80,19 @@ void	ft_replacelable(t_op_list *oplist)
 	}
 }
 
-int		ft_searchlable(t_op_list *oplist, char *data)
+int		ft_searchlable(t_op_list *oplist, t_token_list *toklst)
 {
 	while (oplist)
 	{
 		if (oplist->token_list->ident == LABEL)
 		{
-			if (ft_strequ(data, oplist->token_list->data))
+			if (ft_strequ(toklst->data, oplist->token_list->data))
 			{
 				return (oplist->instrstart);
 			}
 		}
 		oplist = oplist->next;
 	}
-	ft_exit("Unknown lable.", 111);
+	ft_errhandler(toklst);
 	return (-1);
 }
