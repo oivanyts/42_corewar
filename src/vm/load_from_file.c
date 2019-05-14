@@ -48,7 +48,7 @@ bool load_from_file(char *filename, t_player *player, uint8_t memory[])
 	if ((IS_BIG_ENDIAN && COREWAR_EXEC_MAGIC != player->header.magic)
 		|| (!IS_BIG_ENDIAN &&
 			reverse_byte(COREWAR_EXEC_MAGIC) != player->header.magic))
-		handle_error(5);
+		handle_error(error_wrong_magic);
 	ft_memcpy(player->header.prog_name, &bytes[4], PROG_NAME_LENGTH);
 	player->header.prog_size = *(uint32_t *)&bytes[8 + PROG_NAME_LENGTH];
 	if (!IS_BIG_ENDIAN)
@@ -66,13 +66,11 @@ void init_carridge(t_player *player, uint8_t i, uint8_t *memory, int gap)
 
     ft_bzero(&tmp, sizeof(t_thread));
     tmp.player = player;
-    tmp.id = i;
     tmp.alive = 1;
     tmp.processing = 0;
-    player->number = i;
     tmp.vm_memory = memory;
     tmp.ip = (uint32_t)(gap * i);
-    tmp.reg[0] = (uint32_t)-i;
+    tmp.reg[0] = (uint32_t)(-player->number);
     threads_init(&player->threads);
     if (!array_push_back(&player->threads.arr, &tmp))
         handle_error(error_array_add);

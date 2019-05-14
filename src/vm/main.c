@@ -16,7 +16,7 @@ void poor_mans_visualization(uint8_t *bytecode, t_player *players, int num_playe
 				players[i].header.prog_size/8, players[i].header.prog_name,
 				players[i].header.comment);
 		tmp = players[i].threads.arr.arr;
-		ft_printf("carr - [%d][%d] - %d\n", tmp->ip, tmp->id, tmp->reg[0]);
+		ft_printf("carr - [%d][%d] - %d\n", tmp->ip, players->number, tmp->reg[0]);
 		i++;
 	}
 	i = 0;
@@ -62,6 +62,7 @@ uint8_t parce_all_players(int num_players, char **filename, t_player *player, ui
 	{
 //		ft_printf("Next player starts from : %d\n", i * player_gap);
 		load_from_file(filename[i + 1], &player[i], &memory[i *	player_gap]);
+		player->number = i + 1;
 		init_carridge(&player[i], i, memory, player_gap);
 		i++;
 	}

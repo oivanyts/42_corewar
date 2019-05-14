@@ -105,10 +105,10 @@ void	vm_cycle(t_player *players, uint32_t nplayers)
 		++cycles;
 		++global_cycles;
 
-		if (global_cycles == 10)
+		/*if (global_cycles == 19)
 		{
 			return;
-		}
+		}*/
 
 		if (cycles == cycles_to_die)
         {
@@ -124,8 +124,9 @@ t_opcode decode_opcode(struct s_thread *pc)
 {
 	t_opcode opcode;
 
-	opcode = as_byte(pc->vm_memory)[pc->ip % MEM_SIZE];
+	opcode = as_byte(pc->vm_memory)[pc->ip];
 	pc->ip += 1;
+	pc->ip %= MEM_SIZE;
 	return (opcode);
 }
 
@@ -155,12 +156,13 @@ uint8_t	decode_tparams(struct s_thread *pc, t_opcode opcode)
 
 	if ((op_tab[opcode].targs[0] & T_IND) || (op_tab[opcode].targs[1] & T_IND) || (op_tab[opcode].targs[2] & T_IND))
 	{
-		tparams = as_byte(pc->vm_memory)[pc->ip % MEM_SIZE];
+		tparams = as_byte(pc->vm_memory)[pc->ip];
 		if (!check_op_params(opcode, tparams))
 		{
 			pc->op.valid = 0;
 		}
 		pc->ip += 1;
+		pc->ip %= MEM_SIZE;
 	}
 	else
 	{
@@ -209,6 +211,7 @@ t_memory decode_param(t_decoded_op op, t_thread *pc, uint8_t param_number)
 				pc->op.valid = 0;
 			}
 			pc->ip += 1;
+			pc->ip %= MEM_SIZE;
 			memory_init(&param, &pc->reg[reg_number - 1], REG_SIZE);
 		}
 		else if (tparam == DIR_CODE)
@@ -217,11 +220,13 @@ t_memory decode_param(t_decoded_op op, t_thread *pc, uint8_t param_number)
 			{
 				memory_init(&param,  &pc->vm_memory[swap32((uint32_t*)&pc->vm_memory[pc->ip]) % MEM_SIZE], DIR_SIZE);
 				pc->ip += DIR_SIZE;
+				pc->ip %= MEM_SIZE;
 			}
 			else
 			{
 				memory_init(&param,  &pc->vm_memory[swap16((uint16_t*)&pc->vm_memory[pc->ip]) % MEM_SIZE], DIR_SIZE); //IND_SIZE?
 				pc->ip += IND_SIZE;
+				pc->ip %= MEM_SIZE;
 			}
 		}
 		else if (tparam == IND_CODE)
@@ -230,6 +235,7 @@ t_memory decode_param(t_decoded_op op, t_thread *pc, uint8_t param_number)
 			//param = (uint32_t*)&as_byte(pc->vm_memory)[pc->ip + *(int16_t*)&pc->vm_memory[pc->ip]];
 			memory_init(&param, &as_byte(pc->vm_memory)[(op.ip + (int16_t)swap16((uint16_t*)&pc->vm_memory[pc->ip])) % MEM_SIZE], DIR_SIZE); //not exactly
 			pc->ip += IND_SIZE;
+			pc->ip %= MEM_SIZE;
 		}
 		else
 		{
@@ -241,7 +247,7 @@ t_memory decode_param(t_decoded_op op, t_thread *pc, uint8_t param_number)
 
 void	op_decode(t_thread *pc)
 {
-	if (pc->op.valid)
+	if (pc->op.valid == 0)
 	{
 		return ;
 	}
@@ -255,7 +261,7 @@ void	op_exec(t_thread *pc)
 {
 	if (pc->processing == 0)
 	{
-		poor_mans_visualization(pc->vm_memory, pc->player, 1);
+		//poor_mans_visualization(pc->vm_memory, pc->player, 1);
 		pc->op.valid = 1;
 		pc->op.ip = pc->ip;
 		pc->op.opcode = decode_opcode(pc) - 1;
@@ -283,6 +289,7 @@ void	op_exec(t_thread *pc)
 	if (pc->op.valid)
 	{
 		opcalls[pc->op.opcode].opfunc(pc, &pc->op.args[0], &pc->op.args[1], &pc->op.args[2]);
+		poor_mans_visualization(pc->vm_memory, pc->player, 1);
 	}
 	pc->processing = 0;
 }
