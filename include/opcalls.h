@@ -54,6 +54,8 @@ typedef struct	s_op
 
 typedef struct s_decoded_op
 {
+	uint32_t ip;
+	uint8_t tparams;
 	t_opcode opcode;
 	t_memory args[3];
 } t_decoded_op;

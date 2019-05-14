@@ -21,7 +21,7 @@ void    memory_init_number(t_memory *mem, void *ptr, size_t size, uint64_t num)
 
 void    memory_memmove(t_memory *dst, t_memory *src)
 {
-	ft_memcpy(dst, src, dst->memory_size);
+	ft_memcpy(dst->memory, src->memory, dst->memory_size);
 }
 
 void    memory_and(t_memory *dst, t_memory *param1, t_memory *param2)

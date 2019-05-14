@@ -48,7 +48,7 @@ void	vm_cycle(t_player *players, uint32_t nplayers);
 
 uint8_t decode_tparams(struct s_thread *pc, t_opcode opcode);
 
-t_memory decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t param_number);
+t_memory decode_param(t_decoded_op op, t_thread *pc, uint8_t param_number);
 
 t_decoded_op	op_decode(struct s_thread *pc);
 

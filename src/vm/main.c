@@ -34,7 +34,7 @@ void poor_mans_visualization(uint8_t *bytecode, t_player *players, int num_playe
 		{
 			ft_printf("\033[38;05;%dm", color[i / player_gap]);
 		}
-		ft_printf("%.2x\033[m ", bytecode[i]);
+		ft_printf("[%d]%.2x\033[m ", i, bytecode[i]);
 		i++;
 	}
 	ft_printf("\n");
@@ -78,10 +78,10 @@ int		main(int argc, char *argv[])
 	ft_bzero(players, sizeof(t_player) * (argc - 1));
 	ft_bzero(memory, sizeof(uint8_t) * MEM_SIZE);
 	parce_all_players(argc - 1, argv, &players[0], &memory[0]);
-	poor_mans_visualization(memory, &players[0], argc - 1);
+	//poor_mans_visualization(memory, &players[0], argc - 1);
 	vm.last_alive = 3;
 	vm_cycle(&players[0], (uint32_t)(argc - 1));
-	poor_mans_visualization(memory, &players[0], argc - 1);
+	//poor_mans_visualization(memory, &players[0], argc - 1);
 	printf("Last player alive: %u\n", vm.last_alive);
 	return 0;
 }

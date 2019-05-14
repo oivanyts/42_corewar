@@ -106,7 +106,7 @@ void	vm_cycle(t_player *players, uint32_t nplayers)
 			foreach_thread(players, nplayers, kill_thread_if_no_lives);
 		    cycles = 0;
         }
-		poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, players, nplayers);
+		//poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, players, nplayers);
 	}
 }
 
@@ -126,15 +126,15 @@ t_opcode decode_opcode(struct s_thread *pc)
 
 bool	check_op_params(t_opcode opcode, uint8_t tparams)
 {
-	if ((op_tab[opcode].targs[0] & (tparams >> 6)) == 0)
+	if (op_tab[opcode].targs[0] && (op_tab[opcode].targs[0] & ((tparams >> 6) & 0x3)) == 0)
 	{
 		return (0);
 	}
-	else if ((op_tab[opcode].targs[1] & (tparams  >> 4)) == 0)
+	else if (op_tab[opcode].targs[1] && (op_tab[opcode].targs[1] & ((tparams  >> 4) & 0x3)) == 0)
 	{
 		return (0);
 	}
-	else if ((op_tab[opcode].targs[2] & (tparams >> 2)) == 0)
+	else if (op_tab[opcode].targs[2] && (op_tab[opcode].targs[2] & ((tparams >> 2) & 0x3)) == 0)
 	{
 		return (0);
 	}
@@ -176,28 +176,28 @@ uint16_t swap16(uint16_t *toswap)
 	return (*toswap >> 8 | *toswap << 8);
 }
 
-t_memory decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t param_number)
+t_memory decode_param(t_decoded_op op, t_thread *pc, uint8_t param_number)
 {
 	t_memory param;
 	uint8_t  tparam;
 	uint8_t reg_number;
 
 	memory_init(&param, 0, 0);
-	if (param_number <= op_tab[opcode].args)
+	if (param_number <= op_tab[op.opcode].args)
 	{
 		if (param_number == 1)
 		{
-			tparam = ((tparams & T_FIRST_PARAM) >> 6) & 0x3;
+			tparam = ((op.tparams & T_FIRST_PARAM) >> 6) & 0x3;
 		}
 		else if (param_number == 2)
 		{
-			tparam = ((tparams & T_SECOND_PARAM) >> 4) & 0x3;
+			tparam = ((op.tparams & T_SECOND_PARAM) >> 4) & 0x3;
 		}
 		else
 		{
-			tparam = ((tparams & T_THIRD_PARAM) >> 2) & 0x3;
+			tparam = ((op.tparams & T_THIRD_PARAM) >> 2) & 0x3;
 		}
-		if (tparam == T_REG)
+		if (tparam == REG_CODE)
 		{
 			reg_number = as_byte(pc->vm_memory)[pc->ip];
 			if (reg_number >= REG_NUMBER)
@@ -208,24 +208,24 @@ t_memory decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t pa
 			pc->ip += 1;
 			memory_init(&param, &pc->reg[reg_number - 1], REG_SIZE);
 		}
-		else if (tparam == T_DIR)
+		else if (tparam == DIR_CODE)
 		{
-			if (op_tab[opcode].tdir_size == 0)
+			if (op_tab[op.opcode].tdir_size == 0)
 			{
 				memory_init(&param,  &pc->vm_memory[swap32((uint32_t*)&pc->vm_memory[pc->ip])], DIR_SIZE);
 				pc->ip += DIR_SIZE;
 			}
 			else
 			{
-				memory_init(&param,  &pc->vm_memory[swap16((uint16_t*)&pc->vm_memory[pc->ip])], IND_SIZE);
+				memory_init(&param,  &pc->vm_memory[swap16((uint16_t*)&pc->vm_memory[pc->ip])], DIR_SIZE); //IND_SIZE?
 				pc->ip += IND_SIZE;
 			}
 		}
-		else if (tparam == T_IND)
+		else if (tparam == IND_CODE)
 		{
 			//shrink by IDX_MOD?
 			//param = (uint32_t*)&as_byte(pc->vm_memory)[pc->ip + *(int16_t*)&pc->vm_memory[pc->ip]];
-			memory_init(&param, &as_byte(pc->vm_memory)[(pc->ip + *(int16_t*)&pc->vm_memory[pc->ip]) % MEM_SIZE], IND_SIZE); //not exactly
+			memory_init(&param, &as_byte(pc->vm_memory)[(op.ip + (int16_t)swap16((uint16_t*)&pc->vm_memory[pc->ip])) % MEM_SIZE], DIR_SIZE); //not exactly
 			pc->ip += IND_SIZE;
 		}
 		else
@@ -240,17 +240,17 @@ t_memory decode_param(t_opcode opcode, uint8_t tparams, t_thread *pc, uint8_t pa
 t_decoded_op	op_decode(struct s_thread *pc)
 {
 	t_decoded_op op;
-	uint8_t tparams;
 
+	op.ip = pc->ip;
 	op.opcode = decode_opcode(pc) - 1;
 	if (pc->alive == 0)
 	{
 		return (op);
 	}
-	tparams = decode_tparams(pc, op.opcode);
-	op.args[0] = decode_param(op.opcode, tparams, pc, 1);
-	op.args[1] = decode_param(op.opcode, tparams, pc, 2);
-	op.args[2] = decode_param(op.opcode, tparams, pc, 3);
+	op.tparams = decode_tparams(pc, op.opcode);
+	op.args[0] = decode_param(op, pc, 1);
+	op.args[1] = decode_param(op, pc, 2);
+	op.args[2] = decode_param(op, pc, 3);
 	return (op);
 }
 
@@ -258,6 +258,7 @@ void	op_exec(struct s_thread *pc)
 {
 	if (pc->op.opcode == no_op)
 	{
+		poor_mans_visualization(pc->vm_memory, pc->player, 1);
 		pc->op = op_decode(pc);
 		pc->wait = op_tab[pc->op.opcode].cycle;
 	}
