@@ -110,19 +110,27 @@ void f_sub(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 void f_and(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-
+	load_param(sp, p1, 1);
+	load_param(sp, p2, 2);
+	load_param(sp, p3, 3);
 	memory_and(p3, p1, p2);
 	sp->cf = memory_iszero(p3);
 }
 
 void f_or(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
+	load_param(sp, p1, 1);
+	load_param(sp, p2, 2);
+	load_param(sp, p3, 3);
 	memory_or(p3, p1, p2);
 	sp->cf = memory_iszero(p3);
 }
 
 void f_xor(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
+	load_param(sp, p1, 1);
+	load_param(sp, p2, 2);
+	load_param(sp, p3, 3);
 	memory_xor(p3, p1, p2);
 	sp->cf = memory_iszero(p3);
 }
@@ -153,10 +161,12 @@ void f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 void f_fork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3) //not exactly
 {
-    t_player *player;
+    t_player	*player;
     t_thread	tmp;
+    uint16_t 	num;
 
-    (void)p2;
+    (void)p1;
+	(void)p2;
     (void)p3;
     player = sp->player;
     ft_bzero(&tmp, sizeof(t_thread));
@@ -164,7 +174,8 @@ void f_fork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3) //not exactl
     tmp.alive = 1;
     tmp.op.opcode = -1;
     tmp.vm_memory = sp->vm_memory;
-    tmp.ip = (uint8_t*)p1->memory - sp->vm_memory;
+    num = memory_tou16(p2);
+    tmp.ip = (swap16(&num) % IDX_MOD) % MEM_SIZE;
     tmp.reg[0] = (uint32_t) - (((t_player*)sp->player)->number + 1);
     threads_init(&player->threads);
     if (!array_push_back(&player->threads.arr, &tmp))
@@ -190,7 +201,9 @@ void f_lfork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3) //not exact
 {
     t_player *player;
     t_thread	tmp;
+	uint16_t 	num;
 
+    (void)p1;
     (void)p2;
     (void)p3;
     player = sp->player;
@@ -199,7 +212,8 @@ void f_lfork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3) //not exact
     tmp.alive = 1;
     tmp.op.opcode = -1;
     tmp.vm_memory = sp->vm_memory;
-    tmp.ip = (uint8_t*)p1->memory - sp->vm_memory;
+	num = memory_tou16(p2);
+	tmp.ip = swap16(&num) % MEM_SIZE;
     tmp.reg[0] = (uint32_t) - (((t_player*)sp->player)->number + 1);
     threads_init(&player->threads);
     if (!array_push_back(&player->threads.arr, &tmp))
