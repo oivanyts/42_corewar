@@ -21,11 +21,43 @@ t_opcall opcalls[ophighborder] =
 	{opaff, f_aff},
 };
 
+void load_dir_param(t_thread *sp, t_memory *mem)
+{
+	memory_init(mem, &sp->vm_memory[memory_tou32(mem) % MEM_SIZE], IND_SIZE);
+}
+
+void load_ind_param(t_thread *sp, t_memory *mem)
+{
+	memory_init(mem, &sp->vm_memory[(sp->op.ip + memory_tou16(mem)) % MEM_SIZE], IND_SIZE);
+}
+
+void load_reg_param(t_thread *sp, t_memory *mem)
+{
+	memory_init(mem, &sp->reg[memory_tou8(mem) - 1], get_param_type(sp->op.tparams, 1));
+}
+
+void load_param(t_thread *sp, t_memory *mem, uint8_t param_number)
+{
+	if (get_param_type(sp->op.tparams, param_number) == REG_CODE)
+	{
+		load_reg_param(sp, mem);
+	}
+	else if (get_param_type(sp->op.tparams, param_number) == DIR_CODE)
+	{
+		load_dir_param(sp, mem);
+	}
+	else if (get_param_type(sp->op.tparams, param_number) == IND_CODE)
+	{
+		load_ind_param(sp, mem);
+	}
+}
+
 void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
 	(void)p2;
 	(void)p3;
 	sp->lives += 1;
+	load_dir_param(sp, p1);
 	get_vm(0)->last_alive = -memory_tou32(p1);
 }
 
@@ -49,6 +81,9 @@ void f_st(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 void f_add(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
+	load_param(sp, p1, 1);
+	load_param(sp, p2, 2);
+	load_param(sp, p3, 3);
 	memory_add(p3, p1, p2);
 	sp->cf = memory_iszero(p3);
 }
@@ -101,7 +136,7 @@ void f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
     memory_memmove(&mem, p1);
 }
 
-void f_fork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
+void f_fork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3) //not exactly
 {
     t_player *player;
     t_thread	tmp;
@@ -136,7 +171,7 @@ void f_lldi(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
     memory_memmove(p3, &mem);
 }
 
-void f_lfork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
+void f_lfork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3) //not exactly
 {
     t_player *player;
     t_thread	tmp;

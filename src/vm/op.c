@@ -202,61 +202,43 @@ t_memory decode_param(t_decoded_op op, t_thread *pc, uint8_t param_number)
 {
 	t_memory param;
 	uint8_t  tparam;
-	uint8_t reg_number;
 
 	memory_init(&param, 0, 0);
 	if (param_number <= op_tab[op.opcode].args)
 	{
-		if (param_number == 1)
-		{
-			tparam = ((op.tparams & T_FIRST_PARAM) >> 6) & 0x3;
-		}
-		else if (param_number == 2)
-		{
-			tparam = ((op.tparams & T_SECOND_PARAM) >> 4) & 0x3;
-		}
-		else
-		{
-			tparam = ((op.tparams & T_THIRD_PARAM) >> 2) & 0x3;
-		}
+		tparam = get_param_type(pc->op.tparams, param_number);
 		if (tparam == REG_CODE)
 		{
-			reg_number = as_byte(pc->vm_memory)[pc->ip];
-			if (reg_number >= REG_NUMBER)
+			if (as_byte(pc->vm_memory)[pc->ip] > REG_NUMBER || as_byte(pc->vm_memory)[pc->ip] == 0)
 			{
 				pc->op.valid = 0;
 			}
+			memory_init(&param, &(pc->vm_memory)[pc->ip], T_REG);
 			pc->ip += 1;
-			pc->ip %= MEM_SIZE;
-			memory_init(&param, &pc->reg[reg_number - 1], REG_SIZE);
 		}
 		else if (tparam == DIR_CODE)
 		{
 			if (op_tab[op.opcode].tdir_size == 0)
 			{
-				memory_init(&param,  &pc->vm_memory[swap32((uint32_t*)&pc->vm_memory[pc->ip]) % MEM_SIZE], DIR_SIZE);
+				memory_init(&param,  &pc->vm_memory[pc->ip], DIR_SIZE);
 				pc->ip += DIR_SIZE;
-				pc->ip %= MEM_SIZE;
 			}
 			else
 			{
-				memory_init(&param,  &pc->vm_memory[swap16((uint16_t*)&pc->vm_memory[pc->ip]) % MEM_SIZE], DIR_SIZE); //IND_SIZE?
+				memory_init(&param,  &pc->vm_memory[pc->ip], IND_SIZE);
 				pc->ip += IND_SIZE;
-				pc->ip %= MEM_SIZE;
 			}
 		}
 		else if (tparam == IND_CODE)
 		{
-			//shrink by IDX_MOD?
-			//param = (uint32_t*)&as_byte(pc->vm_memory)[pc->ip + *(int16_t*)&pc->vm_memory[pc->ip]];
-			memory_init(&param, &as_byte(pc->vm_memory)[(op.ip + (int16_t)swap16((uint16_t*)&pc->vm_memory[pc->ip])) % MEM_SIZE], DIR_SIZE); //not exactly
+			memory_init(&param, &pc->vm_memory[pc->ip], T_IND);
 			pc->ip += IND_SIZE;
-			pc->ip %= MEM_SIZE;
 		}
 		else
 		{
 			pc->op.valid = 0;
 		}
+		pc->ip %= MEM_SIZE;
 	}
 	return (param);
 }

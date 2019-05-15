@@ -83,6 +83,10 @@ typedef struct s_opcall
 
 t_opcall opcalls[ophighborder];
 
+uint32_t swap32(uint32_t *toswap);
+
+uint16_t swap16(uint16_t *toswap);
+
 void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3);
 
 void f_ld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3);
