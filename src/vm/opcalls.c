@@ -125,6 +125,10 @@ void f_st(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 		memory_init(&tmp, &sp->reg[(num - 1)], REG_SIZE);
     	memory_memmove(&tmp, p1);
 	}
+	else
+	{
+		handle_error(error_wrong_tparam);
+	}
 }
 
 void f_add(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
@@ -189,8 +193,12 @@ void f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
     t_memory mem;
 
-    memory_init(&mem, &sp->vm_memory[(sp->op.ip + memory_tou32(p2) + memory_tou32(p3)) % IDX_MOD], 4); //not exactly 4
-    memory_memmove(&mem, p1);
+	load_param(sp, p1, 1);
+	load_param(sp, p2, 2);
+	load_param(sp, p3, 3);
+	memory_init(&mem, &sp->vm_memory[(sp->op.ip + memory_tou32(p2) + memory_tou32(p3)) % IDX_MOD], 4); //not exactly 4
+	memory_memmove(&mem, p1);
+
 }
 
 void f_fork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3) //not exactly
@@ -208,7 +216,7 @@ void f_fork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3) //not exactl
     tmp.alive = 1;
     tmp.op.opcode = -1;
     tmp.vm_memory = sp->vm_memory;
-    num = memory_tou16(p2);
+    num = memory_tou16(p1);
     tmp.ip = (swap16(&num) % IDX_MOD) % MEM_SIZE;
     tmp.reg[0] = (uint32_t) - (((t_player*)sp->player)->number + 1);
     threads_init(&player->threads);
@@ -246,7 +254,7 @@ void f_lfork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3) //not exact
     tmp.alive = 1;
     tmp.op.opcode = -1;
     tmp.vm_memory = sp->vm_memory;
-	num = memory_tou16(p2);
+	num = memory_tou16(p1);
 	tmp.ip = swap16(&num) % MEM_SIZE;
     tmp.reg[0] = (uint32_t) - (((t_player*)sp->player)->number + 1);
     threads_init(&player->threads);
