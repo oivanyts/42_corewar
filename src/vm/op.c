@@ -105,17 +105,17 @@ void	vm_cycle(t_player *players, uint32_t nplayers)
 		++cycles;
 		++global_cycles;
 
-		if (global_cycles == 10)
+		/*if (global_cycles == 10)
 		{
 			return;
-		}
+		}*/
 
 		if (cycles == cycles_to_die)
         {
 			foreach_thread(players, nplayers, kill_thread_if_no_lives);
 		    cycles = 0;
         }
-		poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, players, nplayers);
+		//poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, players, nplayers);
 		//ft_printf("\ncycle = %u ended\n", global_cycles);
 	}
 }
@@ -288,7 +288,7 @@ void	op_exec(t_thread *pc)
 	if (pc->op.valid)
 	{
 		opcalls[pc->op.opcode].opfunc(pc, &pc->op.args[0], &pc->op.args[1], &pc->op.args[2]);
-		//poor_mans_visualization(pc->vm_memory, pc->player, 1);
+		poor_mans_visualization(pc->vm_memory, pc->player, 1);
 	}
 	pc->processing = 0;
 }

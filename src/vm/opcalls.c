@@ -23,20 +23,17 @@ t_opcall opcalls[ophighborder] =
 
 void load_dir_param(t_thread *sp, t_memory *mem)
 {
-	uint32_t addr;
-
-	addr = memory_tou32(mem);
-	addr = swap32(&addr);
-	memory_init(mem, &sp->vm_memory[addr % MEM_SIZE], DIR_SIZE);
+	(void)sp;
+	(void)mem;
 }
 
 void load_dir_idx_param(t_thread *sp, t_memory *mem)
 {
-	uint32_t addr;
+	uint16_t addr;
 
-	addr = memory_tou32(mem);
-	addr = swap32(&addr);
-	memory_init(mem, &sp->vm_memory[(addr % IDX_MOD) % MEM_SIZE], DIR_SIZE);
+	addr = memory_tou16(mem);
+	addr = swap16(&addr);
+	memory_init(mem, &sp->vm_memory[sp->op.ip + (addr % IDX_MOD) % MEM_SIZE], mem->memory_size);
 }
 
 void load_ind_param(t_thread *sp, t_memory *mem)
@@ -184,29 +181,37 @@ void f_zjmp(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	if (sp->cf)
 	{
 		load_dir_idx_param(sp, p1);
-		sp->ip = memory_tou32(p1);
+		sp->ip = (uint8_t*)p1->memory - sp->vm_memory;
 	}
 }
 
 void f_ldi(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
     t_memory mem;
+    uint32_t up1;
+	uint32_t up2;
 
     load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p2, 3);
-    memory_init(&mem, &sp->vm_memory[(sp->op.ip + memory_tou32(p1) + memory_tou32(p2)) % IDX_MOD], REG_SIZE);
+	up1 = swap32(p1->memory);
+	up2 = swap32(p2->memory);
+	memory_init(&mem, &sp->vm_memory[(sp->op.ip + up1 + up2) % IDX_MOD], REG_SIZE);
 	memory_memmove(p3, &mem);
 }
 
 void f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
     t_memory mem;
+	uint16_t up2;
+	uint16_t up3;
 
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
-	memory_init(&mem, &sp->vm_memory[(sp->op.ip + memory_tou32(p2) + memory_tou32(p3)) % IDX_MOD], DIR_SIZE);
+	up2 = swap16(p2->memory);
+	up3 = swap16(p3->memory);
+	memory_init(&mem, &sp->vm_memory[(sp->op.ip + up2 + up3) % IDX_MOD], DIR_SIZE);
 	memory_memmove(&mem, p1);
 }
 
@@ -245,10 +250,14 @@ void f_lld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 void f_lldi(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
     t_memory mem;
+    uint32_t up1;
+    uint32_t up2;
 
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
-    memory_init(&mem, &sp->vm_memory[(sp->op.ip + memory_tou32(p1) + memory_tou32(p2))], REG_SIZE);
+	up1 = swap32(p1->memory);
+	up2 = swap32(p2->memory);
+    memory_init(&mem, &sp->vm_memory[(sp->op.ip + up1 + up2)], REG_SIZE);
     memory_memmove(p3, &mem);
 }
 
