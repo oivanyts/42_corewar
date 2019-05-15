@@ -42,9 +42,23 @@ void f_ld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 void f_st(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
+	t_memory tmp;
+	uint16_t num;
+
     (void)sp;
     (void)p3;
-    memory_memmove(p2, p1);
+    if (get_param_type(sp->op.tparams, 2) == IND_CODE)
+	{
+    	num = memory_tou16(p2);
+		memory_init(&tmp, &sp->vm_memory[(sp->op.ip + (swap16(&num) % IDX_MOD))], DIR_SIZE);
+		memory_memmove(&tmp, p1);
+	}
+    else if (get_param_type(sp->op.tparams, 2) == REG_CODE)
+	{
+		num = memory_tou8(p2);
+		memory_init(&tmp, &sp->reg[(num - 1)], REG_SIZE);
+    	memory_memmove(&tmp, p1);
+	}
 }
 
 void f_add(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
@@ -61,6 +75,7 @@ void f_sub(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 void f_and(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
+
 	memory_and(p3, p1, p2);
 	sp->cf = memory_iszero(p3);
 }
