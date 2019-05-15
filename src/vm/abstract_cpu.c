@@ -8,7 +8,6 @@
 
 void    memory_init(t_memory *mem, void *ptr, size_t size)
 {
-
 	mem->memory = ptr;
 	mem->memory_size = size;
 }
@@ -107,6 +106,16 @@ bool    memory_iszero(t_memory *mem)
 	return *(uint32_t*)(mem->memory) == 0;
 }
 
+uint8_t memory_tou8(t_memory *mem)
+{
+	return *(uint8_t*)(mem->memory);
+}
+
+uint16_t memory_tou16(t_memory *mem)
+{
+	return *(uint16_t*)(mem->memory);
+}
+
 uint32_t memory_tou32(t_memory *mem)
 {
 	return *(uint32_t*)(mem->memory);
@@ -120,7 +129,7 @@ void    memory_xprintf(t_memory *mem)
 	i = 0;
 	while (i < mem->memory_size)
 	{
-		ft_printf("%x", as_byte(mem->memory)[i]);
+		ft_printf("%x ", as_byte(mem->memory)[i]);
 		++i;
 	}
 }
