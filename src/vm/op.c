@@ -182,6 +182,22 @@ uint16_t swap16(uint16_t *toswap)
 	return (*toswap >> 8 | *toswap << 8);
 }
 
+uint8_t get_param_type(uint8_t tparams, uint8_t param_number)
+{
+	if (param_number == 1)
+	{
+		return ((tparams & T_FIRST_PARAM) >> 6) & 0x3;
+	}
+	else if (param_number == 2)
+	{
+		return ((tparams & T_SECOND_PARAM) >> 4) & 0x3;
+	}
+	else
+	{
+		return ((tparams & T_THIRD_PARAM) >> 2) & 0x3;
+	}
+}
+
 t_memory decode_param(t_decoded_op op, t_thread *pc, uint8_t param_number)
 {
 	t_memory param;
@@ -264,7 +280,7 @@ void	op_exec(t_thread *pc)
 		//poor_mans_visualization(pc->vm_memory, pc->player, 1);
 		pc->op.valid = 1;
 		pc->op.ip = pc->ip;
-		pc->op.opcode = decode_opcode(pc) - 1;
+		pc->op.opcode = as_byte(pc->vm_memory)[pc->ip] - 1;
 		if (pc->op.opcode <= oplowborder || pc->op.opcode >= ophighborder)
 		{
 			pc->op.valid = 0;
@@ -285,11 +301,12 @@ void	op_exec(t_thread *pc)
 	{
 		return ;
 	}
+	decode_opcode(pc);
 	op_decode(pc);
 	if (pc->op.valid)
 	{
 		opcalls[pc->op.opcode].opfunc(pc, &pc->op.args[0], &pc->op.args[1], &pc->op.args[2]);
-		poor_mans_visualization(pc->vm_memory, pc->player, 1);
+		//poor_mans_visualization(pc->vm_memory, pc->player, 1);
 	}
 	pc->processing = 0;
 }

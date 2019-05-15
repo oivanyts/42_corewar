@@ -46,6 +46,8 @@ void	players_sort_by_id(t_player *players, uint32_t nplayers);
 
 void	vm_cycle(t_player *players, uint32_t nplayers);
 
+uint8_t get_param_type(uint8_t tparams, uint8_t param_number);
+
 uint8_t decode_tparams(struct s_thread *pc, t_opcode opcode);
 
 t_memory decode_param(t_decoded_op op, t_thread *pc, uint8_t param_number);

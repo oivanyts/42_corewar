@@ -32,6 +32,10 @@ void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 void f_ld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
     (void)p3;
+    if (get_param_type(sp->op.tparams, 1) == IND_CODE)
+	{
+
+	}
 	memory_memmove(p2, p1);
     sp->cf = memory_iszero(p2);
 }
