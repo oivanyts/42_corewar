@@ -206,9 +206,8 @@ void f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
-	memory_init(&mem, &sp->vm_memory[(sp->op.ip + memory_tou32(p2) + memory_tou32(p3)) % IDX_MOD], 4); //not exactly 4
+	memory_init(&mem, &sp->vm_memory[(sp->op.ip + memory_tou32(p2) + memory_tou32(p3)) % IDX_MOD], DIR_SIZE);
 	memory_memmove(&mem, p1);
-
 }
 
 void f_fork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3) //not exactly
