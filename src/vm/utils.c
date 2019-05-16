@@ -35,3 +35,5 @@ unsigned long long int ft_ullmin(unsigned long long int num1, unsigned long long
 		return num2;
 	}
 }
+
+//get_options();

@@ -26,6 +26,8 @@
 # define T_SECOND_PARAM (uint8_t)0x30
 # define T_THIRD_PARAM (uint8_t)0x0C
 
+# define OPTIONS ""
+
 typedef struct s_player
 {
 	t_threads threads;
