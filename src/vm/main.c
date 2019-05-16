@@ -16,7 +16,7 @@ t_list *find_all_carridges(t_player *pPlayer, int num_players)
 		while (j < size)
 		{
 			tmp = threads_at(&pPlayer[i].threads, j++);
-			ft_lstaddback(&ret, ft_lstnew(&tmp->ip, sizeof(int)));
+			ft_lstaddback(&ret, ft_lstnew(&tmp->ip, sizeof(size_t)));
 		}
 		i++;
 	}
