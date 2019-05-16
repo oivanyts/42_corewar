@@ -1,4 +1,4 @@
-#include <op.h>
+#include "op.h"
 #include "vm.h"
 
 void poor_mans_visualization(uint8_t *bytecode, t_player *players, int num_players)
@@ -41,13 +41,6 @@ void poor_mans_visualization(uint8_t *bytecode, t_player *players, int num_playe
 	ft_printf("\n");
 }
 
-void alloc_carridge(void *dst, const void *src)
-{
-	if (!dst)
-		dst = ft_memalloc(sizeof(t_thread));
-	ft_memcpy(dst, src, sizeof(t_thread));
-}
-
 uint8_t parce_all_players(int num_players, char **filename, t_player *player, uint8_t *memory)
 {
 	uint8_t		i;
@@ -71,6 +64,27 @@ uint8_t parce_all_players(int num_players, char **filename, t_player *player, ui
 	return (0);
 }
 
+void init_vm(t_vm *vm, t_player *players, int32_t nplayers)
+{
+	int32_t player_i;
+	int32_t max_player_i;
+
+	player_i = 1;
+	max_player_i = 0;
+	while (player_i < nplayers)
+	{
+		if (players[player_i].number > players[max_player_i].number)
+		{
+			max_player_i = player_i;
+		}
+		++player_i;
+	}
+	vm->players = players;
+	vm->nplayers = nplayers;
+	vm->last_alive = players[max_player_i].number;
+	vm->cycle = 0; //1?
+}
+
 int		main(int argc, char *argv[])
 {
 	t_player	players[argc - 1];
@@ -82,8 +96,7 @@ int		main(int argc, char *argv[])
 	ft_bzero(memory, sizeof(uint8_t) * MEM_SIZE);
 	parce_all_players(argc - 1, argv, &players[0], &memory[0]);
 	poor_mans_visualization(memory, &players[0], argc - 1);
-	vm.last_alive = players[argc - 2].number;
-	vm.cycle = 0; //1?
+	init_vm(&vm, players, argc - 2);
 	vm_cycle(&players[0], (uint32_t)(argc - 1));
 	poor_mans_visualization(memory, &players[0], argc - 1);
 	printf("Last player alive: %u\n", vm.last_alive);

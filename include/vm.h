@@ -26,24 +26,24 @@
 # define T_SECOND_PARAM (uint8_t)0x30
 # define T_THIRD_PARAM (uint8_t)0x0C
 
-typedef struct s_vm
-{
-	uint32_t last_alive;
-	uint32_t cycle;
-}t_vm;
-
 typedef struct s_player
 {
 	t_threads threads;
 	t_header header;
-	uint32_t number;
+	int32_t number;
 } t_player;
+
+typedef struct s_vm
+{
+	t_player *players;
+	int32_t nplayers;
+	uint32_t last_alive;
+	uint32_t cycle;
+}t_vm;
 
 t_vm *get_vm(t_vm *vm);	uint32_t number;
 
 bool load_from_file(char *filename, t_player *player, uint8_t memory[]);
-
-void	players_sort_by_number(t_player *players, uint32_t nplayers);
 
 void	vm_cycle(t_player *players, uint32_t nplayers);
 

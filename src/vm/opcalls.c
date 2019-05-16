@@ -88,14 +88,14 @@ void load_idx_param(t_thread *sp, t_memory *mem, uint8_t param_number)
 
 void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-	uint32_t p32;
+	int32_t p32;
 
 	(void)p2;
 	(void)p3;
 	sp->lives += 1;
 	load_param(sp, p1, 1);
 	p32 = memory_tou32(p1);
-	p32 = swap32(&p32);
+	p32 = swap32((uint32_t*)&p32);
 	if (((t_player*)sp->player)->number == -p32)
 	{
 		get_vm(0)->last_alive = ((t_player*)sp->player)->number;

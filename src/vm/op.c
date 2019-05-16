@@ -12,12 +12,6 @@
 
 #include "vm.h"
 
-void	players_sort_by_number(t_player *players, uint32_t nplayers)
-{
-	(void)players;
-	(void)nplayers;
-}
-
 uint32_t player_threads_alive(t_player *player)
 {
 	size_t thread;
