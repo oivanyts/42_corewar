@@ -12,7 +12,7 @@
 
 #include "vm.h"
 
-void	players_sort_by_id(t_player *players, uint32_t nplayers)
+void	players_sort_by_number(t_player *players, uint32_t nplayers)
 {
 	(void)players;
 	(void)nplayers;
@@ -99,6 +99,10 @@ void	vm_cycle(t_player *players, uint32_t nplayers)
 		foreach_thread(players, nplayers, op_exec);
 		++cycles;
 		++get_vm(0)->cycle;
+		if (get_vm(0)->cycle == 10000)
+		{
+			return;
+		}
 		if (cycles == cycles_to_die)
         {
 			foreach_thread(players, nplayers, kill_thread_if_no_lives);

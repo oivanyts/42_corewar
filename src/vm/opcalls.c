@@ -225,8 +225,7 @@ void f_fork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
     tmp.vm_memory = sp->vm_memory;
     num = memory_tou16(p1);
     tmp.ip = (swap16(&num) % IDX_MOD) % MEM_SIZE;
-    threads_init(&player->threads);
-    if (!array_push_back(&player->threads.arr, &tmp))
+    if (!threads_push_back(&player->threads, &tmp))
         handle_error(error_array_add);
 }
 
@@ -272,8 +271,7 @@ void f_lfork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
     tmp.vm_memory = sp->vm_memory;
 	num = memory_tou16(p1);
 	tmp.ip = swap16(&num) % MEM_SIZE;
-    threads_init(&player->threads);
-    if (!array_push_back(&player->threads.arr, &tmp))
+    if (!threads_push_back(&player->threads, &tmp))
         handle_error(error_array_add);
 }
 

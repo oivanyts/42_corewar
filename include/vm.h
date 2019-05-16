@@ -43,7 +43,7 @@ t_vm *get_vm(t_vm *vm);	uint32_t number;
 
 bool load_from_file(char *filename, t_player *player, uint8_t memory[]);
 
-void	players_sort_by_id(t_player *players, uint32_t nplayers);
+void	players_sort_by_number(t_player *players, uint32_t nplayers);
 
 void	vm_cycle(t_player *players, uint32_t nplayers);
 
