@@ -16,7 +16,7 @@ t_list *find_all_carridges(t_player *pPlayer, int num_players)
 		while (j < size)
 		{
 			tmp = threads_at(&pPlayer[i].threads, j++);
-			ft_lstaddback(&ret, ft_lstnew(&tmp->ip, sizeof(size_t)));
+			ft_lstaddback(&ret, ft_lstnew(&(tmp->ip), sizeof(int)));
 		}
 		i++;
 	}
@@ -40,7 +40,7 @@ bool check_pos(size_t i, t_list *pList)
 {
 	while (pList)
 	{
-		if (*(size_t *)pList->content == i)
+		if (*(int *)pList->content == (int)i)
 			return (true);
 		pList = pList->next;
 	}

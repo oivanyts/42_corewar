@@ -29,10 +29,10 @@ void load_dir_param(t_thread *sp, t_memory *mem)
 
 void load_dir_idx_param(t_thread *sp, t_memory *mem)
 {
-	uint16_t addr;
+	int16_t addr;
 
 	addr = memory_tou16(mem);
-	addr = swap16(&addr);
+	addr = swap16((uint16_t*)&addr);
 	memory_init(mem, &sp->vm_memory[(sp->op.ip + (addr % IDX_MOD)) % MEM_SIZE], mem->memory_size);
 }
 
@@ -250,7 +250,7 @@ void f_lldi(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	memory_memmove(p3, &mem);
 }
 
-void f_lfork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
+void f_lfork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3) //doesnt work
 {
     t_player *player;
     t_thread	tmp;
