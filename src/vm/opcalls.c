@@ -92,7 +92,10 @@ void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	(void)p3;
 	sp->lives += 1;
 	load_dir_param(sp, p1);
-	get_vm(0)->last_alive = -memory_tou32(p1);
+	if (((t_player*)sp->player)->number == -memory_tou32(p1))
+	{
+		get_vm(0)->last_alive = ((t_player*)sp->player)->number;
+	}
 }
 
 void f_ld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
