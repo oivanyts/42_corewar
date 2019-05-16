@@ -107,8 +107,8 @@ uint8_t parce_all_players(int num_players, char **filename, t_player *player, ui
 	{
 //		ft_printf("Next player starts from : %d\n", i * player_gap);
 		load_from_file(filename[i + 1], &player[i], &memory[i *	player_gap]);
-		player->number = i + 1;
-		//threads_init(&player->threads);
+		player[i].number = i + 1;
+		threads_init(&player[i].threads);
 		init_carridge(&player[i], i, memory, player_gap);
 		i++;
 	}
@@ -153,9 +153,9 @@ int		main(int argc, char *argv[])
 	ft_bzero(memory, sizeof(uint8_t) * MEM_SIZE);
 //	argv = get_options(argc, argv, OPTIONS);								//
 	parce_all_players(argc - 1, argv, &players[0], &memory[0]);
-	poor_mans_visualization(memory, &players[0], argc - 1);
-	init_vm(&vm, players, argc - 2);
-	vm_cycle(&players[0], (uint32_t)(argc - 1));
+	//poor_mans_visualization(memory, &players[0], argc - 1);
+	init_vm(&vm, &players[0], argc - 1);
+	vm_cycle(vm.players, vm.nplayers);
 	poor_mans_visualization(memory, &players[0], argc - 1);
 	printf("Last player alive: %u\n", vm.last_alive);
 	return 0;
