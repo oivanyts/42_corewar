@@ -262,7 +262,7 @@ void	op_exec(t_thread *pc)
 		//poor_mans_visualization(pc->vm_memory, pc->player, 1);
 		pc->op.valid = 1;
 		pc->op.ip = pc->ip;
-		pc->op.opcode = as_byte(pc->vm_memory)[pc->ip] - 1;
+		pc->op.opcode = as_byte(pc->vm_memory)[pc->ip];
 		if (pc->op.opcode <= oplowborder || pc->op.opcode >= ophighborder)
 		{
 			pc->op.valid = 0;
@@ -272,6 +272,7 @@ void	op_exec(t_thread *pc)
 		{
 			pc->wait = op_tab[pc->op.opcode].cycle;
 		}
+		pc->op.opcode -= 1;
 		pc->processing = 1;
 	}
 	if (pc->wait)

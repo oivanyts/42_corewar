@@ -34,7 +34,8 @@ void poor_mans_visualization(uint8_t *bytecode, t_player *players, int num_playe
 		{
 			ft_printf("\033[38;05;%dm", color[i / player_gap]);
 		}
-		ft_printf("[%d]%.2x\033[m ", i, bytecode[i]);
+		//ft_printf("[%d]%.2x\033[m ", i, bytecode[i]);
+		ft_printf("%.2x\033[m ", bytecode[i]);
 		i++;
 	}
 	ft_printf("\n");

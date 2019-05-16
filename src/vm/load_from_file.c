@@ -66,6 +66,7 @@ void init_carridge(t_player *player, uint8_t i, uint8_t *memory, int gap)
 
     ft_bzero(&tmp, sizeof(t_thread));
     tmp.player = player;
+    tmp.lives = 0;
     tmp.alive = 1;
     tmp.processing = 0;
     tmp.vm_memory = memory;

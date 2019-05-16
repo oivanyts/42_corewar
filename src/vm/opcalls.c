@@ -215,7 +215,7 @@ void f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	memory_memmove(&mem, p1);
 }
 
-void f_fork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3) //not exactly
+void f_fork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
     t_player	*player;
     t_thread	tmp;
@@ -225,14 +225,15 @@ void f_fork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3) //not exactl
 	(void)p2;
     (void)p3;
     player = sp->player;
-    ft_bzero(&tmp, sizeof(t_thread));
+	ft_bzero(&tmp, sizeof(t_thread));
+    ft_memcpy(&tmp.reg, &sp->reg, REG_SIZE * REG_NUMBER);
     tmp.player = sp->player;
+	tmp.lives = 0;
     tmp.alive = 1;
     tmp.op.opcode = -1;
     tmp.vm_memory = sp->vm_memory;
     num = memory_tou16(p1);
     tmp.ip = (swap16(&num) % IDX_MOD) % MEM_SIZE;
-    tmp.reg[0] = (uint32_t) - (((t_player*)sp->player)->number + 1);
     threads_init(&player->threads);
     if (!array_push_back(&player->threads.arr, &tmp))
         handle_error(error_array_add);
@@ -261,7 +262,7 @@ void f_lldi(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
     memory_memmove(p3, &mem);
 }
 
-void f_lfork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3) //not exactly
+void f_lfork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
     t_player *player;
     t_thread	tmp;
@@ -271,14 +272,15 @@ void f_lfork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3) //not exact
     (void)p2;
     (void)p3;
     player = sp->player;
-    ft_bzero(&tmp, sizeof(t_thread));
+	ft_bzero(&tmp, sizeof(t_thread));
+	ft_memcpy(&tmp.reg, &sp->reg, REG_SIZE * REG_NUMBER);
     tmp.player = sp->player;
+	tmp.lives = 0;
     tmp.alive = 1;
     tmp.op.opcode = -1;
     tmp.vm_memory = sp->vm_memory;
 	num = memory_tou16(p1);
 	tmp.ip = swap16(&num) % MEM_SIZE;
-    tmp.reg[0] = (uint32_t) - (((t_player*)sp->player)->number + 1);
     threads_init(&player->threads);
     if (!array_push_back(&player->threads.arr, &tmp))
         handle_error(error_array_add);
