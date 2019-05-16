@@ -88,11 +88,15 @@ void load_idx_param(t_thread *sp, t_memory *mem, uint8_t param_number)
 
 void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
+	uint32_t p32;
+
 	(void)p2;
 	(void)p3;
 	sp->lives += 1;
-	load_dir_param(sp, p1);
-	if (((t_player*)sp->player)->number == -memory_tou32(p1))
+	load_param(sp, p1, 1);
+	p32 = memory_tou32(p1);
+	p32 = swap32(&p32);
+	if (((t_player*)sp->player)->number == -p32)
 	{
 		get_vm(0)->last_alive = ((t_player*)sp->player)->number;
 	}
@@ -109,27 +113,11 @@ void f_ld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 void f_st(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-	t_memory tmp;
-	uint16_t num;
-
     (void)sp;
     (void)p3;
-    if (get_param_type(sp->op.tparams, 2) == IND_CODE)
-	{
-    	num = memory_tou16(p2);
-		memory_init(&tmp, &sp->vm_memory[(sp->op.ip + (swap16(&num) % IDX_MOD))], DIR_SIZE);
-		memory_memmove(&tmp, p1);
-	}
-    else if (get_param_type(sp->op.tparams, 2) == REG_CODE)
-	{
-		num = memory_tou8(p2);
-		memory_init(&tmp, &sp->reg[(num - 1)], REG_SIZE);
-    	memory_memmove(&tmp, p1);
-	}
-	else
-	{
-		handle_error(error_wrong_tparam);
-	}
+	load_param(sp, p1, 1);
+	load_param(sp, p2, 2);
+	memory_memmove(p2, p1);
 }
 
 void f_add(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)

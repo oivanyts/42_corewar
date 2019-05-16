@@ -29,6 +29,7 @@
 typedef struct s_vm
 {
 	uint32_t last_alive;
+	uint32_t cycle;
 }t_vm;
 
 typedef struct s_player

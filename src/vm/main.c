@@ -80,8 +80,9 @@ int		main(int argc, char *argv[])
 	ft_bzero(players, sizeof(t_player) * (argc - 1));
 	ft_bzero(memory, sizeof(uint8_t) * MEM_SIZE);
 	parce_all_players(argc - 1, argv, &players[0], &memory[0]);
-	//poor_mans_visualization(memory, &players[0], argc - 1);
-	vm.last_alive = 3;
+	poor_mans_visualization(memory, &players[0], argc - 1);
+	vm.last_alive = players[argc - 2].number;
+	vm.cycle = 0; //1?
 	vm_cycle(&players[0], (uint32_t)(argc - 1));
 	poor_mans_visualization(memory, &players[0], argc - 1);
 	printf("Last player alive: %u\n", vm.last_alive);

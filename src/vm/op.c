@@ -83,38 +83,40 @@ void    foreach_thread(t_player *players, uint32_t nplayers, void(*func)(t_threa
 
 void	vm_cycle(t_player *players, uint32_t nplayers)
 {
-	uint32_t cycles;
-	uint32_t global_cycles;
-	uint32_t cycles_to_die;
+	int32_t cycles;
+	int32_t cycles_to_die;
 	uint32_t checks;
+	uint32_t cycles_to_die_dropped;
 	uint32_t alive;
 
 	cycles = 0;
-	global_cycles = 0;
 	cycles_to_die = CYCLE_TO_DIE;
+	cycles_to_die_dropped = 0;
 	checks = 0;
-	while ((alive = threads_alive(players, nplayers)))
+	alive = threads_alive(players, nplayers);
+	while (alive || cycles_to_die > 0)
 	{
-		if (checks == MAX_CHECKS || alive > 21)
-		{
-			cycles_to_die -= CYCLE_DELTA;
-			checks = 0;
-		}
-		++checks;
 		foreach_thread(players, nplayers, op_exec);
 		++cycles;
-		++global_cycles;
-
-		/*if (global_cycles == 10)
-		{
-			return;
-		}*/
-
+		++get_vm(0)->cycle;
 		if (cycles == cycles_to_die)
         {
 			foreach_thread(players, nplayers, kill_thread_if_no_lives);
+			alive = threads_alive(players, nplayers);
 		    cycles = 0;
+			++checks;
+			if (alive > 21)
+			{
+				cycles_to_die -= CYCLE_DELTA;
+				++cycles_to_die_dropped;
+			}
         }
+		if ((checks == MAX_CHECKS && !cycles_to_die_dropped))
+		{
+			cycles_to_die -= CYCLE_DELTA;
+			cycles_to_die_dropped = 0;
+			checks = 0;
+		}
 		//poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, players, nplayers);
 		//ft_printf("\ncycle = %u ended\n", global_cycles);
 	}
@@ -289,7 +291,7 @@ void	op_exec(t_thread *pc)
 	if (pc->op.valid)
 	{
 		opcalls[pc->op.opcode].opfunc(pc, &pc->op.args[0], &pc->op.args[1], &pc->op.args[2]);
-		poor_mans_visualization(pc->vm_memory, pc->player, 1);
+		//poor_mans_visualization(pc->vm_memory, pc->player, 1);
 	}
 	pc->processing = 0;
 }
