@@ -136,12 +136,6 @@ void init_vm(t_vm *vm, t_player *players, int32_t nplayers)
 	vm->cycle = 0; //1?
 }
 
-char **read_options(int argc, char **argv)
-{
-	(void)argc;
-	return argv;
-}
-
 int		main(int argc, char *argv[])
 {
 	t_player	players[argc - 1];
@@ -151,9 +145,9 @@ int		main(int argc, char *argv[])
 	get_vm(&vm);
 	ft_bzero(players, sizeof(t_player) * (argc - 1));
 	ft_bzero(memory, sizeof(uint8_t) * MEM_SIZE);
-//	argv = get_options(argc, argv, OPTIONS);								//
+//	argc = get_options(argc, argv, OPTIONS);								//
 	parce_all_players(argc - 1, argv, &players[0], &memory[0]);
-	//poor_mans_visualization(memory, &players[0], argc - 1);
+	poor_mans_visualization(memory, &players[0], argc - 1);
 	init_vm(&vm, &players[0], argc - 1);
 	vm_cycle(vm.players, vm.nplayers);
 	poor_mans_visualization(memory, &players[0], argc - 1);

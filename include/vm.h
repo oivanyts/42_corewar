@@ -26,7 +26,7 @@
 # define T_SECOND_PARAM (uint8_t)0x30
 # define T_THIRD_PARAM (uint8_t)0x0C
 
-# define OPTIONS ""
+# define OPTIONS "d:n:o"
 
 typedef struct s_player
 {
@@ -67,4 +67,6 @@ void init_carridge(t_player *player, uint8_t i, uint8_t *memory, int gap);
 void poor_mans_visualization(uint8_t *bytecode, t_player *players, int num_players);
 uint16_t swap16(uint16_t *toswap);
 uint32_t swap32(uint32_t *toswap);
+
+int get_options(int	argc, char *argv[], const char *options);
 #endif

@@ -93,11 +93,12 @@ void	vm_cycle(t_player *players, uint32_t nplayers)
 		foreach_thread(players, nplayers, op_exec);
 		++cycles;
 		++get_vm(0)->cycle;
-		if (get_vm(0)->cycle == 3300)
+		if (get_vm(0)->cycle == 2430)
 		{
 //			ft_printf("player 1 threads_size = %d\n", threads_size(&players[0].threads));
 //			ft_printf("player 2 threads_size = %d\n", threads_size(&players[1].threads));
-			return;
+//			(void)0;
+			poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, players, nplayers);
 		}
 		if (cycles == cycles_to_die)
         {
