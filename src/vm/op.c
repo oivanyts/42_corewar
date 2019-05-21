@@ -93,12 +93,10 @@ void	vm_cycle(t_player *players, uint32_t nplayers)
 		foreach_thread(players, nplayers, op_exec);
 		++cycles;
 		++get_vm(0)->cycle;
-		if (get_vm(0)->cycle == 2430)
+		if (get_vm(0)->cycle == get_vm(0)->o_dump_point && get_vm(0)->o_dump)
 		{
-//			ft_printf("player 1 threads_size = %d\n", threads_size(&players[0].threads));
-//			ft_printf("player 2 threads_size = %d\n", threads_size(&players[1].threads));
-//			(void)0;
-			poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, players, nplayers);
+			poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, get_vm(0)->players, nplayers);
+			return ;
 		}
 		if (cycles == cycles_to_die)
         {
@@ -258,11 +256,25 @@ void	op_decode(t_thread *pc)
 	pc->op.args[2] = decode_param(pc->op, pc, 3);
 }
 
+void print_moves(t_thread *pc)
+{
+	int8_t	i = 0;
+	int8_t funcsize = pc->ip % MEM_SIZE - pc->op.ip % MEM_SIZE;
+	ft_printf("ADV %d (0x%0.4x -> 0x%0.4x)", funcsize, pc->op.ip % MEM_SIZE, pc->ip % MEM_SIZE);
+	while (i < funcsize)
+	{
+		ft_printf(" %0.2x", (uint8_t)pc->vm_memory[(pc->op.ip + i) % MEM_SIZE]);
+		i++;
+	}
+	ft_printf("\n");
+
+}
+
 void	op_exec(t_thread *pc)
 {
 	if (pc->processing == 0)
 	{
-		//poor_mans_visualization(pc->vm_memory, pc->player, 1);
+//		poor_mans_visualization(pc->vm_memory, pc->player, 1);
 		pc->op.valid = 1;
 		pc->op.ip = pc->ip;
 		pc->op.opcode = as_byte(pc->vm_memory)[pc->ip];
@@ -292,6 +304,7 @@ void	op_exec(t_thread *pc)
 	if (pc->op.valid)
 	{
 		opcalls[pc->op.opcode].opfunc(pc, &pc->op.args[0], &pc->op.args[1], &pc->op.args[2]);
+//		print_moves(pc);
 //		poor_mans_visualization(pc->vm_memory, get_vm(0)->players, get_vm(0)->nplayers);
 	}
 	pc->processing = 0;

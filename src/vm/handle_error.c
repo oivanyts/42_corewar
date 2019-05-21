@@ -13,13 +13,14 @@
 #include "libft.h"
 #include "error.h"
 
-const char	*error_table[5] =
+const char	*error_table[6] =
 {
 	"Array sizing failed.",
 	"No players.",
 	"Too many players.",
 	"Wrong magic number in header.",
-	"Wrong parameter type passed to command."
+	"Wrong parameter type passed to command.",
+	"Option fail"
 };
 
 void	handle_error(t_error_code n_err)

@@ -21,7 +21,7 @@ typedef enum e_opcode
 {
 	no_op = -1,
 	oplowborder = 0,
-	oplive = 0,
+	oplive = 1,
 	opld,
 	opst,
 	opadd,
@@ -42,13 +42,13 @@ typedef enum e_opcode
 
 typedef struct	s_op
 {
-	char	*name;
-	uint32_t		args;
+	char		*name;
+	uint32_t	args;
 	uint8_t		targs[3];
 	uint8_t		opcode;
-	uint32_t		cycle;
-	char	*descr;
-	bool	codoctal;
+	uint32_t	cycle;
+	char		*descr;
+	bool		codoctal;
 	bool		tdir_size;
 }				t_op;
 

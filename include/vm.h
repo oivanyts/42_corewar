@@ -26,26 +26,32 @@
 # define T_SECOND_PARAM (uint8_t)0x30
 # define T_THIRD_PARAM (uint8_t)0x0C
 
-# define OPTIONS "d:n:o"
+# define OPTIONS "d:n:s:"
 
-typedef struct s_player
+typedef struct	s_player
 {
-	t_threads threads;
-	t_header header;
-	int32_t number;
-} t_player;
+	t_threads	threads;
+	t_header	header;
+	int32_t		number;
+} 				t_player;
 
-typedef struct s_vm
+typedef struct	s_vm
 {
-	t_player *players;
-	int32_t nplayers;
-	uint32_t last_alive;
-	uint32_t cycle;
-}t_vm;
+	t_player	*players;
+	int32_t		nplayers;
+	uint32_t	last_alive;
+	uint32_t	cycle;
+	bool		o_dump;
+	uint32_t	o_dump_point;
+	bool		o_stop;
+	uint32_t	o_stop_point;
+	uint8_t		o_next_player;
+}				t_vm;
 
-t_vm *get_vm(t_vm *vm);	uint32_t number;
 
-bool load_from_file(char *filename, t_player *player, uint8_t memory[]);
+t_vm			*get_vm(t_vm *vm);	uint32_t number;
+
+bool			load_from_file(char *filename, t_player *player, uint8_t memory[]);
 
 void	vm_cycle(t_player *players, uint32_t nplayers);
 
@@ -65,7 +71,9 @@ t_op    op_tab[17];
 void init_carridge(t_player *player, uint8_t i, uint8_t *memory, int gap);
 
 void poor_mans_visualization(uint8_t *bytecode, t_player *players, int num_players);
+
 uint16_t swap16(uint16_t *toswap);
+
 uint32_t swap32(uint32_t *toswap);
 
 int get_options(int	argc, char *argv[], const char *options);
