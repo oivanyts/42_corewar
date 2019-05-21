@@ -19,13 +19,13 @@
 
 typedef struct	s_op
 {
-	char	*name;
-	uint32_t		args;
+	char		*name;
+	uint32_t	args;
 	uint8_t		targs[3];
 	uint8_t		opcode;
-	uint32_t		cycle;
-	char	*descr;
-	bool	codoctal;
+	uint32_t	cycle;
+	char		*descr;
+	bool		codoctal;
 	bool		tdir_size;
 }				t_op;
 
