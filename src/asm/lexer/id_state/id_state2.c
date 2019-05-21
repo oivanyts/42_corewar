@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   id_state2.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/21 19:20:12 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/05/21 19:20:17 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "asm.h"
 #include "lexer.h"
 
@@ -5,7 +17,7 @@ int		id_string(t_asm *a)
 {
 	t_fsm	*fsm;
 	char	*data;
-	size_t 	len;
+	size_t	len;
 
 	fsm = a->fsm;
 	len = fsm->curr - fsm->start - 1;

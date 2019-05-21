@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/21 19:26:16 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/05/21 19:26:17 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "asm.h"
 #include "lex_conditions.h"
 #include "id_states.h"
@@ -25,7 +37,6 @@ t_op_list	*get_op_list(char *file_name)
 	init_asm(&a, file_name);
 	lexer(&a);
 	free(a.fsm->code);
-	del_2d_masint(a.fsm->table, a.fsm);
 	free(a.fsm);
 	return (a.op_list);
 }
@@ -46,40 +57,3 @@ void		print_identifiers(t_op_list *op_list)
 		op_list = op_list->next;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

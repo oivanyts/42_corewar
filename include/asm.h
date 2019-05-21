@@ -41,9 +41,6 @@ typedef struct	s_fsm
 	char 				*start;
 	char 				*curr;
 	int 				state;
-	int 				**table;
-	int					tab_row;
-	int					tab_col;
 	char 				*code;
 }				t_fsm;
 
@@ -118,6 +115,7 @@ static t_op		g_op_tab[17] =
 	{"aff", 1, {T_REG}, 16, 2, "aff", 1, 0},
 	{0, 0, {0}, 0, 0, 0, 0, 0}
 };
+
 int		ft_listlen(t_token_list *lst);
 
 #endif

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lex_condition1.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/21 19:22:02 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/05/21 19:22:03 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "asm.h"
 #include "lexer.h"
 
@@ -21,7 +33,7 @@ int		lex_quote(char *c)
 	return (*c == '"');
 }
 
-int 	lex_name(char *c)
+int		lex_name(char *c)
 {
 	return (str_cmp(c, NAME_CMD_STRING));
 }
