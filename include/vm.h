@@ -43,7 +43,7 @@ typedef struct s_vm
 	uint32_t cycle;
 }t_vm;
 
-t_vm *get_vm(t_vm *vm);	uint32_t number;
+t_vm *get_vm(t_vm *vm);
 
 bool load_from_file(char *filename, t_player *player, uint8_t memory[]);
 
@@ -51,7 +51,7 @@ void	vm_cycle(t_player *players, uint32_t nplayers);
 
 uint8_t get_param_type(uint8_t tparams, uint8_t param_number);
 
-uint8_t decode_tparams(struct s_thread *pc, t_opcode opcode);
+uint8_t decode_tparams(struct s_thread *pc, uint8_t opcode);
 
 t_memory decode_param(t_decoded_op op, t_thread *pc, uint8_t param_number);
 
@@ -60,13 +60,13 @@ void	op_decode(t_thread *pc);
 void	op_exec(t_thread *pc);
 
 uint32_t threads_alive(t_player *players, uint32_t nplayers);
+
 t_op    op_tab[17];
 
 void init_carridge(t_player *player, uint8_t i, uint8_t *memory, int gap);
 
 void poor_mans_visualization(uint8_t *bytecode, t_player *players, int num_players);
-uint16_t swap16(uint16_t *toswap);
-uint32_t swap32(uint32_t *toswap);
 
 int get_options(int	argc, char *argv[], const char *options);
+
 #endif

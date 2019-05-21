@@ -93,13 +93,13 @@ void	vm_cycle(t_player *players, uint32_t nplayers)
 		foreach_thread(players, nplayers, op_exec);
 		++cycles;
 		++get_vm(0)->cycle;
-		if (get_vm(0)->cycle == 2430)
-		{
+		//if (get_vm(0)->cycle == 2430)
+		//{
 //			ft_printf("player 1 threads_size = %d\n", threads_size(&players[0].threads));
 //			ft_printf("player 2 threads_size = %d\n", threads_size(&players[1].threads));
 //			(void)0;
-			poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, players, nplayers);
-		}
+			//poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, players, nplayers);
+		//}
 		if (cycles == cycles_to_die)
         {
 			foreach_thread(players, nplayers, kill_thread_if_no_lives);
@@ -123,9 +123,9 @@ void	vm_cycle(t_player *players, uint32_t nplayers)
 	}
 }
 
-t_opcode decode_opcode(struct s_thread *pc)
+uint8_t decode_opcode(struct s_thread *pc)
 {
-	t_opcode opcode;
+	uint8_t opcode;
 
 	opcode = as_byte(pc->vm_memory)[pc->ip];
 	pc->ip += 1;
@@ -133,7 +133,7 @@ t_opcode decode_opcode(struct s_thread *pc)
 	return (opcode);
 }
 
-bool	check_op_params(t_opcode opcode, uint8_t tparams)
+bool	check_op_params(uint8_t opcode, uint8_t tparams)
 {
 	if (op_tab[opcode].targs[0] && (op_tab[opcode].targs[0] & ((tparams >> 6) & 0x3)) == 0)
 	{
@@ -153,11 +153,11 @@ bool	check_op_params(t_opcode opcode, uint8_t tparams)
 	}
 }
 
-uint8_t	decode_tparams(struct s_thread *pc, t_opcode opcode)
+uint8_t	decode_tparams(struct s_thread *pc, uint8_t opcode)
 {
 	uint8_t tparams;
 
-	if ((op_tab[opcode].targs[0] & T_IND) || (op_tab[opcode].targs[1] & T_IND) || (op_tab[opcode].targs[2] & T_IND))
+	if (op_tab[opcode].codoctal)
 	{
 		tparams = as_byte(pc->vm_memory)[pc->ip];
 		if (!check_op_params(opcode, tparams))
@@ -174,15 +174,15 @@ uint8_t	decode_tparams(struct s_thread *pc, t_opcode opcode)
 	return (tparams);
 }
 
-uint32_t swap32(uint32_t *toswap)
+uint32_t swap32(uint32_t toswap)
 {
-	return (*toswap >> 24 | ((*toswap >> 8) & 0xff00 ) | ((*toswap << 8) & 0xff0000 ) | *toswap << 24);
+	return (toswap >> 24 | ((toswap >> 8) & 0xff00 ) | ((toswap << 8) & 0xff0000 ) | toswap << 24);
 }
 
 
-uint16_t swap16(uint16_t *toswap)
+uint16_t swap16(uint16_t toswap)
 {
-	return (*toswap >> 8 | *toswap << 8);
+	return (toswap >> 8 | toswap << 8);
 }
 
 uint8_t get_param_type(uint8_t tparams, uint8_t param_number)
@@ -258,6 +258,20 @@ void	op_decode(t_thread *pc)
 	pc->op.args[2] = decode_param(pc->op, pc, 3);
 }
 
+void print_moves(t_thread *pc)
+{
+	int8_t i = 0;
+	int8_t funcsize = pc->ip % MEM_SIZE - pc->op.ip % MEM_SIZE;
+	ft_printf("ADV %d (0x%0.4x -> 0x%0.4x)", funcsize, pc->op.ip % MEM_SIZE, pc->ip % MEM_SIZE);
+	while (i < funcsize)
+	{
+		ft_printf(" %0.2x", (uint8_t)pc->vm_memory[(pc->op.ip + i) % MEM_SIZE]);
+		i++;
+	}
+	ft_printf("\n");
+
+}
+
 void	op_exec(t_thread *pc)
 {
 	if (pc->processing == 0)
@@ -266,7 +280,7 @@ void	op_exec(t_thread *pc)
 		pc->op.valid = 1;
 		pc->op.ip = pc->ip;
 		pc->op.opcode = as_byte(pc->vm_memory)[pc->ip];
-		if (pc->op.opcode <= oplowborder || pc->op.opcode >= ophighborder)
+		if (pc->op.opcode < 1 || pc->op.opcode > 16)
 		{
 			pc->op.valid = 0;
 			pc->wait = 1;
@@ -292,7 +306,8 @@ void	op_exec(t_thread *pc)
 	if (pc->op.valid)
 	{
 		opcalls[pc->op.opcode].opfunc(pc, &pc->op.args[0], &pc->op.args[1], &pc->op.args[2]);
-//		poor_mans_visualization(pc->vm_memory, get_vm(0)->players, get_vm(0)->nplayers);
+		//print_moves(pc);
+		//poor_mans_visualization(pc->vm_memory, get_vm(0)->players, get_vm(0)->nplayers);
 	}
 	pc->processing = 0;
 }

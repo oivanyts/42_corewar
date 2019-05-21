@@ -17,29 +17,6 @@
 # include <stdbool.h>
 #include "abstract_cpu.h"
 
-typedef enum e_opcode
-{
-	no_op = -1,
-	oplowborder = 0,
-	oplive = 0,
-	opld,
-	opst,
-	opadd,
-	opsub,
-	opand,
-	opor,
-	opxor,
-	opzjmp,
-	opldi,
-	opsti,
-	opfork,
-	oplld,
-	oplldi,
-	oplfork,
-	opaff,
-	ophighborder
-} t_opcode;
-
 typedef struct	s_op
 {
 	char	*name;
@@ -56,7 +33,7 @@ typedef struct s_decoded_op
 {
 	uint32_t ip;
 	uint8_t tparams;
-	t_opcode opcode;
+	uint8_t opcode;
 	t_memory args[3];
 	bool valid;
 } t_decoded_op;
@@ -81,11 +58,11 @@ typedef struct s_opcall
 	void (*opfunc)(t_thread*, t_memory*, t_memory*, t_memory*);
 } t_opcall;
 
-t_opcall opcalls[ophighborder];
+t_opcall opcalls[16];
 
-uint32_t swap32(uint32_t *toswap);
+uint32_t swap32(uint32_t toswap);
 
-uint16_t swap16(uint16_t *toswap);
+uint16_t swap16(uint16_t toswap);
 
 void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3);
 

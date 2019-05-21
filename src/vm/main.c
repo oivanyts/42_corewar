@@ -147,10 +147,10 @@ int		main(int argc, char *argv[])
 	ft_bzero(memory, sizeof(uint8_t) * MEM_SIZE);
 //	argc = get_options(argc, argv, OPTIONS);								//
 	parce_all_players(argc - 1, argv, &players[0], &memory[0]);
-	poor_mans_visualization(memory, &players[0], argc - 1);
+	//poor_mans_visualization(memory, &players[0], argc - 1);
 	init_vm(&vm, &players[0], argc - 1);
 	vm_cycle(vm.players, vm.nplayers);
-	poor_mans_visualization(memory, &players[0], argc - 1);
+	//poor_mans_visualization(memory, &players[0], argc - 1);
 	printf("Last player alive: %u\n", vm.last_alive);
 	return 0;
 }
