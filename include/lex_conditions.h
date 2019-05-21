@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lex_conditions.h                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/21 21:16:50 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/05/21 21:16:51 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef LEX_CONDITIONS_H
 # define LEX_CONDITIONS_H
 
@@ -10,7 +22,7 @@ int		lex_separator_char(char *c);
 int		lex_label_char(char *c);
 int		lex_comment(char *c);
 int		lex_quote(char *c);
-int 	lex_name(char *c);
+int		lex_name(char *c);
 int		lex_commentary(char *c);
 int		lex_whitespace(char *c);
 int		lex_endline(char *c);
