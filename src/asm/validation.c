@@ -46,7 +46,7 @@ void		ft_chekargs(t_token_list *toklst, t_op *op)
 		!(ft_gettypearg(toklst->ident) & op->targs[argnum++]))
 			ft_errhandler(toklst);
 		if (toklst->ident == REGISTER &&
-		(*(int *)toklst->data < 1 || *(int *)toklst->data > 99))
+		(*(int *)toklst->data < 0 || *(int *)toklst->data > 99))
 			ft_errhandler(toklst);
 		toklst = toklst->next;
 		i++;
