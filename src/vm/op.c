@@ -59,19 +59,19 @@ void    kill_thread_if_no_lives(t_thread *th)
 
 void    foreach_thread(t_player *players, uint32_t nplayers, void(*func)(t_thread*))
 {
-	uint32_t player;
-	uint32_t player_thread;
+	int32_t player;
+	int32_t player_thread;
 
-	player = 0;
-	while (player < nplayers)
+	player = nplayers - 1;
+	while (player >= 0)
 	{
-		player_thread = 0;
-		while (player_thread < threads_size(&players[player].threads))
+		player_thread = threads_size(&players[player].threads) - 1;
+		while (player_thread >= 0)
 		{
 			func(threads_at(&players[player].threads, player_thread));
-			++player_thread;
+			--player_thread;
 		}
-		++player;
+		--player;
 	}
 }
 
@@ -93,30 +93,31 @@ void	vm_cycle(t_player *players, uint32_t nplayers)
 		foreach_thread(players, nplayers, op_exec);
 		++cycles;
 		++get_vm(0)->cycle;
-		if (get_vm(0)->cycle == get_vm(0)->o_dump_point && get_vm(0)->o_dump)
-		{
-			poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, get_vm(0)->players, nplayers);
-			return ;
-		}
+//		ft_printf("It is now cycle %d\n", get_vm(0)->cycle);
 		if (cycles == cycles_to_die)
         {
 			foreach_thread(players, nplayers, kill_thread_if_no_lives);
 			alive = threads_alive(players, nplayers);
-		    cycles = 0;
+			cycles = 0;
 			++checks;
 			if (alive > 21)
 			{
 				cycles_to_die -= CYCLE_DELTA;
 				++cycles_to_die_dropped;
 			}
-        }
+		}
 		if ((checks == MAX_CHECKS && !cycles_to_die_dropped))
 		{
 			cycles_to_die -= CYCLE_DELTA;
 			cycles_to_die_dropped = 0;
 			checks = 0;
 		}
-		//poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, players, nplayers);
+		if (get_vm(0)->cycle == get_vm(0)->o_dump_point && get_vm(0)->o_dump)
+		{
+//			poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, get_vm(0)->players, nplayers);
+			return ;
+		}
+//		poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, players, nplayers);
 		//ft_printf("\ncycle = %u ended\n", global_cycles);
 	}
 }
@@ -259,14 +260,23 @@ void	op_decode(t_thread *pc)
 void print_moves(t_thread *pc)
 {
 	int8_t	i = 0;
-	int8_t funcsize = pc->ip % MEM_SIZE - pc->op.ip % MEM_SIZE;
+	int8_t funcsize;
+	if (pc->op.opcode == 8 && pc->cf)
+	{
+		return;
+	}
+	else
+	{
+		funcsize = pc->ip % MEM_SIZE - pc->op.ip % MEM_SIZE;
+	}
 	ft_printf("ADV %d (0x%0.4x -> 0x%0.4x)", funcsize, pc->op.ip % MEM_SIZE, pc->ip % MEM_SIZE);
 	while (i < funcsize)
 	{
 		ft_printf(" %0.2x", (uint8_t)pc->vm_memory[(pc->op.ip + i) % MEM_SIZE]);
 		i++;
 	}
-	ft_printf("\n");
+	ft_printf(" \n", op_tab[pc->op.opcode].name);
+//	ft_printf(" {red}[%s]{eoc}\n", op_tab[pc->op.opcode].name);
 
 }
 
@@ -304,8 +314,9 @@ void	op_exec(t_thread *pc)
 	if (pc->op.valid)
 	{
 		opcalls[pc->op.opcode].opfunc(pc, &pc->op.args[0], &pc->op.args[1], &pc->op.args[2]);
-//		print_moves(pc);
-//		poor_mans_visualization(pc->vm_memory, get_vm(0)->players, get_vm(0)->nplayers);
+		if (get_vm(0)->o_dump)
+			print_moves(pc);
+		poor_mans_visualization(pc->vm_memory, get_vm(0)->players, get_vm(0)->nplayers);
 	}
 	pc->processing = 0;
 }

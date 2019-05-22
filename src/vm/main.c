@@ -1,7 +1,7 @@
 #include "op.h"
 #include "vm.h"
 
-
+#define TOFILE //
 
 t_list *find_all_carridges(t_player *pPlayer, int num_players)
 {
@@ -49,32 +49,46 @@ bool check_pos(size_t i, t_list *pList)
 
 void poor_mans_visualization(uint8_t *bytecode, t_player *players, int num_players)
 {
-	size_t		i;
+	size_t		i = 0;
 	int			player_gap;
 //	t_thread	*tmp;
 	t_list		*carridges = NULL;
 
-	int    color[4] = {31,34,36,32};
+//	int    color[4] = {31,34,36,32};
 
 	carridges = find_all_carridges(players, num_players);
 	player_gap = MEM_SIZE / num_players;
+//	while (i < (size_t)num_players)
+//	{
+//		ft_printf("* Player %d, weighing %d, %s, (%s) !\n", players[i].number,
+//				players[i].header.prog_size/8, players[i].header.prog_name,
+//				players[i].header.comment);
+//		tmp = players[i].threads.arr.arr;
+//		ft_printf("carr - [%d][%d] - %d\n", tmp->ip, players->number, tmp->reg[0]);
+//		i++;
+//	}
 	i = 0;
 	while (i < MEM_SIZE)
 	{
 		if (!(i % 64))
 		{
-			ft_printf("\n0x%04x : ", i);
+			ft_printf("0x%04x : ", i);
 		}
 		if (check_pos(i, carridges))
 		{
-			ft_printf("\033[48;05;%dm", color[i / player_gap] + 10);
+//			ft_printf("\033[48;05;%dm", color[i / player_gap] + 10);
 		}
 		else if (i < players[i / player_gap].header.prog_size + (i / player_gap) * player_gap)
 		{
-			ft_printf("\033[38;05;%dm", color[i / player_gap]);
+//			ft_printf("\033[38;05;%dm", color[i / player_gap]);
 		}
-		ft_printf("%.2x\033[m%c", bytecode[i], (i + 1) % 64 ? ' ' : 1);
+		ft_printf("%.2x%c", bytecode[i], ' ');
+//	ft_printf("\033[m");
 		i++;
+		if (!(i % 64) )
+		{
+			ft_printf("\n");
+		}
 	}
 	delcarlist(carridges);
 	ft_printf("\n");
@@ -125,6 +139,8 @@ bool is_option(char **argv, uint8_t *arg_num, char string1[])
 			}
 			else if (ft_strnequ(option, "n", 1))
 			{
+				if (param > 4 || param < 1)
+					handle_error(error_option);
 				vm->o_next_player = param;
 			}
 			else
@@ -172,9 +188,9 @@ uint8_t next_file(uint8_t files[4])
 	uint8_t i;
 	uint8_t cp;
 
-	i = 3;
-	while (!files[i] && i)
-		i--;
+	i = 0;
+	while (!files[i] && i < 3)
+		i++;
 	cp = files[i];
 	files[i] = 0;
 	return (cp);
@@ -205,12 +221,10 @@ uint8_t parce_info(int argc, char **arguments, t_player *player, uint8_t *memory
 		{
 
 		}
-
 //		chose_player_number();
 		place_process(&files[0], vm->o_next_player, i);
 		vm->o_next_player = 0;
 		vm->nplayers++;
-
 		i++;
 	}
 	if (vm->nplayers < 1)
@@ -223,6 +237,7 @@ uint8_t parce_info(int argc, char **arguments, t_player *player, uint8_t *memory
 	{
 		load_from_file(arguments[next_file(files)], &player[i], &memory[(i) * player_gap]);
 		threads_init(&player[i].threads);
+		player[i].number = i + 1;
 		init_carridge(&player[i], i, memory, player_gap);
 		i++;
 	}
@@ -260,10 +275,14 @@ int		main(int argc, char *argv[])
 	ft_bzero(players, sizeof(t_player) * (argc - 1));
 	ft_bzero(memory, sizeof(uint8_t) * MEM_SIZE);
 	parce_info(argc - 1, argv, &players[0], &memory[0]);
-	poor_mans_visualization(memory, &players[0], vm.nplayers);
+	ft_printf("Introducing contestants...\n"
+			  "* Player 1, weighing 23 bytes, \"zork\" (\"just a basic living prog\") !\n"
+			  "* Player 2, weighing 325 bytes, \"Celebration Funebre v0.99pl42\" (\"Jour J\") !\n"
+			  "* Player 3, weighing 281 bytes, \"Tching tching(Intercepteur), Bouh!Bouh!(bruits d'anti-jeu)\" (\"\") !\n");
+//	poor_mans_visualization(memory, &players[0], vm.nplayers);
 	init_vm(&vm, &players[0], vm.nplayers);
 	vm_cycle(vm.players, vm.nplayers);
 	poor_mans_visualization(memory, &players[0], vm.nplayers);
-	printf("Last player alive: %u\n", vm.last_alive);
+//	printf("Last player alive: %u\n", vm.last_alive);
 	return 0;
 }

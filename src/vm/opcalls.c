@@ -38,7 +38,7 @@ void load_dir_idx_param(t_thread *sp, t_memory *mem)
 
 void load_ind_param(t_thread *sp, t_memory *mem)
 {
-	uint16_t addr;
+	int16_t addr;
 
 	addr = memory_tou16(mem);
 	addr = swap16(addr);
@@ -195,17 +195,23 @@ void f_ldi(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 void f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-	t_memory mem;
-	uint16_t up2;
-	uint16_t up3;
+	t_memory mem, mem2;
+	int32_t up1;
+	int16_t up2;
+	int16_t up3;
 
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
+	if (get_vm(0)->cycle >= 243)
+		get_vm(0);
+	up1 = swap32(memory_tou32(p1));
 	up2 = swap16(memory_tou16(p2));
 	up3 = swap16(memory_tou16(p3));
+	memory_init(&mem2, &up1, REG_SIZE);
 	memory_init(&mem, &sp->vm_memory[(sp->op.ip + (up2 + up3) % IDX_MOD) % MEM_SIZE], DIR_SIZE);
-	memory_memmove(&mem, p1);
+	memory_memmove(&mem, &mem2);
+
 }
 
 void f_fork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
