@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_lexer.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/21 19:26:00 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/05/21 19:26:01 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "asm.h"
 #include "lex_conditions.h"
 #include "id_states.h"
@@ -49,20 +61,13 @@ static void	init_errors(t_asm *a)
 	a->errors[3] = err_empty_file;
 }
 
-
-static void	init_fsm(t_asm *a, char *name)
-{
-	a->fsm->code = read_text_from(name);
-	read_table("./src/asm/lexer/graph/fsm", a->fsm);
-	a->fsm->state = 1;
-}
-
-void	init_asm(t_asm *a, char *file_name)
+void		init_asm(t_asm *a, char *file_name)
 {
 	a->row = 1;
 	a->col = 1;
 	a->fsm = (t_fsm*)ft_memalloc(sizeof(t_fsm));
-	init_fsm(a, file_name);
+	a->fsm->code = read_text_from(file_name);
+	a->fsm->state = 1;
 	a->op_list = NULL;
 	a->token_list = NULL;
 	init_lex_conditions(a);

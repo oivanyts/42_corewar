@@ -1,12 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   read_text.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/21 19:27:30 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/05/21 19:27:31 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "asm.h"
 
-static int	get_file_len(fd)
+static int	get_file_len(int fd)
 {
 	char	buf[1];
 	int		len;
 
 	len = 0;
-	while (read(fd, buf, 1) == 1)
+	while ((read(fd, buf, 1)) == 1)
 		len++;
 	lseek(fd, 0, SEEK_SET);
 	return (len);
@@ -14,7 +26,7 @@ static int	get_file_len(fd)
 
 char		*read_text_from(char *name)
 {
-	int 	fd;
+	int		fd;
 	char	*text;
 	char	*p_text;
 
@@ -26,7 +38,7 @@ char		*read_text_from(char *name)
 	}
 	text = (char*)ft_memalloc(get_file_len(fd) + 1);
 	p_text = text;
-	while (read(fd, p_text, 1) == 1)
+	while ((read(fd, p_text, 1)) == 1)
 		p_text++;
 	close(fd);
 	return (text);

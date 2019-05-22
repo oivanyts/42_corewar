@@ -1,8 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   op_list_operations.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/21 19:24:05 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/05/21 19:24:06 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "asm.h"
 
 void	add_to_op_list(t_op_list **op_list, t_token_list *token_list)
 {
 	t_op_list	*tmp;
+
 	tmp = (t_op_list*)ft_memalloc(sizeof(t_op_list));
 	tmp->token_list = token_list;
 	if (*op_list == NULL)

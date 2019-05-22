@@ -1,4 +1,4 @@
-.comment        "Just a basicWinner Program"
+.comment        "Just a basicWinner Program" 23 %34
 .name          "42"
 
 

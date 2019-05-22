@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   id_state0.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/21 19:19:50 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/05/21 19:19:51 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "asm.h"
 #include "lexer.h"
 
@@ -23,7 +35,7 @@ int		id_label(t_asm *a)
 {
 	t_fsm	*fsm;
 	char	*data;
-	size_t 	len;
+	size_t	len;
 
 	fsm = a->fsm;
 	len = fsm->curr - fsm->start;
@@ -37,7 +49,7 @@ int		id_instruction(t_asm *a)
 {
 	t_fsm	*fsm;
 	char	*data;
-	size_t 	len;
+	size_t	len;
 
 	fsm = a->fsm;
 	len = fsm->curr - fsm->start;

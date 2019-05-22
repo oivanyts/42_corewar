@@ -1,7 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   finite_state_machine.c                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/21 19:25:50 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/05/21 19:25:51 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "asm.h"
+#include "fsm.h"
 #define ABS(n) (n) < 0 ? ((n) * -1) : (n)
 
-static int 	check_condition(t_asm *a)
+static int	check_condition(t_asm *a)
 {
 	int		condition;
 
@@ -32,7 +45,7 @@ static void	check_errors(t_asm *a)
 	}
 }
 
-void	finite_state_machine(t_asm *a, t_fsm *fsm)
+void		finite_state_machine(t_asm *a, t_fsm *fsm)
 {
 	int		cond;
 	int		id_ret;
@@ -42,7 +55,7 @@ void	finite_state_machine(t_asm *a, t_fsm *fsm)
 	{
 		first_state_init(a, fsm);
 		cond = check_condition(a);
-		fsm->state = fsm->table[fsm->state - 1][cond];
+		fsm->state = g_fsm[fsm->state - 1][cond];
 		if (fsm->state <= 0)
 		{
 			check_errors(a);
