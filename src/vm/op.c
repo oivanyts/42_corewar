@@ -90,16 +90,8 @@ void	vm_cycle(t_player *players, uint32_t nplayers)
 	while (alive || cycles_to_die > 0)
 	{
 		ft_printf("It is now cycle %d\n", get_vm(0)->cycle);
-		foreach_thread(players, nplayers, op_exec);
-		if (get_vm(0)->cycle == get_vm(0)->o_dump_point && get_vm(0)->o_dump)
-		{
-//			poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, get_vm(0)->players, nplayers);
-			return ;
-		}
-		++cycles;
-		++get_vm(0)->cycle;
 		if (cycles == cycles_to_die)
-        {
+		{
 			alive = threads_alive(players, nplayers);
 			foreach_thread(players, nplayers, kill_thread_if_no_lives);
 			cycles = 0;
@@ -117,6 +109,18 @@ void	vm_cycle(t_player *players, uint32_t nplayers)
 			ft_printf("Cycle to die is now %d\n", cycles_to_die);
 			checks = 0;
 		}
+		if (get_vm(0)->cycle == 2515)
+		{
+			get_vm(0);
+		}
+		foreach_thread(players, nplayers, op_exec);
+		if (get_vm(0)->cycle == get_vm(0)->o_dump_point && get_vm(0)->o_dump)
+		{
+//			poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, get_vm(0)->players, nplayers);
+			return ;
+		}
+		++cycles;
+		++get_vm(0)->cycle;
 //		poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, players, nplayers);
 		//ft_printf("\ncycle = %u ended\n", global_cycles);
 	}
