@@ -23,7 +23,7 @@ uint32_t player_threads_alive(t_player *player)
 	{
 		if (threads_at(&player->threads, thread)->alive)
 		{
-			++alive;
+			alive += threads_at(&player->threads, thread)->lives;
 		}
 		++thread;
 	}
@@ -83,39 +83,42 @@ void	vm_cycle(t_player *players, uint32_t nplayers)
 	uint32_t cycles_to_die_dropped;
 	uint32_t alive;
 
-	cycles = 0;
+	cycles = 1;
+	get_vm(0)->cycle = 1;
 	cycles_to_die = CYCLE_TO_DIE;
 	cycles_to_die_dropped = 0;
 	checks = 0;
 	alive = threads_alive(players, nplayers);
 	while (alive || cycles_to_die > 0)
 	{
+		ft_printf("It is now cycle %d\n", get_vm(0)->cycle);
 		foreach_thread(players, nplayers, op_exec);
+		if (get_vm(0)->cycle == get_vm(0)->o_dump_point && get_vm(0)->o_dump)
+		{
+//			poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, get_vm(0)->players, nplayers);
+			return ;
+		}
 		++cycles;
 		++get_vm(0)->cycle;
-//		ft_printf("It is now cycle %d\n", get_vm(0)->cycle);
 		if (cycles == cycles_to_die)
         {
 			foreach_thread(players, nplayers, kill_thread_if_no_lives);
 			alive = threads_alive(players, nplayers);
 			cycles = 0;
 			++checks;
-			if (alive > 21)
+			if (alive >= NBR_LIVE)
 			{
+				ft_printf("Cycle to die is now %d\n", cycles_to_die);
 				cycles_to_die -= CYCLE_DELTA;
 				++cycles_to_die_dropped;
 			}
 		}
 		if ((checks == MAX_CHECKS && !cycles_to_die_dropped))
 		{
+			ft_printf("Cycle to die is now %d\n", cycles_to_die);
 			cycles_to_die -= CYCLE_DELTA;
 			cycles_to_die_dropped = 0;
 			checks = 0;
-		}
-		if (get_vm(0)->cycle == get_vm(0)->o_dump_point && get_vm(0)->o_dump)
-		{
-//			poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, get_vm(0)->players, nplayers);
-			return ;
 		}
 //		poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, players, nplayers);
 		//ft_printf("\ncycle = %u ended\n", global_cycles);
@@ -276,7 +279,7 @@ void print_moves(t_thread *pc)
 		i++;
 	}
 	ft_printf(" \n", op_tab[pc->op.opcode].name);
-//	ft_printf(" {red}[%s]{eoc}\n", op_tab[pc->op.opcode].name);
+	//ft_printf(" {red}[%s]{eoc}\n", op_tab[pc->op.opcode].name);
 
 }
 
@@ -303,7 +306,10 @@ void	op_exec(t_thread *pc)
 	if (pc->wait)
 	{
 	    pc->wait -= 1;
-		return ;
+	    if (pc->wait)
+		{
+	    	return ;
+		}
 	}
 	if (pc->alive == 0)
 	{
@@ -316,7 +322,7 @@ void	op_exec(t_thread *pc)
 		opcalls[pc->op.opcode].opfunc(pc, &pc->op.args[0], &pc->op.args[1], &pc->op.args[2]);
 		if (get_vm(0)->o_dump)
 			print_moves(pc);
-//		poor_mans_visualization(pc->vm_memory, get_vm(0)->players, get_vm(0)->nplayers);
+		//poor_mans_visualization(pc->vm_memory, get_vm(0)->players, get_vm(0)->nplayers);
 	}
 	pc->processing = 0;
 }

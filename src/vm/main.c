@@ -54,7 +54,7 @@ void poor_mans_visualization(uint8_t *bytecode, t_player *players, int num_playe
 //	t_thread	*tmp;
 	t_list		*carridges = NULL;
 
-//	int    color[4] = {31,34,36,32};
+	//int    color[4] = {31,34,36,32};
 
 	carridges = find_all_carridges(players, num_players);
 	player_gap = MEM_SIZE / num_players;
@@ -76,14 +76,14 @@ void poor_mans_visualization(uint8_t *bytecode, t_player *players, int num_playe
 		}
 		if (check_pos(i, carridges))
 		{
-//			ft_printf("\033[48;05;%dm", color[i / player_gap] + 10);
+			//ft_printf("\033[48;05;%dm", color[i / player_gap] + 10);
 		}
 		else if (i < players[i / player_gap].header.prog_size + (i / player_gap) * player_gap)
 		{
 //			ft_printf("\033[38;05;%dm", color[i / player_gap]);
 		}
 		ft_printf("%.2x%c", bytecode[i], ' ');
-//	ft_printf("\033[m");
+	//ft_printf("\033[m");
 		i++;
 		if (!(i % 64) )
 		{
@@ -279,7 +279,7 @@ int		main(int argc, char *argv[])
 			  "* Player 1, weighing 23 bytes, \"zork\" (\"just a basic living prog\") !\n"
 			  "* Player 2, weighing 325 bytes, \"Celebration Funebre v0.99pl42\" (\"Jour J\") !\n"
 			  "* Player 3, weighing 281 bytes, \"Tching tching(Intercepteur), Bouh!Bouh!(bruits d'anti-jeu)\" (\"\") !\n");
-//	poor_mans_visualization(memory, &players[0], vm.nplayers);
+	//poor_mans_visualization(memory, &players[0], vm.nplayers);
 	init_vm(&vm, &players[0], vm.nplayers);
 	vm_cycle(vm.players, vm.nplayers);
 	poor_mans_visualization(memory, &players[0], vm.nplayers);

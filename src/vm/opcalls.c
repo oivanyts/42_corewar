@@ -222,17 +222,14 @@ void f_fork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	(void)p2;
     (void)p3;
     load_idx_param(sp, p1, 1);
-    player = sp->player;
-	ft_bzero(&tmp, sizeof(t_thread));
-    ft_memcpy(&tmp.reg, &sp->reg, REG_SIZE * REG_NUMBER);
-    tmp.player = sp->player;
-	tmp.lives = 0;
-    tmp.alive = 1;
-    tmp.op.opcode = -1;
-    tmp.vm_memory = sp->vm_memory;
-    tmp.ip = (uint8_t*)p1->memory - sp->vm_memory;
-    if (!threads_push_back(&player->threads, &tmp))
-        handle_error(error_array_add);
+	player = sp->player;
+	ft_memcpy(&tmp, sp, sizeof(t_thread));
+	tmp.ip = (uint8_t*)p1->memory - sp->vm_memory;
+	tmp.processing = 0;
+	if (!threads_push_back(&player->threads, &tmp))
+	{
+		handle_error(error_array_add);
+	}
 }
 
 void f_lld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
@@ -279,13 +276,8 @@ void f_lfork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
     (void)p2;
     (void)p3;
     player = sp->player;
-	ft_bzero(&tmp, sizeof(t_thread));
-	ft_memcpy(&tmp.reg, &sp->reg, REG_SIZE * REG_NUMBER);
-    tmp.player = sp->player;
-	tmp.lives = 0;
-    tmp.alive = 1;
-    tmp.op.opcode = -1;
-    tmp.vm_memory = sp->vm_memory;
+	ft_memcpy(&tmp, sp, sizeof(t_thread));
+	tmp.processing = 0;
 	addr = memory_tou16(p1);
 	addr = swap16(addr);
 	memory_init(p1, &sp->vm_memory[(sp->op.ip + addr) % MEM_SIZE], p1->memory_size);
