@@ -12,35 +12,20 @@
 
 #include "vm.h"
 
-uint32_t player_threads_alive(t_player *player)
+uint32_t threads_alive(t_threads *threads)
 {
 	size_t thread;
 	uint32_t alive;
 
 	alive = 0;
 	thread = 0;
-	while (thread < threads_size(&player->threads))
+	while (thread < threads_size(threads))
 	{
-		if (threads_at(&player->threads, thread)->alive)
+		if (threads_at(threads, thread)->alive)
 		{
-			alive += threads_at(&player->threads, thread)->lives;
+			alive += threads_at(threads, thread)->lives;
 		}
 		++thread;
-	}
-	return (alive);
-}
-
-uint32_t threads_alive(t_player *players, uint32_t nplayers)
-{
-	uint32_t player;
-	uint32_t alive;
-
-	player = 0;
-	alive = 0;
-	while (player < nplayers)
-	{
-		alive += player_threads_alive(&players[player]);
-		++player;
 	}
 	return (alive);
 }
@@ -57,25 +42,19 @@ void    kill_thread_if_no_lives(t_thread *th)
 	}
 }
 
-void    foreach_thread(t_player *players, uint32_t nplayers, void(*func)(t_thread*))
+void    foreach_thread(t_threads *threads, void(*func)(t_thread*))
 {
-	int32_t player;
-	int32_t player_thread;
+	int32_t thread;
 
-	player = nplayers - 1;
-	while (player >= 0)
+	thread = threads_size(threads) - 1;
+	while (thread >= 0)
 	{
-		player_thread = threads_size(&players[player].threads) - 1;
-		while (player_thread >= 0)
-		{
-			func(threads_at(&players[player].threads, player_thread));
-			--player_thread;
-		}
-		--player;
+		func(threads_at(threads, thread));
+		--thread;
 	}
 }
 
-void	vm_cycle(t_player *players, uint32_t nplayers)
+void	vm_cycle(t_vm *vm)
 {
 	int32_t cycles;
 	int32_t cycles_to_die;
@@ -83,17 +62,16 @@ void	vm_cycle(t_player *players, uint32_t nplayers)
 	uint32_t alive;
 
 	cycles = 1;
-	get_vm(0)->cycle = 1;
 	cycles_to_die = CYCLE_TO_DIE;
 	checks = 0;
-	alive = threads_alive(players, nplayers);
+	alive = threads_alive(&vm->threads);
 	while (alive || cycles_to_die > 0)
 	{
-		ft_printf("It is now cycle %d\n", get_vm(0)->cycle);
+		ft_printf("It is now cycle %d\n", vm->cycle);
 		if (cycles == cycles_to_die)
 		{
-			alive = threads_alive(players, nplayers);
-			foreach_thread(players, nplayers, kill_thread_if_no_lives);
+			alive = threads_alive(&vm->threads);
+			foreach_thread(&vm->threads, kill_thread_if_no_lives);
 			cycles = 0;
 			++checks;
 			if (alive >= NBR_LIVE)
@@ -109,18 +87,18 @@ void	vm_cycle(t_player *players, uint32_t nplayers)
 			ft_printf("Cycle to die is now %d\n", cycles_to_die);
 			checks = 0;
 		}
-		if (get_vm(0)->cycle == 2515)
+		/*if (get_vm(0)->cycle == 2111)
 		{
 			get_vm(0);
-		}
-		foreach_thread(players, nplayers, op_exec);
-		if (get_vm(0)->cycle == get_vm(0)->o_dump_point && get_vm(0)->o_dump)
+		}*/
+		foreach_thread(&vm->threads, op_exec);
+		if (vm->cycle == vm->o_dump_point && vm->o_dump)
 		{
 //			poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, get_vm(0)->players, nplayers);
 			return ;
 		}
 		++cycles;
-		++get_vm(0)->cycle;
+		++vm->cycle;
 //		poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, players, nplayers);
 		//ft_printf("\ncycle = %u ended\n", global_cycles);
 	}
@@ -261,7 +239,7 @@ void	op_decode(t_thread *pc)
 	pc->op.args[2] = decode_param(pc->op, pc, 3);
 }
 
-void print_moves(t_thread *pc)
+void print_moves(const t_thread *pc)
 {
 	int8_t	i = 0;
 	int8_t funcsize;
@@ -282,6 +260,11 @@ void print_moves(t_thread *pc)
 	ft_printf(" \n", op_tab[pc->op.opcode].name);
 	//ft_printf(" {red}[%s]{eoc}\n", op_tab[pc->op.opcode].name);
 
+}
+
+void	print_op(const t_thread *pc)
+{
+	ft_printf("P    %d | %s\n", pc - threads_at(&get_vm(0)->threads, 0) + 1, op_tab[pc->op.opcode].name);
 }
 
 void	op_exec(t_thread *pc)
@@ -320,12 +303,14 @@ void	op_exec(t_thread *pc)
 	op_decode(pc);
 	if (pc->op.valid)
 	{
-		opcalls[pc->op.opcode].opfunc(pc, &pc->op.args[0], &pc->op.args[1], &pc->op.args[2]);
+		//print_op(pc);
+		pc->processing = 0;
+		int pc_i = pc - threads_at(&get_vm(0)->threads, 0);
+		opcalls[pc->op.opcode].opfunc(pc, &pc->op.args[0], &pc->op.args[1], &pc->op.args[2]); //dalshe zatiraetsa adres pc, poetomu sohranyaem ego v pc_i
 		if (get_vm(0)->o_dump)
-			print_moves(pc);
+			print_moves(threads_at(&get_vm(0)->threads, pc_i));
 		//poor_mans_visualization(pc->vm_memory, get_vm(0)->players, get_vm(0)->nplayers);
 	}
-	pc->processing = 0;
 }
 
 t_vm *get_vm(t_vm *vm)

@@ -72,6 +72,6 @@ void init_carridge(t_player *player, uint8_t i, uint8_t *memory, int gap)
     tmp.vm_memory = memory;
     tmp.ip = (uint32_t)(gap * i);
     tmp.reg[0] = swap32(-player->number);
-    if (!threads_push_back(&player->threads, &tmp))
+    if (!threads_push_back(player->threads, &tmp))
         handle_error(error_array_add);
 }

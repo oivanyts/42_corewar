@@ -30,7 +30,7 @@
 
 typedef struct	s_player
 {
-	t_threads	threads;
+	t_threads	*threads;
 	t_header	header;
 	int32_t		number;
 } 				t_player;
@@ -39,6 +39,7 @@ typedef struct	s_vm
 {
 	t_player	*players;
 	int32_t		nplayers;
+	t_threads	threads;
 	uint32_t	last_alive;
 	uint32_t	cycle;
 	bool		o_dump;
@@ -53,7 +54,7 @@ t_vm			*get_vm(t_vm *vm);
 
 bool			load_from_file(char *filename, t_player *player, uint8_t memory[]);
 
-void	vm_cycle(t_player *players, uint32_t nplayers);
+void	vm_cycle(t_vm *vm);
 
 uint8_t get_param_type(uint8_t tparams, uint8_t param_number);
 
@@ -65,7 +66,7 @@ void	op_decode(t_thread *pc);
 
 void	op_exec(t_thread *pc);
 
-uint32_t threads_alive(t_player *players, uint32_t nplayers);
+uint32_t threads_alive(t_threads *threads);
 
 t_op    op_tab[17];
 

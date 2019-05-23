@@ -12,10 +12,10 @@ t_list *find_all_carridges(t_player *pPlayer, int num_players)
 	while (i < num_players)
 	{
 		j = 0;
-		size = threads_size(&pPlayer[i].threads);
+		size = threads_size(pPlayer[i].threads);
 		while (j < size)
 		{
-			tmp = threads_at(&pPlayer[i].threads, j++);
+			tmp = threads_at(pPlayer[i].threads, j++);
 			ft_lstaddback(&ret, ft_lstnew(&(tmp->ip), sizeof(int)));
 		}
 		i++;
@@ -232,12 +232,13 @@ uint8_t parce_info(int argc, char **arguments, t_player *player, uint8_t *memory
 	else if (vm->nplayers > MAX_PLAYERS)
 		handle_error(error_to_many_players);
 	player_gap = MEM_SIZE / vm->nplayers;
+	threads_init(&vm->threads);
 	i = 0;
 	while (i < vm->nplayers)
 	{
 		load_from_file(arguments[next_file(files)], &player[i], &memory[(i) * player_gap]);
-		threads_init(&player[i].threads);
 		player[i].number = i + 1;
+		player[i].threads = &vm->threads;
 		init_carridge(&player[i], i, memory, player_gap);
 		i++;
 	}
@@ -262,7 +263,7 @@ void init_vm(t_vm *vm, t_player *players, int32_t nplayers)
 	vm->players = players;
 	vm->nplayers = nplayers;
 	vm->last_alive = players[max_player_i].number;
-	vm->cycle = 0; //1?
+	vm->cycle = 1;
 }
 
 int		main(int argc, char *argv[])
@@ -281,7 +282,7 @@ int		main(int argc, char *argv[])
 			  "* Player 3, weighing 281 bytes, \"Tching tching(Intercepteur), Bouh!Bouh!(bruits d'anti-jeu)\" (\"\") !\n");
 	//poor_mans_visualization(memory, &players[0], vm.nplayers);
 	init_vm(&vm, &players[0], vm.nplayers);
-	vm_cycle(vm.players, vm.nplayers);
+	vm_cycle(&vm);
 	poor_mans_visualization(memory, &players[0], vm.nplayers);
 //	printf("Last player alive: %u\n", vm.last_alive);
 	return 0;

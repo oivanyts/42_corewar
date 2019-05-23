@@ -200,16 +200,20 @@ void f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	int16_t up2;
 	int16_t up3;
 
+	if (get_vm(0)->cycle == 2171)
+	{
+		get_vm(0);
+	}
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
 	if (get_vm(0)->cycle >= 243)
 		get_vm(0);
-	//up1 = swap32(memory_tou32(p1));
+	up1 = (memory_tou32(p1));
 	up2 = swap16(memory_tou16(p2));
 	up3 = swap16(memory_tou16(p3));
 	memory_init(&mem2, &up1, REG_SIZE);
-	memory_init(&mem, &sp->vm_memory[(sp->op.ip + (up2 + up3) % IDX_MOD) % MEM_SIZE], DIR_SIZE);
+	memory_init(&mem, &sp->vm_memory[(sp->op.ip + (up2 + up3) % IDX_MOD) % MEM_SIZE], DIR_SIZE); //r1=0((
 	memory_memmove(&mem, p1);
 
 }
@@ -226,7 +230,7 @@ void f_fork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	ft_memcpy(&tmp, sp, sizeof(t_thread));
 	tmp.ip = (uint8_t*)p1->memory - sp->vm_memory;
 	tmp.processing = 0;
-	if (!threads_push_back(&player->threads, &tmp))
+	if (!threads_push_back(player->threads, &tmp))
 	{
 		handle_error(error_array_add);
 	}
@@ -282,7 +286,7 @@ void f_lfork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	addr = swap16(addr);
 	memory_init(p1, &sp->vm_memory[(sp->op.ip + addr) % MEM_SIZE], p1->memory_size);
 	tmp.ip = (uint8_t*)p1->memory - sp->vm_memory;
-    if (!threads_push_back(&player->threads, &tmp))
+    if (!threads_push_back(player->threads, &tmp))
         handle_error(error_array_add);
 }
 
