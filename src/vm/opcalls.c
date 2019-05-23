@@ -205,12 +205,12 @@ void f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	load_param(sp, p3, 3);
 	if (get_vm(0)->cycle >= 243)
 		get_vm(0);
-	up1 = swap32(memory_tou32(p1));
+	//up1 = swap32(memory_tou32(p1));
 	up2 = swap16(memory_tou16(p2));
 	up3 = swap16(memory_tou16(p3));
 	memory_init(&mem2, &up1, REG_SIZE);
 	memory_init(&mem, &sp->vm_memory[(sp->op.ip + (up2 + up3) % IDX_MOD) % MEM_SIZE], DIR_SIZE);
-	memory_memmove(&mem, &mem2);
+	memory_memmove(&mem, p1);
 
 }
 

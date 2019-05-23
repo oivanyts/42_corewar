@@ -67,7 +67,7 @@ void poor_mans_visualization(uint8_t *bytecode, t_player *players, int num_playe
 //		ft_printf("carr - [%d][%d] - %d\n", tmp->ip, players->number, tmp->reg[0]);
 //		i++;
 //	}
-	i = 0;
+//	i = 0;
 	while (i < MEM_SIZE)
 	{
 		if (!(i % 64))

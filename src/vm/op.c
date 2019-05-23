@@ -316,7 +316,7 @@ void	op_exec(t_thread *pc)
 		opcalls[pc->op.opcode].opfunc(pc, &pc->op.args[0], &pc->op.args[1], &pc->op.args[2]);
 		if (get_vm(0)->o_dump)
 			print_moves(pc);
-		poor_mans_visualization(pc->vm_memory, get_vm(0)->players, get_vm(0)->nplayers);
+//		poor_mans_visualization(pc->vm_memory, get_vm(0)->players, get_vm(0)->nplayers);
 	}
 	pc->processing = 0;
 }
