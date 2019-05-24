@@ -6,7 +6,7 @@
 /*   By: myaremen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 15:57:21 by myaremen          #+#    #+#             */
-/*   Updated: 2019/04/26 07:54:57 by oivanyts         ###   ########.fr       */
+/*   Updated: 2019/05/24 12:29:42 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	vm_cycle(t_vm *vm)
 		if (checks == MAX_CHECKS)
 		{
 			cycles_to_die -= CYCLE_DELTA;
-			ft_printf("Cycle to die is now %d\n", cycles_to_die);
+//			ft_printf("Cycle to die is now %d\n", cycles_to_die);
 			checks = 0;
 		}
 		/*if (get_vm(0)->cycle == 2111)
