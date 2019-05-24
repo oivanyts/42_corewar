@@ -6,11 +6,12 @@
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 09:42:51 by oivanyts          #+#    #+#             */
-/*   Updated: 2019/01/18 09:43:10 by oivanyts         ###   ########.fr       */
+/*   Updated: 2019/05/24 12:29:17 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
+#include <stdarg.h>
 
 int	ft_printf_fd(int fd, const char *format, ...)
 {

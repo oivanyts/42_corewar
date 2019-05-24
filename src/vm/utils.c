@@ -1,24 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strnew.c                                        :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/31 11:43:25 by oivanyts          #+#    #+#             */
-/*   Updated: 2018/11/06 12:52:09 by oivanyts         ###   ########.fr       */
+/*   Created: 2019/04/26 08:02:26 by oivanyts          #+#    #+#             */
+/*   Updated: 2019/04/26 08:02:29 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/libft.h"
+#include "array.h"
 
-char	*ft_strnew(size_t size)
+uint8_t	*as_byte(void *ptr)
 {
-	char	*str;
-
-	str = (char *)malloc(size + 1);
-	if (!str)
-		return (NULL);
-	ft_memset(str, '\0', size + 1);
-	return (str);
+	return (ptr);
 }
+
+void	ft_memswap(void *dest, void *src, void *buffer, size_t size)
+{
+	ft_memcpy(buffer, dest, size);
+	ft_memcpy(dest, src, size);
+	ft_memcpy(src, buffer, size);
+}
+
+unsigned long long int ft_ullmin(unsigned long long int num1, unsigned long long num2)
+{
+	if (num1 <= num2)
+	{
+		return num1;
+	}
+	else
+	{
+		return num2;
+	}
+}
+
+//get_options();

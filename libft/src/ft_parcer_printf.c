@@ -6,11 +6,12 @@
 /*   By: oivanyts <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 17:33:46 by oivanyts          #+#    #+#             */
-/*   Updated: 2019/01/14 17:33:51 by oivanyts         ###   ########.fr       */
+/*   Updated: 2019/05/24 12:29:17 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
+#include <stdarg.h>
 
 static int	f_precs(const char **w, va_list arg)
 {
