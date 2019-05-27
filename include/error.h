@@ -12,11 +12,12 @@ typedef enum e_error_code
     error_to_many_players,
     error_wrong_magic,
     error_wrong_tparam,
-    error_option
+    error_option,
+	error_champ_size
 } t_error_code;
 
 void	handle_error(t_error_code n_err);
 
-const char *error_table[6];
+const char *error_table[7];
 
 #endif

@@ -221,7 +221,6 @@ uint8_t parce_info(int argc, char **arguments, t_player *player, uint8_t *memory
 		{
 
 		}
-//		chose_player_number();
 		place_process(&files[0], vm->o_next_player, i);
 		vm->o_next_player = 0;
 		vm->nplayers++;
@@ -289,6 +288,11 @@ int		main(int argc, char *argv[])
 	ft_bzero(players, sizeof(t_player) * (argc - 1));
 	ft_bzero(memory, sizeof(uint8_t) * MEM_SIZE);
 	parce_info(argc - 1, argv, &players[0], &memory[0]);
+	ft_printf("Introducing contestants...\n"
+			  "* Player 1, weighing 23 bytes, \"zork\" (\"just a basic living prog\") !\n"
+			  "* Player 2, weighing 325 bytes, \"Celebration Funebre v0.99pl42\" (\"Jour J\") !\n"
+			  "* Player 3, weighing 281 bytes, \"Tching tching(Intercepteur), Bouh!Bouh!(bruits d'anti-jeu)\" (\"\") !\n");
+	//poor_mans_visualization(memory, &players[0], vm.nplayers);
 	init_vm(&vm, &players[0], vm.nplayers);
 	print_players_intro(players, vm.nplayers);
 	vm_cycle(&vm);
