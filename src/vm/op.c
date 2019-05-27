@@ -330,6 +330,7 @@ t_memory decode_param(t_decoded_op op, t_thread *pc, uint8_t param_number)
 				pc->op.valid = 0;
 			}
 			memory_init(&param, &(pc->vm_memory)[pc->ip], T_REG);
+			memory_set_bounds(&param, param.memory, param.memory + 8);
 			pc->ip += 1;
 		}
 		else if (tparam == T_DIR)
@@ -344,10 +345,12 @@ t_memory decode_param(t_decoded_op op, t_thread *pc, uint8_t param_number)
 				memory_init(&param,  &pc->vm_memory[pc->ip], IND_SIZE);
 				pc->ip += IND_SIZE;
 			}
+			memory_set_bounds(&param, pc->vm_memory, pc->vm_memory + MEM_SIZE);
 		}
 		else if (tparam == T_IND)
 		{
 			memory_init(&param, &pc->vm_memory[pc->ip], IND_SIZE);
+			memory_set_bounds(&param, pc->vm_memory, pc->vm_memory + MEM_SIZE);
 			pc->ip += IND_SIZE;
 		}
 		else
