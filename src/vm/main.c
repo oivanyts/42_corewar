@@ -1,5 +1,6 @@
 #include "op.h"
 #include "vm.h"
+#include "vs.h"
 
 #define TOFILE //
 
@@ -240,6 +241,7 @@ uint8_t parce_info(int argc, char **arguments, t_player *player, uint8_t *memory
 		player[i].number = i + 1;
 		player[i].threads = &vm->threads;
 		init_carridge(&player[i], i, memory, player_gap);
+//		ft_initvsmap(i, player, vm);
 		i++;
 	}
 	return (0);
@@ -275,15 +277,17 @@ int		main(int argc, char *argv[])
 	get_vm(&vm);
 	ft_bzero(players, sizeof(t_player) * (argc - 1));
 	ft_bzero(memory, sizeof(uint8_t) * MEM_SIZE);
+//	ft_vsinit();
 	parce_info(argc - 1, argv, &players[0], &memory[0]);
-	ft_printf("Introducing contestants...\n"
-			  "* Player 1, weighing 23 bytes, \"zork\" (\"just a basic living prog\") !\n"
-			  "* Player 2, weighing 325 bytes, \"Celebration Funebre v0.99pl42\" (\"Jour J\") !\n"
-			  "* Player 3, weighing 281 bytes, \"Tching tching(Intercepteur), Bouh!Bouh!(bruits d'anti-jeu)\" (\"\") !\n");
+//	ft_drawmap(&memory[0]);
+//	ft_printf("Introducing contestants...\n"
+//			  "* Player 1, weighing 23 bytes, \"zork\" (\"just a basic living prog\") !\n"
+//			  "* Player 2, weighing 325 bytes, \"Celebration Funebre v0.99pl42\" (\"Jour J\") !\n"
+//			  "* Player 3, weighing 281 bytes, \"Tching tching(Intercepteur), Bouh!Bouh!(bruits d'anti-jeu)\" (\"\") !\n");
 	//poor_mans_visualization(memory, &players[0], vm.nplayers);
 	init_vm(&vm, &players[0], vm.nplayers);
 	vm_cycle(&vm);
-	poor_mans_visualization(memory, &players[0], vm.nplayers);
+//	poor_mans_visualization(memory, &players[0], vm.nplayers);
 //	printf("Last player alive: %u\n", vm.last_alive);
 	return 0;
 }

@@ -6,11 +6,12 @@
 /*   By: myaremen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 15:57:21 by myaremen          #+#    #+#             */
-/*   Updated: 2019/05/24 12:29:42 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/05/27 12:56:09 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
+#include "vs.h"
 
 uint32_t threads_alive(t_threads *threads)
 {
@@ -67,7 +68,7 @@ void	vm_cycle(t_vm *vm)
 	alive = threads_alive(&vm->threads);
 	while (alive || cycles_to_die > 0)
 	{
-		ft_printf("It is now cycle %d\n", vm->cycle);
+//		ft_printf("It is now cycle %d\n", vm->cycle);
 		if (cycles == cycles_to_die)
 		{
 			alive = threads_alive(&vm->threads);
@@ -77,7 +78,7 @@ void	vm_cycle(t_vm *vm)
 			if (alive >= NBR_LIVE)
 			{
 				cycles_to_die -= CYCLE_DELTA;
-				ft_printf("Cycle to die is now %d\n", cycles_to_die);
+//				ft_printf("Cycle to die is now %d\n", cycles_to_die);
 				checks = 0;
 			}
 		}
@@ -97,6 +98,7 @@ void	vm_cycle(t_vm *vm)
 //			poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, get_vm(0)->players, nplayers);
 			return ;
 		}
+//		ft_drawmap(vm);
 		++cycles;
 		++vm->cycle;
 //		poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, players, nplayers);
