@@ -6,7 +6,7 @@
 /*   By: myaremen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 15:57:21 by myaremen          #+#    #+#             */
-/*   Updated: 2019/05/27 12:56:09 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/04/26 07:54:57 by oivanyts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,11 @@ void	vm_cycle(t_vm *vm)
 	while (alive || cycles_to_die > 0)
 	{
 //		ft_printf("It is now cycle %d\n", vm->cycle);
+		/*if (get_vm(0)->cycle == 2111)
+		{
+			get_vm(0);
+		}*/
+		foreach_thread(&vm->threads, op_exec);
 		if (cycles == cycles_to_die)
 		{
 			alive = threads_alive(&vm->threads);
@@ -88,11 +93,6 @@ void	vm_cycle(t_vm *vm)
 //			ft_printf("Cycle to die is now %d\n", cycles_to_die);
 			checks = 0;
 		}
-		/*if (get_vm(0)->cycle == 2111)
-		{
-			get_vm(0);
-		}*/
-		foreach_thread(&vm->threads, op_exec);
 		if (vm->cycle == vm->o_dump_point && vm->o_dump)
 		{
 //			poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, get_vm(0)->players, nplayers);
@@ -245,7 +245,7 @@ void print_moves(const t_thread *pc)
 {
 	int8_t	i = 0;
 	int8_t funcsize;
-	if (pc->op.opcode == 8 && pc->cf)
+	if ((pc->op.opcode == 8 && pc->cf) || (pc->op.opcode < 0 || pc->op.opcode > 15))
 	{
 		return;
 	}
@@ -271,6 +271,18 @@ void	print_op(const t_thread *pc)
 
 void	op_exec(t_thread *pc)
 {
+	if (get_vm(0)->cycle == 4460 && pc - threads_at(&get_vm(0)->threads, 0) == 27)
+	{
+		get_vm(0);
+	}
+	if (get_vm(0)->cycle == 4461 && pc - threads_at(&get_vm(0)->threads, 0) == 27)
+	{
+		get_vm(0);
+	}
+	if (pc - threads_at(&get_vm(0)->threads, 0) == 27)
+	{
+		get_vm(0);
+	}
 	if (pc->processing == 0)
 	{
 //		poor_mans_visualization(pc->vm_memory, pc->player, 1);
@@ -303,16 +315,16 @@ void	op_exec(t_thread *pc)
 	}
 	decode_opcode(pc);
 	op_decode(pc);
+	pc->processing = 0;
+	int pc_i = pc - threads_at(&get_vm(0)->threads, 0);
 	if (pc->op.valid)
 	{
 		//print_op(pc);
-		pc->processing = 0;
-		int pc_i = pc - threads_at(&get_vm(0)->threads, 0);
 		opcalls[pc->op.opcode].opfunc(pc, &pc->op.args[0], &pc->op.args[1], &pc->op.args[2]); //dalshe zatiraetsa adres pc, poetomu sohranyaem ego v pc_i
-		if (get_vm(0)->o_dump)
-			print_moves(threads_at(&get_vm(0)->threads, pc_i));
 		//poor_mans_visualization(pc->vm_memory, get_vm(0)->players, get_vm(0)->nplayers);
 	}
+	if (get_vm(0)->o_dump)
+		print_moves(threads_at(&get_vm(0)->threads, pc_i));
 }
 
 t_vm *get_vm(t_vm *vm)

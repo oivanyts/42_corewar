@@ -92,7 +92,7 @@ void poor_mans_visualization(uint8_t *bytecode, t_player *players, int num_playe
 		}
 	}
 	delcarlist(carridges);
-	ft_printf("\n");
+	//ft_printf("\n");
 }
 
 bool string_to_number(char *string, int *n)
