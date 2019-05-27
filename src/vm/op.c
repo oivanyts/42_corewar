@@ -68,10 +68,6 @@ void	vm_cycle(t_vm *vm)
 	while (alive || cycles_to_die > 0)
 	{
 		ft_printf("It is now cycle %d\n", vm->cycle);
-		/*if (get_vm(0)->cycle == 2111)
-		{
-			get_vm(0);
-		}*/
 		foreach_thread(&vm->threads, op_exec);
 		if (cycles == cycles_to_die)
 		{
@@ -99,32 +95,148 @@ void	vm_cycle(t_vm *vm)
 		}
 		++cycles;
 		++vm->cycle;
-//		poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, players, nplayers);
-		//ft_printf("\ncycle = %u ended\n", global_cycles);
 	}
 }
 
-uint8_t decode_opcode(struct s_thread *pc)
+void decode_opcode(struct s_thread *pc)
 {
-	uint8_t opcode;
-
-	opcode = as_byte(pc->vm_memory)[pc->ip];
 	pc->ip += 1;
 	pc->ip %= MEM_SIZE;
-	return (opcode);
+}
+
+uint8_t get_param_type(uint8_t opcode, uint8_t tparams, uint8_t param_number)
+{
+	if (param_number == 1)
+	{
+		if ((op_tab[opcode].targs[param_number - 1] & T_IND) && (((tparams & T_FIRST_PARAM) >> 6) & 0x3) == IND_CODE)
+		{
+			return (T_IND);
+		}
+		else if ((op_tab[opcode].targs[param_number - 1] & T_REG) && (((tparams & T_FIRST_PARAM) >> 6) & 0x3) == REG_CODE)
+		{
+			return (T_REG);
+		}
+		else if ((op_tab[opcode].targs[param_number - 1] & T_DIR) && (((tparams & T_FIRST_PARAM) >> 6) & 0x3) == DIR_CODE)
+		{
+			return (T_DIR);
+		}
+		else
+		{
+			return (0);
+		}
+	}
+	else if (param_number == 2)
+	{
+		if ((op_tab[opcode].targs[param_number - 1] & T_IND) && (((tparams & T_SECOND_PARAM) >> 4) & 0x3) == IND_CODE)
+		{
+			return (T_IND);
+		}
+		else if ((op_tab[opcode].targs[param_number - 1] & T_REG) && (((tparams & T_SECOND_PARAM) >> 4) & 0x3) == REG_CODE)
+		{
+			return (T_REG);
+		}
+		else if ((op_tab[opcode].targs[param_number - 1] & T_DIR) && (((tparams & T_SECOND_PARAM) >> 4) & 0x3) == DIR_CODE)
+		{
+			return (T_DIR);
+		}
+		else
+		{
+			return (0);
+		}
+	}
+	else
+	{
+		if ((op_tab[opcode].targs[param_number - 1] & T_IND) && (((tparams & T_THIRD_PARAM) >> 2) & 0x3) == IND_CODE)
+		{
+			return (T_IND);
+		}
+		else if ((op_tab[opcode].targs[param_number - 1] & T_REG) && (((tparams & T_THIRD_PARAM) >> 2) & 0x3) == REG_CODE)
+		{
+			return (T_REG);
+		}
+		else if ((op_tab[opcode].targs[param_number - 1] & T_DIR) && (((tparams & T_THIRD_PARAM) >> 2) & 0x3) == DIR_CODE)
+		{
+			return (T_DIR);
+		}
+		else
+		{
+			return (0);
+		}
+	}
+}
+
+uint8_t force_get_param_type(uint8_t tparams, uint8_t param_number)
+{
+	if (param_number == 1)
+	{
+		if ((((tparams & T_FIRST_PARAM) >> 6) & 0x3) == IND_CODE)
+		{
+			return (T_IND);
+		}
+		else if ((((tparams & T_FIRST_PARAM) >> 6) & 0x3) == REG_CODE)
+		{
+			return (T_REG);
+		}
+		else if ((((tparams & T_FIRST_PARAM) >> 6) & 0x3) == DIR_CODE)
+		{
+			return (T_DIR);
+		}
+		else
+		{
+			return (0);
+		}
+	}
+	else if (param_number == 2)
+	{
+		if ((((tparams & T_SECOND_PARAM) >> 4) & 0x3) == IND_CODE)
+		{
+			return (T_IND);
+		}
+		else if ((((tparams & T_SECOND_PARAM) >> 4) & 0x3) == REG_CODE)
+		{
+			return (T_REG);
+		}
+		else if ((((tparams & T_SECOND_PARAM) >> 4) & 0x3) == DIR_CODE)
+		{
+			return (T_DIR);
+		}
+		else
+		{
+			return (0);
+		}
+	}
+	else
+	{
+		if ((((tparams & T_THIRD_PARAM) >> 2) & 0x3) == IND_CODE)
+		{
+			return (T_IND);
+		}
+		else if ((((tparams & T_THIRD_PARAM) >> 2) & 0x3) == REG_CODE)
+		{
+			return (T_REG);
+		}
+		else if ((((tparams & T_THIRD_PARAM) >> 2) & 0x3) == DIR_CODE)
+		{
+			return (T_DIR);
+		}
+		else
+		{
+			return (0);
+		}
+	}
 }
 
 bool	check_op_params(uint8_t opcode, uint8_t tparams)
 {
-	if (op_tab[opcode].targs[0] && (op_tab[opcode].targs[0] & ((tparams >> 6) & 0x3)) == 0)
+	if (op_tab[opcode].targs[0] && get_param_type(opcode, tparams, 1) == 0)
 	{
 		return (0);
 	}
-	else if (op_tab[opcode].targs[1] && (op_tab[opcode].targs[1] & ((tparams  >> 4) & 0x3)) == 0)
+	else if (op_tab[opcode].targs[1] && get_param_type(opcode, tparams, 2) == 0)
 	{
 		return (0);
 	}
-	else if (op_tab[opcode].targs[2] && (op_tab[opcode].targs[2] & ((tparams >> 2) & 0x3)) == 0)
+	else if (op_tab[opcode].targs[2] && get_param_type(opcode, tparams, 3) == 0)
 	{
 		return (0);
 	}
@@ -138,6 +250,7 @@ uint8_t	decode_tparams(struct s_thread *pc, uint8_t opcode)
 {
 	uint8_t tparams;
 
+	tparams = 0;
 	if (op_tab[opcode].codoctal)
 	{
 		tparams = as_byte(pc->vm_memory)[pc->ip];
@@ -150,7 +263,42 @@ uint8_t	decode_tparams(struct s_thread *pc, uint8_t opcode)
 	}
 	else
 	{
-		tparams = (op_tab[opcode].targs[0] << 6) | (op_tab[opcode].targs[1] << 4) | (op_tab[opcode].targs[2] << 2);
+		if (op_tab[opcode].targs[0] & T_REG)
+		{
+			tparams |= (REG_CODE << 6);
+		}
+		if (op_tab[opcode].targs[0] & T_DIR)
+		{
+			tparams |= (DIR_CODE << 6);
+		}
+		if (op_tab[opcode].targs[0] & T_IND)
+		{
+			tparams |= (IND_CODE << 6);
+		}
+		if (op_tab[opcode].targs[1] & T_REG)
+		{
+			tparams |= (REG_CODE << 4);
+		}
+		if (op_tab[opcode].targs[1] & T_DIR)
+		{
+			tparams |= (DIR_CODE << 4);
+		}
+		if (op_tab[opcode].targs[1] & T_IND)
+		{
+			tparams |= (IND_CODE << 4);
+		}
+		if (op_tab[opcode].targs[2] & T_REG)
+		{
+			tparams |= (REG_CODE << 2);
+		}
+		if (op_tab[opcode].targs[2] & T_DIR)
+		{
+			tparams |= (DIR_CODE << 2);
+		}
+		if (op_tab[opcode].targs[2] & T_IND)
+		{
+			tparams |= (IND_CODE << 2);
+		}
 	}
 	return (tparams);
 }
@@ -166,22 +314,6 @@ uint16_t swap16(uint16_t toswap)
 	return (toswap >> 8 | toswap << 8);
 }
 
-uint8_t get_param_type(uint8_t tparams, uint8_t param_number)
-{
-	if (param_number == 1)
-	{
-		return ((tparams & T_FIRST_PARAM) >> 6) & 0x3;
-	}
-	else if (param_number == 2)
-	{
-		return ((tparams & T_SECOND_PARAM) >> 4) & 0x3;
-	}
-	else
-	{
-		return ((tparams & T_THIRD_PARAM) >> 2) & 0x3;
-	}
-}
-
 t_memory decode_param(t_decoded_op op, t_thread *pc, uint8_t param_number)
 {
 	t_memory param;
@@ -190,8 +322,8 @@ t_memory decode_param(t_decoded_op op, t_thread *pc, uint8_t param_number)
 	memory_init(&param, 0, 0);
 	if (param_number <= op_tab[op.opcode].args)
 	{
-		tparam = get_param_type(pc->op.tparams, param_number);
-		if (tparam == REG_CODE)
+		tparam = force_get_param_type(pc->op.tparams, param_number);
+		if (tparam == T_REG)
 		{
 			if (as_byte(pc->vm_memory)[pc->ip] > REG_NUMBER || as_byte(pc->vm_memory)[pc->ip] == 0)
 			{
@@ -200,7 +332,7 @@ t_memory decode_param(t_decoded_op op, t_thread *pc, uint8_t param_number)
 			memory_init(&param, &(pc->vm_memory)[pc->ip], T_REG);
 			pc->ip += 1;
 		}
-		else if (tparam == DIR_CODE)
+		else if (tparam == T_DIR)
 		{
 			if (op_tab[op.opcode].tdir_size == 0)
 			{
@@ -213,9 +345,9 @@ t_memory decode_param(t_decoded_op op, t_thread *pc, uint8_t param_number)
 				pc->ip += IND_SIZE;
 			}
 		}
-		else if (tparam == IND_CODE)
+		else if (tparam == T_IND)
 		{
-			memory_init(&param, &pc->vm_memory[pc->ip], T_IND);
+			memory_init(&param, &pc->vm_memory[pc->ip], IND_SIZE);
 			pc->ip += IND_SIZE;
 		}
 		else
@@ -267,23 +399,19 @@ void	print_op(const t_thread *pc)
 	ft_printf("P    %d | %s\n", pc - threads_at(&get_vm(0)->threads, 0) + 1, op_tab[pc->op.opcode].name);
 }
 
+uint32_t get_thread_number(const t_thread *pc)
+{
+	uint32_t pc_i;
+
+	pc_i = pc - threads_at(&get_vm(0)->threads, 0);
+	return (pc_i);
+}
+
 void	op_exec(t_thread *pc)
 {
-	if (get_vm(0)->cycle == 4460 && pc - threads_at(&get_vm(0)->threads, 0) == 27)
-	{
-		get_vm(0);
-	}
-	if (get_vm(0)->cycle == 4461 && pc - threads_at(&get_vm(0)->threads, 0) == 27)
-	{
-		get_vm(0);
-	}
-	if (pc - threads_at(&get_vm(0)->threads, 0) == 27)
-	{
-		get_vm(0);
-	}
 	if (pc->processing == 0)
 	{
-//		poor_mans_visualization(pc->vm_memory, pc->player, 1);
+		ft_memset(&pc->op, 0, sizeof(t_decoded_op));
 		pc->op.valid = 1;
 		pc->op.ip = pc->ip;
 		pc->op.opcode = as_byte(pc->vm_memory)[pc->ip];
@@ -314,12 +442,11 @@ void	op_exec(t_thread *pc)
 	decode_opcode(pc);
 	op_decode(pc);
 	pc->processing = 0;
-	int pc_i = pc - threads_at(&get_vm(0)->threads, 0);
+	int pc_i = get_thread_number(pc);
 	if (pc->op.valid)
 	{
 		//print_op(pc);
-		opcalls[pc->op.opcode].opfunc(pc, &pc->op.args[0], &pc->op.args[1], &pc->op.args[2]); //dalshe zatiraetsa adres pc, poetomu sohranyaem ego v pc_i
-		//poor_mans_visualization(pc->vm_memory, get_vm(0)->players, get_vm(0)->nplayers);
+		opcalls[pc->op.opcode].opfunc(pc, &pc->op.args[0], &pc->op.args[1], &pc->op.args[2]);
 	}
 	if (get_vm(0)->o_dump)
 		print_moves(threads_at(&get_vm(0)->threads, pc_i));

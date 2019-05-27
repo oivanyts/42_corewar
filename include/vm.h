@@ -56,7 +56,7 @@ bool			load_from_file(char *filename, t_player *player, uint8_t memory[]);
 
 void	vm_cycle(t_vm *vm);
 
-uint8_t get_param_type(uint8_t tparams, uint8_t param_number);
+uint8_t get_param_type(uint8_t opcode, uint8_t tparams, uint8_t param_number);
 
 uint8_t decode_tparams(struct s_thread *pc, uint8_t opcode);
 

@@ -266,6 +266,19 @@ void init_vm(t_vm *vm, t_player *players, int32_t nplayers)
 	vm->cycle = 1;
 }
 
+void	print_players_intro(t_player *players, int32_t nplayers)
+{
+	int32_t player_i;
+
+	player_i = 0;
+	ft_printf("Introducing contestants...\n");
+	while (player_i < nplayers)
+	{
+		ft_printf("* Player %d, weighing %u bytes, \"%s\" (\"%s\") !\n", players[player_i].number, players[player_i].header.prog_size, players[player_i].header.prog_name, players[player_i].header.comment);
+		++player_i;
+	}
+}
+
 int		main(int argc, char *argv[])
 {
 	t_player	players[argc - 1];
@@ -276,14 +289,10 @@ int		main(int argc, char *argv[])
 	ft_bzero(players, sizeof(t_player) * (argc - 1));
 	ft_bzero(memory, sizeof(uint8_t) * MEM_SIZE);
 	parce_info(argc - 1, argv, &players[0], &memory[0]);
-	ft_printf("Introducing contestants...\n"
-			  "* Player 1, weighing 23 bytes, \"zork\" (\"just a basic living prog\") !\n"
-			  "* Player 2, weighing 325 bytes, \"Celebration Funebre v0.99pl42\" (\"Jour J\") !\n"
-			  "* Player 3, weighing 281 bytes, \"Tching tching(Intercepteur), Bouh!Bouh!(bruits d'anti-jeu)\" (\"\") !\n");
-	//poor_mans_visualization(memory, &players[0], vm.nplayers);
 	init_vm(&vm, &players[0], vm.nplayers);
+	print_players_intro(players, vm.nplayers);
 	vm_cycle(&vm);
 	poor_mans_visualization(memory, &players[0], vm.nplayers);
-//	printf("Last player alive: %u\n", vm.last_alive);
+	printf("Last player alive: %u\n", vm.last_alive);
 	return 0;
 }
