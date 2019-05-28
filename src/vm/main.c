@@ -47,16 +47,19 @@ bool check_pos(size_t i, t_list *pList)
 	return (false);
 }
 
-void poor_mans_visualization(uint8_t *bytecode, t_player *players, int num_players)
+void poor_mans_visualization(uint8_t *bytecode)
 {
 	size_t		i = 0;
 	int			player_gap;
 	t_list		*carridges = NULL;
+	t_vm		*vm;
+
+	vm = get_vm(0);
 
 //	int    color[4] = {31,34,36,32};
 
-	carridges = find_all_carridges(players, num_players);
-	player_gap = MEM_SIZE / num_players;
+	carridges = find_all_carridges(vm->players, vm->nplayers);
+	player_gap = MEM_SIZE / vm->nplayers;
 	while (i < MEM_SIZE)
 	{
 		if (!(i % 64))
@@ -67,7 +70,7 @@ void poor_mans_visualization(uint8_t *bytecode, t_player *players, int num_playe
 		{
 			//ft_printf("\033[48;05;%dm", color[i / player_gap] + 10);
 		}
-		else if (i < players[i / player_gap].header.prog_size + (i / player_gap) * player_gap)
+		else if (i < vm->players[i / player_gap].header.prog_size + (i / player_gap) * player_gap)
 		{
 //			ft_printf("\033[38;05;%dm", color[i / player_gap]);
 		}
@@ -93,7 +96,7 @@ bool string_to_number(char *string, int *n)
 	return (ft_strlen(string) == (size_t)ft_num_size(*n = ft_atoi(string)));
 }
 
-bool is_option(char **argv, uint8_t *arg_num, char string1[])
+bool is_option(char **argv, int argc, uint8_t *arg_num, char *string1)
 {
 	char	*option;
 	int		param;
@@ -108,13 +111,13 @@ bool is_option(char **argv, uint8_t *arg_num, char string1[])
 		if (*(option + 1) == ':' && !vm->visual)
 		{
 			(*arg_num)++;
-			if (string_to_number(argv[*arg_num], &param))
+			if (argc >= *arg_num && string_to_number(argv[*arg_num], &param))
 			{
 				(*arg_num)++;
 			}
 			else
 			{
-
+				handle_error(error_option);
 			}
 			if (ft_strnequ(option, "d", 1))
 			{
@@ -208,7 +211,7 @@ uint8_t parce_info(int argc, char **arguments, t_player *player, uint8_t *memory
 	ft_bzero(vm, sizeof(t_vm));
 	while (i <= argc)
 	{
-		if (is_option(arguments, &i, OPTIONS))
+		if (is_option(arguments, argc, &i, OPTIONS))
 		{
 			continue ;
 		}
@@ -287,7 +290,6 @@ int		main(int argc, char *argv[])
 	init_vm(&vm, &players[0], vm.nplayers);
 	vm.visual ? 0 : print_players_intro(players, vm.nplayers);
 	vm_cycle(&vm);
-	poor_mans_visualization(memory, &players[0], vm.nplayers);
-	printf("Last player alive: %u\n", vm.last_alive);
+	vm.visual ? 0 : ft_printf("Contestant %d, \"%s\", has won\nFINISH", players[vm.last_alive - 1].number, players[vm.last_alive - 1].header.prog_name);
 	return 0;
 }

@@ -73,7 +73,7 @@ t_op    op_tab[17];
 
 void init_carridge(t_player *player, uint8_t i, uint8_t *memory, int gap);
 
-void poor_mans_visualization(uint8_t *bytecode, t_player *players, int num_players);
+void poor_mans_visualization(uint8_t *bytecode);
 
 int get_options(int	argc, char *argv[], const char *options);
 

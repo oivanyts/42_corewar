@@ -64,10 +64,10 @@ void	vm_cycle(t_vm *vm)
 	cycles = 1;
 	cycles_to_die = CYCLE_TO_DIE;
 	checks = 0;
-	alive = threads_alive(&vm->threads);
-	while (alive || cycles_to_die > 0)
+	alive = 1;
+	while (alive && cycles_to_die > 0)
 	{
-		vm->visual ? 0 : ft_printf("It is now cycle %d\n", vm->cycle);
+		vm->visual ? 0 : ft_printf("It is now cycle %d\n", vm->cycle , cycles_to_die, cycles);
 		foreach_thread(&vm->threads, op_exec);
 		if (cycles == cycles_to_die)
 		{
@@ -90,7 +90,7 @@ void	vm_cycle(t_vm *vm)
 		}
 		if (vm->cycle == vm->o_dump_point && vm->o_dump)
 		{
-//			poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, get_vm(0)->players, nplayers);
+			poor_mans_visualization(threads_at(&vm->threads, 0)->vm_memory);
 			return ;
 		}
 		++cycles;
@@ -451,8 +451,7 @@ void	op_exec(t_thread *pc)
 		//print_op(pc);
 		opcalls[pc->op.opcode].opfunc(pc, &pc->op.args[0], &pc->op.args[1], &pc->op.args[2]);
 	}
-	if (get_vm(0)->o_dump)
-		print_moves(threads_at(&get_vm(0)->threads, pc_i));
+	print_moves(threads_at(&get_vm(0)->threads, pc_i));
 }
 
 t_vm *get_vm(t_vm *vm)
