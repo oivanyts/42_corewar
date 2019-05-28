@@ -51,23 +51,12 @@ void poor_mans_visualization(uint8_t *bytecode, t_player *players, int num_playe
 {
 	size_t		i = 0;
 	int			player_gap;
-//	t_thread	*tmp;
 	t_list		*carridges = NULL;
 
-	//int    color[4] = {31,34,36,32};
+//	int    color[4] = {31,34,36,32};
 
 	carridges = find_all_carridges(players, num_players);
 	player_gap = MEM_SIZE / num_players;
-//	while (i < (size_t)num_players)
-//	{
-//		ft_printf("* Player %d, weighing %d, %s, (%s) !\n", players[i].number,
-//				players[i].header.prog_size/8, players[i].header.prog_name,
-//				players[i].header.comment);
-//		tmp = players[i].threads.arr.arr;
-//		ft_printf("carr - [%d][%d] - %d\n", tmp->ip, players->number, tmp->reg[0]);
-//		i++;
-//	}
-//	i = 0;
 	while (i < MEM_SIZE)
 	{
 		if (!(i % 64))
@@ -116,9 +105,9 @@ bool is_option(char **argv, uint8_t *arg_num, char string1[])
 	if ((option = ft_strstr(string1, &argv[*arg_num][1])))
 	{
 		vm->o_next_player = 0;
-		(*arg_num)++;
-		if (*(option + 1) == ':')
+		if (*(option + 1) == ':' && !vm->visual)
 		{
+			(*arg_num)++;
 			if (string_to_number(argv[*arg_num], &param))
 			{
 				(*arg_num)++;
@@ -150,7 +139,13 @@ bool is_option(char **argv, uint8_t *arg_num, char string1[])
 		}
 		else
 		{
-			//vm & other param
+			if (argv[*arg_num][1] == 'v')
+			{
+				vm->visual = true;
+				vm->o_dump = false;
+				vm->o_stop = false;
+			}
+			(*arg_num)++;
 		}
 	}
 	return (true);
@@ -288,13 +283,9 @@ int		main(int argc, char *argv[])
 	ft_bzero(players, sizeof(t_player) * (argc - 1));
 	ft_bzero(memory, sizeof(uint8_t) * MEM_SIZE);
 	parce_info(argc - 1, argv, &players[0], &memory[0]);
-	ft_printf("Introducing contestants...\n"
-			  "* Player 1, weighing 23 bytes, \"zork\" (\"just a basic living prog\") !\n"
-			  "* Player 2, weighing 325 bytes, \"Celebration Funebre v0.99pl42\" (\"Jour J\") !\n"
-			  "* Player 3, weighing 281 bytes, \"Tching tching(Intercepteur), Bouh!Bouh!(bruits d'anti-jeu)\" (\"\") !\n");
 	//poor_mans_visualization(memory, &players[0], vm.nplayers);
 	init_vm(&vm, &players[0], vm.nplayers);
-	print_players_intro(players, vm.nplayers);
+	vm.visual ? 0 : print_players_intro(players, vm.nplayers);
 	vm_cycle(&vm);
 	poor_mans_visualization(memory, &players[0], vm.nplayers);
 	printf("Last player alive: %u\n", vm.last_alive);

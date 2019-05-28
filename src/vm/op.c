@@ -67,7 +67,7 @@ void	vm_cycle(t_vm *vm)
 	alive = threads_alive(&vm->threads);
 	while (alive || cycles_to_die > 0)
 	{
-		ft_printf("It is now cycle %d\n", vm->cycle);
+		vm->visual ? 0 : ft_printf("It is now cycle %d\n", vm->cycle);
 		foreach_thread(&vm->threads, op_exec);
 		if (cycles == cycles_to_die)
 		{
@@ -78,14 +78,14 @@ void	vm_cycle(t_vm *vm)
 			if (alive >= NBR_LIVE)
 			{
 				cycles_to_die -= CYCLE_DELTA;
-				ft_printf("Cycle to die is now %d\n", cycles_to_die);
+				vm->visual ? 0 : ft_printf("Cycle to die is now %d\n", cycles_to_die);
 				checks = 0;
 			}
 		}
 		if (checks == MAX_CHECKS)
 		{
 			cycles_to_die -= CYCLE_DELTA;
-			ft_printf("Cycle to die is now %d\n", cycles_to_die);
+			vm->visual ? 0 : ft_printf("Cycle to die is now %d\n", cycles_to_die);
 			checks = 0;
 		}
 		if (vm->cycle == vm->o_dump_point && vm->o_dump)

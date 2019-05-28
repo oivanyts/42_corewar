@@ -26,7 +26,7 @@
 # define T_SECOND_PARAM (uint8_t)0x30
 # define T_THIRD_PARAM (uint8_t)0x0C
 
-# define OPTIONS "d:n:s:"
+# define OPTIONS "d:n:s:vc"
 
 typedef struct	s_player
 {
@@ -47,6 +47,7 @@ typedef struct	s_vm
 	bool		o_stop;
 	uint32_t	o_stop_point;
 	uint8_t		o_next_player;
+	bool		visual;
 }				t_vm;
 
 
