@@ -107,8 +107,8 @@ bool is_option(char **argv, int argc, uint8_t *arg_num, char *string1)
 		return (false);
 	if ((option = ft_strstr(string1, &argv[*arg_num][1])))
 	{
-		vm->o_next_player = 0;
-		if (*(option + 1) == ':' && !vm->visual)
+		vm->options.o_next_player = 0;
+		if (*(option + 1) == ':' && !vm->options.visual)
 		{
 			(*arg_num)++;
 			if (argc >= *arg_num && string_to_number(argv[*arg_num], &param))
@@ -121,19 +121,19 @@ bool is_option(char **argv, int argc, uint8_t *arg_num, char *string1)
 			}
 			if (ft_strnequ(option, "d", 1))
 			{
-				vm->o_dump = true;
-				vm->o_dump_point = param;
+				vm->options.o_dump = true;
+				vm->options.o_dump_point = param;
 			}
 			else if (ft_strnequ(option, "s", 1))
 			{
-				vm->o_stop = true;
-				vm->o_stop_point = param;
+				vm->options.o_stop = true;
+				vm->options.o_stop_point = param;
 			}
 			else if (ft_strnequ(option, "n", 1))
 			{
 				if (param > 4 || param < 1)
 					handle_error(error_option);
-				vm->o_next_player = param;
+				vm->options.o_next_player = param;
 			}
 			else
 			{
@@ -144,9 +144,9 @@ bool is_option(char **argv, int argc, uint8_t *arg_num, char *string1)
 		{
 			if (argv[*arg_num][1] == 'v')
 			{
-				vm->visual = true;
-				vm->o_dump = false;
-				vm->o_stop = false;
+				vm->options.visual = true;
+				vm->options.o_dump = false;
+				vm->options.o_stop = false;
 			}
 			(*arg_num)++;
 		}
@@ -219,8 +219,8 @@ uint8_t parce_info(int argc, char **arguments, t_player *player, uint8_t *memory
 		{
 
 		}
-		place_process(&files[0], vm->o_next_player, i);
-		vm->o_next_player = 0;
+		place_process(&files[0], vm->options.o_next_player, i);
+		vm->options.o_next_player = 0;
 		vm->nplayers++;
 		i++;
 	}
@@ -286,10 +286,19 @@ int		main(int argc, char *argv[])
 	ft_bzero(players, sizeof(t_player) * (argc - 1));
 	ft_bzero(memory, sizeof(uint8_t) * MEM_SIZE);
 	parce_info(argc - 1, argv, &players[0], &memory[0]);
-	//poor_mans_visualization(memory, &players[0], vm.nplayers);
 	init_vm(&vm, &players[0], vm.nplayers);
-	vm.visual ? 0 : print_players_intro(players, vm.nplayers);
+	if (vm.options.visual == 0)
+	{
+		print_players_intro(players, vm.nplayers);
+	}
 	vm_cycle(&vm);
-	vm.visual ? 0 : ft_printf("Contestant %d, \"%s\", has won\nFINISH", players[vm.last_alive - 1].number, players[vm.last_alive - 1].header.prog_name);
+	/*if (vm.options.o_dump)
+	{
+		//poor_mans_visualization(memory, &players[0], vm.nplayers);
+	}*/
+	if (vm.options.visual == 0 && threads_alive(&vm.threads))
+	{
+		ft_printf("Contestant %d, \"%s\", has won\n", players[vm.last_alive - 1].number, players[vm.last_alive - 1].header.prog_name);
+	}
 	return 0;
 }

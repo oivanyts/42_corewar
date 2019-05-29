@@ -34,13 +34,13 @@ unsigned int reverse_byte(unsigned int old)
 	old << 24);
 }
 
-bool load_from_file(char *filename, t_player *player, uint8_t memory[])
+void load_from_file(char *filename, t_player *player, uint8_t memory[])
 {
 	int		fd;
 	size_t	ret;
 	uint8_t	bytes[MEM_SIZE];
 
-	(fd = open(filename, O_RDONLY)) > 0 ? 0 : handle_error(3);
+	(fd = open(filename, O_RDONLY)) > 0 ? 0 : handle_error(error_opening_file);
 	(ret = (size_t)read(fd, bytes, MEM_SIZE)) > 0 ? 0 : handle_error(4);
 	player->header.magic = *(uint32_t *)&bytes;
 	if ((IS_BIG_ENDIAN && COREWAR_EXEC_MAGIC != player->header.magic)
@@ -59,7 +59,6 @@ bool load_from_file(char *filename, t_player *player, uint8_t memory[])
 	ft_memcpy(memory, &bytes[12 + PROG_NAME_LENGTH + COMMENT_LENGTH + 4],
 			  (size_t)player->header.prog_size);
 	close(fd);
-	return (true);
 }
 
 void init_carridge(t_player *player, uint8_t i, uint8_t *memory, int gap)

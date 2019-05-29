@@ -13,8 +13,9 @@
 #include "libft.h"
 #include "error.h"
 
-const char	*error_table[7] =
+const char	*error_table[8] =
 {
+	"Cannot open file.",
 	"Array sizing failed.",
 	"No players.",
 	"Too many players.",

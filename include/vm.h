@@ -35,6 +35,17 @@ typedef struct	s_player
 	int32_t		number;
 } 				t_player;
 
+typedef struct	s_options
+{
+	bool		o_op;
+	bool		o_dump;
+	uint32_t	o_dump_point;
+	bool		o_stop;
+	uint32_t	o_stop_point;
+	uint8_t		o_next_player;
+	bool		visual;
+}				t_options;
+
 typedef struct	s_vm
 {
 	t_player	*players;
@@ -42,18 +53,12 @@ typedef struct	s_vm
 	t_threads	threads;
 	uint32_t	last_alive;
 	uint32_t	cycle;
-	bool		o_dump;
-	uint32_t	o_dump_point;
-	bool		o_stop;
-	uint32_t	o_stop_point;
-	uint8_t		o_next_player;
-	bool		visual;
+	t_options	options;
 }				t_vm;
 
+t_vm	*get_vm(t_vm *vm);
 
-t_vm			*get_vm(t_vm *vm);
-
-bool			load_from_file(char *filename, t_player *player, uint8_t memory[]);
+void	load_from_file(char *filename, t_player *player, uint8_t memory[]);
 
 void	vm_cycle(t_vm *vm);
 
@@ -68,8 +73,6 @@ void	op_decode(t_thread *pc);
 void	op_exec(t_thread *pc);
 
 uint32_t threads_alive(t_threads *threads);
-
-t_op    op_tab[17];
 
 void init_carridge(t_player *player, uint8_t i, uint8_t *memory, int gap);
 

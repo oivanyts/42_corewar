@@ -24,9 +24,9 @@ int get_options(int	argc, char *argv[], const char *options)
 		if ((opt = is_param(argv[i], options)))
 		{
 			if (*opt == 'd' && *(opt + 1) == ':')
-				vm->o_dump = ft_atoi((opt + 1));
+				vm->options.o_dump = ft_atoi((opt + 1));
 			if (*opt == 's' && *(opt + 1) == ':')
-				vm->o_stop = ft_atoi((opt + 1));
+				vm->options.o_stop = ft_atoi((opt + 1));
 		}
 		else
 		{

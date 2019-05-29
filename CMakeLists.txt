@@ -11,7 +11,7 @@ AUX_SOURCE_DIRECTORY(./src/vm/ SOURCE_FILES_VM)
 AUX_SOURCE_DIRECTORY(./src/asm/ SOURCE_FILES_ASM)
 
 
-add_executable(vm ${SOURCE_FILES_VM} src/vm/opcalls.c include/thread_array.h src/vm/thread_array.c include/error.h include/abstract_cpu.h src/vm/abstract_cpu.c include/utils.h)
+add_executable(vm ${SOURCE_FILES_VM} src/vm/opcalls.c include/thread_array.h src/vm/thread_array.c include/error.h include/abstract_cpu.h src/vm/abstract_cpu.c include/utils.h src/vm/op.c)
 add_executable(asm ${SOURCE_FILES_ASM} include/opcalls.h)
 
 target_include_directories(vm PUBLIC ./include)
