@@ -6,7 +6,7 @@
 /*   By: myaremen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 15:57:21 by myaremen          #+#    #+#             */
-/*   Updated: 2019/04/26 07:54:57 by oivanyts         ###   ########.fr       */
+/*   Updated: 2019/05/27 13:32:10 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ void	vm_cycle(t_vm *vm)
 //			poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, get_vm(0)->players, nplayers);
 			return ;
 		}
-//		ft_drawmap(vm);
+		ft_drawmap(vm);
 		++cycles;
 		++vm->cycle;
 //		poor_mans_visualization(((t_thread *)(players->threads.arr.arr))->vm_memory, players, nplayers);

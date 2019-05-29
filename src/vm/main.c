@@ -241,7 +241,7 @@ uint8_t parce_info(int argc, char **arguments, t_player *player, uint8_t *memory
 		player[i].number = i + 1;
 		player[i].threads = &vm->threads;
 		init_carridge(&player[i], i, memory, player_gap);
-//		ft_initvsmap(i, player, vm);
+		ft_initvsmap(i, player, vm);
 		i++;
 	}
 	return (0);
@@ -277,7 +277,7 @@ int		main(int argc, char *argv[])
 	get_vm(&vm);
 	ft_bzero(players, sizeof(t_player) * (argc - 1));
 	ft_bzero(memory, sizeof(uint8_t) * MEM_SIZE);
-//	ft_vsinit();
+	ft_vsinit();
 	parce_info(argc - 1, argv, &players[0], &memory[0]);
 //	ft_drawmap(&memory[0]);
 //	ft_printf("Introducing contestants...\n"

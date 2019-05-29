@@ -1,5 +1,6 @@
 #include "opcalls.h"
 #include "vm.h"
+#include "vs.h"
 
 t_opcall opcalls[16] =
 {
@@ -99,6 +100,8 @@ void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	if (((t_player*)sp->player)->number == -p32)
 	{
 		get_vm(0)->last_alive = ((t_player*)sp->player)->number;
+		g_vsmap[sp->op.ip].live = 50;
+		g_vsmap[sp->op.ip].liveplayer = ((t_player*)sp->player)->number;
 	}
 }
 
@@ -122,6 +125,12 @@ void f_st(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	memory_memmove(p2, p1);
+	if (get_param_type(sp->op.tparams, 2) == IND_CODE)
+	{
+//		mvwprintw(g_vs->info_win, 6, 3, "!!=%d", ((uint8_t *)p2->memory - &sp->vm_memory[0]));
+		ft_changememvs(((uint8_t *)p2->memory - &sp->vm_memory[0]), ((t_player *)sp->player)->number);
+//		wrefresh(g_vs->info_win);
+	}
 }
 
 void f_add(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
@@ -253,6 +262,9 @@ void f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	memory_init(&mem2, &up1, REG_SIZE);
 	memory_init(&mem, &sp->vm_memory[(sp->op.ip + (up2 + up3) % IDX_MOD) % MEM_SIZE], DIR_SIZE);
 	memory_memmove(&mem, p1);
+	ft_changememvs((sp->op.ip + (up2 + up3) % IDX_MOD) % MEM_SIZE, ((t_player *)sp->player)->number);
+//	mvwprintw(g_vs->info_win, 6, 3, "!!=%d", (sp->op.ip + (up2 + up3) % IDX_MOD) % MEM_SIZE);
+//	wrefresh(g_vs->info_win);
 
 }
 
