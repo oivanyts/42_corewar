@@ -451,7 +451,7 @@ void	op_exec(t_thread *pc)
 		//print_op(pc);
 		opcalls[pc->op.opcode].opfunc(pc, &pc->op.args[0], &pc->op.args[1], &pc->op.args[2]);
 	}
-	print_moves(threads_at(&get_vm(0)->threads, pc_i));
+	get_vm(0)->visual ? 0 : print_moves(threads_at(&get_vm(0)->threads, pc_i));
 }
 
 t_vm *get_vm(t_vm *vm)

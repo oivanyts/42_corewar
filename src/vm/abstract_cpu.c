@@ -35,7 +35,6 @@ void    memory_memmove(t_memory *dst, t_memory *src)
 	src_cpy = *src;
 	while (i < dst->memory_size)
 	{
-		ft_memcpy(dst_cpy.memory, src_cpy.memory, 1);
 		if (dst_cpy.memory == dst_cpy.memory_end)
 		{
 			dst_cpy.memory = dst_cpy.memory_begin;
@@ -44,6 +43,7 @@ void    memory_memmove(t_memory *dst, t_memory *src)
 		{
 			src_cpy.memory = src_cpy.memory_begin;
 		}
+		ft_memcpy(dst_cpy.memory, src_cpy.memory, 1);
 		dst_cpy.memory += 1;
 		src_cpy.memory += 1;
 		++i;

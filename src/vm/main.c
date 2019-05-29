@@ -51,14 +51,14 @@ void poor_mans_visualization(uint8_t *bytecode)
 {
 	size_t		i = 0;
 	int			player_gap;
-	t_list		*carridges = NULL;
+//	t_list		*carridges = NULL;
 	t_vm		*vm;
 
 	vm = get_vm(0);
 
 //	int    color[4] = {31,34,36,32};
 
-	carridges = find_all_carridges(vm->players, vm->nplayers);
+//	carridges = find_all_carridges(vm->players, vm->nplayers);
 	player_gap = MEM_SIZE / vm->nplayers;
 	while (i < MEM_SIZE)
 	{
@@ -66,14 +66,14 @@ void poor_mans_visualization(uint8_t *bytecode)
 		{
 			ft_printf("0x%04x : ", i);
 		}
-		if (check_pos(i, carridges))
-		{
-			//ft_printf("\033[48;05;%dm", color[i / player_gap] + 10);
-		}
-		else if (i < vm->players[i / player_gap].header.prog_size + (i / player_gap) * player_gap)
-		{
+//		if (check_pos(i, carridges))
+//		{
+//			ft_printf("\033[48;05;%dm", color[i / player_gap] + 10);
+//		}
+//		else if (i < vm->players[i / player_gap].header.prog_size + (i / player_gap) * player_gap)
+//		{
 //			ft_printf("\033[38;05;%dm", color[i / player_gap]);
-		}
+//		}
 		ft_printf("%.2x%c", bytecode[i], ' ');
 	//ft_printf("\033[m");
 		i++;
@@ -82,7 +82,7 @@ void poor_mans_visualization(uint8_t *bytecode)
 			ft_printf("\n");
 		}
 	}
-	delcarlist(carridges);
+//	delcarlist(carridges);
 	//ft_printf("\n");
 }
 
