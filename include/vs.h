@@ -33,8 +33,8 @@ typedef struct	s_vs
 
 t_vsmap	*g_vsmap;
 t_vs	*g_vs;
-void	ft_vsinit();
-void	ft_initvsmap(int playern, t_player *player, t_vm *vm);
+void	ft_vsinit(t_vm *vm, t_player *players);
+void	ft_initvsmap(t_vm *vm, t_player *player);
 void	ft_drawmap(t_vm *vm);
 void	ft_changememvs(int memstart, int player);
 void    foreach_thread(t_threads *threads, void(*func)(t_thread*));

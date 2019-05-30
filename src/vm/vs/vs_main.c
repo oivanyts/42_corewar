@@ -6,7 +6,7 @@
 /*   By: npiatiko <npiatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 12:44:52 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/05/29 15:48:16 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/05/30 16:10:52 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ void ft_speedcontroll()
 	long long int 			dusec;
 
 	wattron(g_vs->info_win, COLOR_PAIR(WHITE));
-	mvwprintw(g_vs->info_win, 4, 3, "Cycles/second limit : %-5d", g_vs->speed);
 	gettimeofday(&curtime, NULL);
 	dusec = (curtime.tv_sec * SEC + curtime.tv_usec) - prevtime;
 	if (dusec < SEC / g_vs->speed)
@@ -86,28 +85,51 @@ void ft_speedcontroll()
 	prevtime = curtime.tv_sec * SEC + curtime.tv_usec;
 }
 
-void	ft_kbhandler(int key)
+void	ft_printinfo(t_vm *vm, int delay, int key)
+{
+	int i;
+
+	mvwprintw(g_vs->info_win, 7, 3, "Cycle : %-3d", vm->cycle * (bool)vm->last_alive);
+	mvwprintw(g_vs->info_win, 5, 3, "key  : %c", key);
+	mvwprintw(g_vs->info_win, 2, 3, "%-13s", delay ? "** RUNNING ** " : "** PAUSED **");
+	mvwprintw(g_vs->info_win, 4, 3, "Cycles/second limit : %-5d", g_vs->speed);
+	i = vm->nplayers;
+	while (i--)
+	{
+		wattron(g_vs->info_win, COLOR_PAIR(WHITE));
+		mvwprintw(g_vs->info_win, 23 - (vm->nplayers - 1 - i) * 4, 3, "Player -%d : ", vm->players[i].number);
+		wattron(g_vs->info_win, COLOR_PAIR(vm->players[i].number + 10) | A_BOLD);
+		wprintw(g_vs->info_win, "%.41s", vm->players[i].header.prog_name);
+
+	}
+	wrefresh(g_vs->info_win);
+}
+
+void	ft_kbhandler(t_vm *vm)
 {
 	static int	delay = 0;
+	static int	key = -1;
 
-	wattron(g_vs->info_win, COLOR_PAIR(WHITE));
-	if (key == ' ')
-	{
-		delay = !delay;
-		nodelay(stdscr, delay);
-		mvwprintw(g_vs->info_win, 2, 3, "%-13s", delay ? "** RUNNING ** " : "** PAUSED **");
-	}
-	else if (key == '=')
-		g_vs->speed == INT_MAX ? 0 : ++g_vs->speed;
-	else if (key == '-')
-		g_vs->speed == 1 ? 0 : g_vs->speed--;
-	else if (key == '+')
-		g_vs->speed += 10;
-	else if (key == '_')
-		g_vs->speed = g_vs->speed < 11 ? g_vs->speed : g_vs->speed - 10;
+	wattron(g_vs->info_win, COLOR_PAIR(WHITE) | A_BOLD);
 	ft_speedcontroll();
-	mvwprintw(g_vs->info_win, 5, 3, "key  : %lld", (long long )key);
-	wrefresh(g_vs->info_win);
+	while (true)
+	{
+		if (key == ' ')
+			delay = !delay;
+		else if (key == '=')
+			g_vs->speed == INT_MAX ? 0 : ++g_vs->speed;
+		else if (key == '-')
+			g_vs->speed == 1 ? 0 : g_vs->speed--;
+		else if (key == '+')
+			g_vs->speed += 10;
+		else if (key == '_')
+			g_vs->speed = g_vs->speed < 11 ? g_vs->speed : g_vs->speed - 10;
+		nodelay(stdscr, delay);
+		ft_printinfo(vm, delay, key);
+		key = getch();
+		if (delay || (!ft_strchr("-_=+ ", key) && key > 0))
+			break;
+	}
 }
 
 void	ft_drawcarriage(t_thread *th)
@@ -133,35 +155,40 @@ void	ft_drawmap(t_vm *vm)
 		i++;
 	}
 	foreach_thread(&vm->threads, ft_drawcarriage);
-	wattrset(g_vs->info_win, COLOR_PAIR(WHITE));
-	mvwprintw(g_vs->info_win, 7, 3, "Cycle : %-3d", vm->cycle);
+//	wattrset(g_vs->info_win, COLOR_PAIR(WHITE));
+//	mvwprintw(g_vs->info_win, 7, 3, "Cycle : %-3d", vm->cycle);
 //	mvwprintw(g_vs->info_win, 6, 3, "Cycle : %08d", COLOR_PAIR(11));
 //	mvwprintw(g_vs->info_win, 7, 3, "Cycle : %08d", COLOR_PAIR(222));
 
 	wrefresh(g_vs->mem_win);
-	wrefresh(g_vs->info_win);
-	ft_kbhandler(getch());
+//	wrefresh(g_vs->info_win);
+	ft_kbhandler(vm);
 //	getch();
 //	endwin();
 
 }
 
-void	ft_initvsmap(int playern, t_player *player, t_vm *vm)
+void	ft_initvsmap(t_vm *vm, t_player *player)
 {
 	int i;
 	int imax;
+	int	playern;
 
-	i = playern * MEM_SIZE / vm->nplayers;
-	imax = i + player[playern].header.prog_size;
-	while (i < imax)
+	playern = 0;
+	while (playern < vm->nplayers)
 	{
-		(g_vsmap[i]).player = player[playern].number;
-		i++;
+		i = playern * MEM_SIZE / vm->nplayers;
+		imax = i + player[playern].header.prog_size;
+		while (i < imax)
+		{
+			(g_vsmap[i]).player = player[playern].number;
+			i++;
+		}
+		playern++;
 	}
-
 }
 
-void ft_vsinit()
+void ft_vsinit(t_vm *vm, t_player *players)
 {
 	chtype ch;
 
@@ -179,6 +206,7 @@ void ft_vsinit()
 	}
 	g_vs = (t_vs *)ft_memalloc(sizeof(t_vs));
 	g_vsmap = (t_vsmap *)ft_memalloc(sizeof(t_vsmap) * MEM_SIZE);
+	ft_initvsmap(vm, players);
 	start_color();
 	ft_initcolors();
 	refresh();
@@ -193,6 +221,7 @@ void ft_vsinit()
 //	mvwprintw(g_vs->info_win, 10, 3, "%d", getch());
 	wrefresh(g_vs->mem_win);
 	wrefresh(g_vs->info_win);
+	ft_drawmap(vm);
 //	refresh();
 //	getch();
 //	endwin();

@@ -235,13 +235,13 @@ uint8_t parce_info(int argc, char **arguments, t_player *player, uint8_t *memory
 	player_gap = MEM_SIZE / vm->nplayers;
 	threads_init(&vm->threads);
 	i = 0;
+//	vm->players = &player[0];
 	while (i < vm->nplayers)
 	{
 		load_from_file(arguments[next_file(files)], &player[i], &memory[(i) * player_gap]);
 		player[i].number = i + 1;
 		player[i].threads = &vm->threads;
 		init_carridge(&player[i], i, memory, player_gap);
-		ft_initvsmap(i, player, vm);
 		i++;
 	}
 	return (0);
@@ -277,7 +277,6 @@ int		main(int argc, char *argv[])
 	get_vm(&vm);
 	ft_bzero(players, sizeof(t_player) * (argc - 1));
 	ft_bzero(memory, sizeof(uint8_t) * MEM_SIZE);
-	ft_vsinit();
 	parce_info(argc - 1, argv, &players[0], &memory[0]);
 //	ft_drawmap(&memory[0]);
 //	ft_printf("Introducing contestants...\n"
@@ -286,6 +285,7 @@ int		main(int argc, char *argv[])
 //			  "* Player 3, weighing 281 bytes, \"Tching tching(Intercepteur), Bouh!Bouh!(bruits d'anti-jeu)\" (\"\") !\n");
 	//poor_mans_visualization(memory, &players[0], vm.nplayers);
 	init_vm(&vm, &players[0], vm.nplayers);
+	ft_vsinit(&vm, &players[0]);
 	vm_cycle(&vm);
 //	poor_mans_visualization(memory, &players[0], vm.nplayers);
 //	printf("Last player alive: %u\n", vm.last_alive);
