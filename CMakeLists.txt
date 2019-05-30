@@ -3,8 +3,8 @@ project(corewar LANGUAGES C)
 set(CMAKE_C_COMPILER clang)
 
 set(CMAKE_C_STANDARD 99)
-set(CMAKE_C_FLAGS "-lncurses")
-#set(CMAKE_C_FLAGS "-Wall -Wextra -Werror")
+#set(CMAKE_C_FLAGS "-lncurses")
+set(CMAKE_C_FLAGS "-Wall -Wextra -Werror")
 add_subdirectory(./libft)
 
 AUX_SOURCE_DIRECTORY(./src/vm/ SOURCE_FILES_VM)
