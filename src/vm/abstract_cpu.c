@@ -114,13 +114,13 @@ uint16_t memory_tou16(t_memory *mem)
 {
 	uint16_t u16;
 
-	if (mem->memory_end - mem->memory >= 2)
+	if ((uint8_t*)mem->memory_end - (uint8_t*)mem->memory >= 2)
 	{
 		u16 = *(uint16_t*)(mem->memory);
 	}
 	else
 	{
-		u16 = (*as_byte(mem) << 8);
+		u16 = (*as_byte(mem->memory) << 8);
 		u16 |= *as_byte(mem->memory_begin);
 	}
 	return (u16);
@@ -133,7 +133,7 @@ uint32_t memory_tou32(t_memory *mem)
 	t_memory mem_cpy;
 
 	mem_cpy = *mem;
-	if (mem->memory_end - mem->memory >= 4)
+	if ((uint8_t*)mem->memory_end - (uint8_t*)mem->memory >= 4)
 	{
 		res = *(uint32_t*)(mem->memory);
 	}

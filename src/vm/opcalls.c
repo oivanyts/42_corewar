@@ -247,10 +247,6 @@ void f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	int32_t up2;
 	int32_t up3;
 
-	if (get_vm(0)->cycle == 4840)
-	{
-		get_vm(0);
-	}
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
