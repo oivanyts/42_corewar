@@ -96,20 +96,15 @@ void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	load_param(sp, p1, 1);
 	p32 = memory_tou32(p1);
 	p32 = swap32(p32);
-	if (((t_player*)sp->player)->number == -p32)
+	if (((t_player*)sp->player)->number == -p32) //need to fix
 	{
 		get_vm(0)->last_alive = ((t_player*)sp->player)->number;
-//		ft_printf("%d(%d) [%d]\n", -swap32(sp->reg[0]), ((t_player*)sp->player)->number , get_vm(0)->cycle);
 	}
 }
 
 void f_ld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
     (void)p3;
-	if (((t_player*)(sp->player))->number == 1)
-	{
-		get_vm(0);
-	}
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	memory_memmove(p2, p1);
