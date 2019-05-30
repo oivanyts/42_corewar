@@ -86,100 +86,10 @@ void poor_mans_visualization(uint8_t *bytecode)
 	//ft_printf("\n");
 }
 
-bool string_to_number(char *string, int *n)
-{
-	*n = ft_atoi(string);
-	while (ft_isspace(*string))
-	{
-		string++;
-	}
-	return (ft_strlen(string) == (size_t)ft_num_size(*n = ft_atoi(string)));
-}
 
-bool is_option(char **argv, int argc, uint8_t *arg_num, char *string1)
-{
-	char	*option;
-	int		param;
-	t_vm	*vm;
 
-	vm = get_vm(0);
-	if (argv[*arg_num][0] != '-')
-		return (false);
-	if ((option = ft_strstr(string1, &argv[*arg_num][1])))
-	{
-		vm->options.o_next_player = 0;
-		if (*(option + 1) == ':' && !vm->options.visual)
-		{
-			(*arg_num)++;
-			if (argc >= *arg_num && string_to_number(argv[*arg_num], &param))
-			{
-				(*arg_num)++;
-			}
-			else
-			{
-				handle_error(error_option);
-			}
-			if (ft_strnequ(option, "d", 1))
-			{
-				vm->options.o_dump = true;
-				vm->options.o_dump_point = param;
-			}
-			else if (ft_strnequ(option, "s", 1))
-			{
-				vm->options.o_stop = true;
-				vm->options.o_stop_point = param;
-			}
-			else if (ft_strnequ(option, "n", 1))
-			{
-				if (param > 4 || param < 1)
-					handle_error(error_option);
-				vm->options.o_next_player = param;
-			}
-			else
-			{
-				handle_error(error_option);
-			}
-		}
-		else
-		{
-			if (argv[*arg_num][1] == 'v')
-			{
-				vm->options.visual = true;
-				vm->options.o_dump = false;
-				vm->options.o_stop = false;
-			}
-			(*arg_num)++;
-		}
-	}
-	return (true);
-}
 
-int place_process(uint8_t *files, uint8_t o_numb, uint8_t i)
-{
-	int8_t	drag;
 
-	if (o_numb)
-	{
-		if (files[o_numb - 1])
-		{
-			drag = 3;
-			while (drag > (o_numb - 1))
-			{
-				files[drag] = files[drag - 1];
-				drag--;
-			}
-		}
-		files[o_numb - 1] = i;
-	}
-	else
-	{
-		drag = 0;
-		while (files[drag] && drag < 3)
-			drag++;
-		files[drag] = i;
-	}
-	return 0;
-}
 
 uint8_t next_file(uint8_t files[4])
 {
@@ -194,36 +104,20 @@ uint8_t next_file(uint8_t files[4])
 	return (cp);
 }
 
+
+
 uint8_t parce_info(int argc, char **arguments, t_player *player, uint8_t *memory)
 {
 	uint8_t		i;
 	t_vm		*vm;
 	uint8_t 	files[4];
-	int 		player_gap;
-//	int			numbers[4];
+	uint16_t 	player_gap;
 
-//	ft_bzero(&numbers, sizeof(int) * 4);
-	ft_bzero(&files, sizeof(int) * 5);
+	ft_bzero(&files, sizeof(int) * 4);
 	vm = get_vm(0);
 	vm->nplayers = 0;
-
-	i = 1;
 	ft_bzero(vm, sizeof(t_vm));
-	while (i <= argc)
-	{
-		if (is_option(arguments, argc, &i, OPTIONS))
-		{
-			continue ;
-		}
-		else
-		{
-
-		}
-		place_process(&files[0], vm->options.o_next_player, i);
-		vm->options.o_next_player = 0;
-		vm->nplayers++;
-		i++;
-	}
+	handle_options(arguments, argc, vm, &files[0]);
 	if (vm->nplayers < 1)
 		handle_error(error_no_players);
 	else if (vm->nplayers > MAX_PLAYERS)
@@ -287,16 +181,16 @@ int		main(int argc, char *argv[])
 	ft_bzero(memory, sizeof(uint8_t) * MEM_SIZE);
 	parce_info(argc - 1, argv, &players[0], &memory[0]);
 	init_vm(&vm, &players[0], vm.nplayers);
-	if (vm.options.visual == 0)
+	if (vm.options.visual_ncurses == 0)
 	{
 		print_players_intro(players, vm.nplayers);
 	}
 	vm_cycle(&vm);
-	/*if (vm.options.o_dump)
-	{
-		//poor_mans_visualization(memory, &players[0], vm.nplayers);
-	}*/
-	if (vm.options.visual == 0 && threads_alive(&vm.threads))
+//	if (vm.options.o_dump)
+//	{
+//		poor_mans_visualization(memory);
+//	}
+	if (vm.options.visual_ncurses == 0 && !threads_alive(&vm.threads))
 	{
 		ft_printf("Contestant %d, \"%s\", has won\n", players[vm.last_alive - 1].number, players[vm.last_alive - 1].header.prog_name);
 	}
