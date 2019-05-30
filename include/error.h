@@ -11,6 +11,7 @@ typedef enum e_error_code
 	error_array_add,
     error_no_players,
     error_to_many_players,
+	error_read_file,
     error_wrong_magic,
     error_wrong_tparam,
     error_option,
@@ -19,6 +20,6 @@ typedef enum e_error_code
 
 void	handle_error(t_error_code n_err);
 
-const char *error_table[8];
+const char *error_table[9];
 
 #endif

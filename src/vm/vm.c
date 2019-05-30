@@ -67,7 +67,7 @@ void	vm_cycle(t_vm *vm)
 	alive = 1;
 	while (alive)
 	{
-		vm->options.visual ? 0 : ft_printf("It is now cycle %d\n", vm->cycle , cycles_to_die, cycles);
+		vm->options.visual_ncurses ? 0 : ft_printf("It is now cycle %d\n", vm->cycle , cycles_to_die, cycles);
 		foreach_thread(&vm->threads, op_exec);
 		if (cycles >= cycles_to_die)
 		{
@@ -78,14 +78,14 @@ void	vm_cycle(t_vm *vm)
 			if (alive >= NBR_LIVE)
 			{
 				cycles_to_die -= CYCLE_DELTA;
-				vm->options.visual ? 0 : ft_printf("Cycle to die is now %d\n", cycles_to_die);
+				vm->options.visual_ncurses ? 0 : ft_printf("Cycle to die is now %d\n", cycles_to_die);
 				checks = 0;
 			}
 		}
 		if (checks == MAX_CHECKS)
 		{
 			cycles_to_die -= CYCLE_DELTA;
-			vm->options.visual ? 0 : ft_printf("Cycle to die is now %d\n", cycles_to_die);
+			vm->options.visual_ncurses ? 0 : ft_printf("Cycle to die is now %d\n", cycles_to_die);
 			checks = 0;
 		}
 		if (vm->cycle == vm->options.o_dump_point && vm->options.o_dump)
@@ -448,13 +448,13 @@ void	op_exec(t_thread *pc)
 	int pc_i = get_thread_number(pc);
 	if (pc->op.valid)
 	{
-		if (get_vm(0)->options.visual == 0 && get_vm(0)->options.o_op)
+		if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_op)
 		{
 			print_op(pc);
 		}
 		opcalls[pc->op.opcode].opfunc(pc, &pc->op.args[0], &pc->op.args[1], &pc->op.args[2]);
 	}
-	get_vm(0)->options.visual ? 0 : print_moves(threads_at(&get_vm(0)->threads, pc_i));
+	get_vm(0)->options.visual_ncurses ? 0 : print_moves(threads_at(&get_vm(0)->threads, pc_i));
 }
 
 t_vm *get_vm(t_vm *vm)

@@ -153,5 +153,7 @@ char				*ft_check_color(const char *str);
 void				ft_color_input(char *color);
 int					ft_printf_fd(int fd, const char *format, ...);
 void				ft_print_list(t_list *list);
+bool				ft_string_to_number(char *string, int *n);
+
 
 #endif

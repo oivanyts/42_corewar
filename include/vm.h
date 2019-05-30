@@ -26,7 +26,7 @@
 # define T_SECOND_PARAM (uint8_t)0x30
 # define T_THIRD_PARAM (uint8_t)0x0C
 
-# define OPTIONS "d:n:s:vc"
+# define OPTIONS "d:n:v:sa"
 
 typedef struct	s_player
 {
@@ -40,10 +40,10 @@ typedef struct	s_options
 	bool		o_op;
 	bool		o_dump;
 	uint32_t	o_dump_point;
-	bool		o_stop;
-	uint32_t	o_stop_point;
+	bool		o_visual;
+	uint32_t	o_v_param;
 	uint8_t		o_next_player;
-	bool		visual;
+	bool		visual_ncurses;
 }				t_options;
 
 typedef struct	s_vm
@@ -78,6 +78,6 @@ void init_carridge(t_player *player, uint8_t i, uint8_t *memory, int gap);
 
 void poor_mans_visualization(uint8_t *bytecode);
 
-int get_options(int	argc, char *argv[], const char *options);
+void handle_options(char **arguments, int argc, t_vm *vm, uint8_t *files);
 
 #endif
