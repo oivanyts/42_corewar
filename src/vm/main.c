@@ -186,6 +186,7 @@ int		main(int argc, char *argv[])
 	{
 		print_players_intro(players, vm.nplayers);
 	}
+	vm.options.visual_ncurses ? ft_vsinit(&vm, &players[0]) : 0;
 	vm_cycle(&vm);
 //	if (vm.options.o_dump)
 //	{

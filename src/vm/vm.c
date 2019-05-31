@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "vm.h"
+#include "vs.h"
 
 uint32_t threads_alive(t_threads *threads)
 {
@@ -74,6 +75,7 @@ void	vm_cycle(t_vm *vm)
 			alive = threads_alive(&vm->threads);
 			foreach_thread(&vm->threads, kill_thread_if_no_lives);
 			cycles = 0;
+			ft_resetlivesinper(vm);
 			++checks;
 			if (alive >= NBR_LIVE)
 			{
@@ -93,9 +95,11 @@ void	vm_cycle(t_vm *vm)
 			poor_mans_visualization(threads_at(&vm->threads, 0)->vm_memory);
 			return ;
 		}
+		vm->options.visual_ncurses ? ft_drawmap(vm) : 0;
 		++cycles;
 		++vm->cycle;
 	}
+
 }
 
 void decode_opcode(struct s_thread *pc)

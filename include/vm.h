@@ -33,6 +33,8 @@ typedef struct	s_player
 	t_threads	*threads;
 	t_header	header;
 	int32_t		number;
+	int32_t		lastlive;
+	int32_t		livesinper;
 } 				t_player;
 
 typedef struct	s_options
@@ -79,5 +81,7 @@ void init_carridge(t_player *player, uint8_t i, uint8_t *memory, int gap);
 void poor_mans_visualization(uint8_t *bytecode);
 
 void handle_options(char **arguments, int argc, t_vm *vm, uint8_t *files);
+
+void	ft_resetlivesinper(t_vm *vm);
 
 #endif

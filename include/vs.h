@@ -29,6 +29,7 @@ typedef struct	s_vs
 	WINDOW	*mem_win;
 	WINDOW	*info_win;
 	int		speed;
+	int 	sumlives;
 }				t_vs;
 
 t_vsmap	*g_vsmap;
@@ -38,4 +39,5 @@ void	ft_initvsmap(t_vm *vm, t_player *player);
 void	ft_drawmap(t_vm *vm);
 void	ft_changememvs(int memstart, int player);
 void    foreach_thread(t_threads *threads, void(*func)(t_thread*));
+void	ft_printlivebar(t_vm *vm, int indent);
 #endif

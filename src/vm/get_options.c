@@ -56,7 +56,7 @@ bool is_option(char **argv, int argc, uint8_t *arg_num, char *string1)
 				vm->options.o_dump = true;
 				vm->options.o_dump_point = param;
 			}
-			else if (ft_strnequ(option, "v", 1) && )
+			else if (ft_strnequ(option, "v", 1))
 			{
 				vm->options.o_visual = true;
 				vm->options.o_v_param = param;

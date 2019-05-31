@@ -18,6 +18,25 @@
 #define NLINES 10
 #define NCOLS 40
 
+int		ft_getnchars(int lives)
+{
+	float j;
+
+	j = (((float)lives / (float)g_vs->sumlives) * (float)50);
+	return ((int)(j - (int)j >= 1.0 / (float)get_vm(0)->nplayers ? j + 1 : j));
+}
+
+void	ft_resetlivesinper(t_vm *vm)
+{
+	int 	i;
+
+	ft_printlivebar(get_vm(0), 3);
+	i = vm->nplayers;
+	while (i--)
+		vm->players[i].livesinper = 0;
+	g_vs->sumlives = 0;
+}
+
 void	ft_initcolors(void)
 {
 	init_color(COLOR_GRAY, 455, 455, 455);
@@ -40,7 +59,7 @@ void	ft_changememvs(int memstart, int player)
 	while (i--)
 	{
 		g_vsmap[memstart % 4095].player = player;
-		g_vsmap[memstart % 4095].newdata = 1000;
+		g_vsmap[memstart % 4095].newdata = 50;
 		memstart++;
 	}
 }
@@ -62,7 +81,7 @@ void	ft_drawlive(int i)
 	if (g_vsmap[i].live > 0)
 	{
 		g_vsmap[i].live--;
-		wattrset(g_vs->mem_win, COLOR_PAIR(g_vsmap[i].liveplayer + 20));
+		wattrset(g_vs->mem_win, COLOR_PAIR(g_vsmap[i].liveplayer + 20) | A_BOLD);
 		if (g_vsmap[i].liveplayer > 4 || g_vsmap[i].liveplayer < 1)
 			mvwprintw(g_vs->info_win, 8, 3, "player : %08d", g_vsmap[i].liveplayer);
 	}
@@ -85,23 +104,46 @@ void ft_speedcontroll()
 	prevtime = curtime.tv_sec * SEC + curtime.tv_usec;
 }
 
+void	ft_printlivebar(t_vm *vm, int indent)
+{
+	int i;
+
+	i = vm->nplayers;
+	wattrset(g_vs->info_win, COLOR_PAIR(GRAY) | A_BOLD);
+	mvwprintw(g_vs->info_win, 28 + indent, 3, "[--------------------------------------------------]");
+	wmove(g_vs->info_win, 28 + indent, 4);
+	while (i-- && g_vs->sumlives)
+	{
+		wattrset(g_vs->info_win, COLOR_PAIR(vm->players[i].number + 10) | A_BOLD);
+		wprintw(g_vs->info_win,"%.*s",ft_getnchars(vm->players[i].livesinper) , "--------------------------------------------------");
+	}
+	wattrset(g_vs->info_win, COLOR_PAIR(GRAY) | A_BOLD);
+	mvwprintw(g_vs->info_win, 28 + indent, 54, "]");
+}
+
 void	ft_printinfo(t_vm *vm, int delay, int key)
 {
 	int i;
 
-	mvwprintw(g_vs->info_win, 7, 3, "Cycle : %-3d", vm->cycle * (bool)vm->last_alive);
+	wattrset(g_vs->info_win, COLOR_PAIR(WHITE) | A_BOLD);
+	mvwprintw(g_vs->info_win, 27, 3, "Live breakdown for current period :");
+	mvwprintw(g_vs->info_win, 30, 3, "Live breakdown for last period :");
+	mvwprintw(g_vs->info_win, 7, 3, "Cycle : %-3d", vm->cycle * (bool) vm->last_alive);
 	mvwprintw(g_vs->info_win, 5, 3, "key  : %c", key);
 	mvwprintw(g_vs->info_win, 2, 3, "%-13s", delay ? "** RUNNING ** " : "** PAUSED **");
 	mvwprintw(g_vs->info_win, 4, 3, "Cycles/second limit : %-5d", g_vs->speed);
 	i = vm->nplayers;
 	while (i--)
 	{
-		wattron(g_vs->info_win, COLOR_PAIR(WHITE));
+		wattrset(g_vs->info_win, COLOR_PAIR(WHITE));
+		mvwprintw(g_vs->info_win, 23 - (vm->nplayers - 1 - i) * 4 + 1, 3, "Last live :%22d", vm->players[i].lastlive);
+		mvwprintw(g_vs->info_win, 23 - (vm->nplayers - 1 - i) * 4 + 2, 3, "Lives in current period :%8d",
+				  vm->players[i].livesinper);
 		mvwprintw(g_vs->info_win, 23 - (vm->nplayers - 1 - i) * 4, 3, "Player -%d : ", vm->players[i].number);
-		wattron(g_vs->info_win, COLOR_PAIR(vm->players[i].number + 10) | A_BOLD);
+		wattrset(g_vs->info_win, COLOR_PAIR(vm->players[i].number + 10) | A_BOLD);
 		wprintw(g_vs->info_win, "%.41s", vm->players[i].header.prog_name);
-		mvwprintw(g_vs->info_win, 23 - (vm->nplayers - 1 - i) * 4 + 1, 3, "Test");
 	}
+	ft_printlivebar(vm, 0);
 	wrefresh(g_vs->info_win);
 }
 
@@ -110,7 +152,6 @@ void	ft_kbhandler(t_vm *vm)
 	static int	delay = 0;
 	static int	key = -1;
 
-	wattron(g_vs->info_win, COLOR_PAIR(WHITE) | A_BOLD);
 	ft_speedcontroll();
 	while (true)
 	{

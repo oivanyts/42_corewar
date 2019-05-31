@@ -100,8 +100,14 @@ void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	if (-p32 > 0 && -p32 <= get_vm(0)->nplayers)
 	{
 		get_vm(0)->last_alive = -p32;
-		g_vsmap[sp->op.ip].live = 50;
-		g_vsmap[sp->op.ip].liveplayer = ((t_player*)sp->player)->number;
+		if (get_vm(0)->options.visual_ncurses)
+		{
+			g_vsmap[sp->op.ip].live = 50;
+			g_vsmap[sp->op.ip].liveplayer = -p32;
+			get_vm(0)->players[-p32 - 1].lastlive = get_vm(0)->cycle;
+			get_vm(0)->players[-p32 - 1].livesinper++;
+			g_vs->sumlives++;
+		}
 	}
 }
 
@@ -121,12 +127,8 @@ void f_st(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	memory_memmove(p2, p1);
-	if (get_param_type(sp->op.tparams, 2) == IND_CODE)
-	{
-//		mvwprintw(g_vs->info_win, 6, 3, "!!=%d", ((uint8_t *)p2->memory - &sp->vm_memory[0]));
-		ft_changememvs(((uint8_t *)p2->memory - &sp->vm_memory[0]), ((t_player *)sp->player)->number);
-//		wrefresh(g_vs->info_win);
-	}
+	if (get_param_type(sp->op.opcode, sp->op.tparams, 2) == T_IND && get_vm(0)->options.visual_ncurses)
+		ft_changememvs(((uint8_t *) p2->memory - &sp->vm_memory[0]), ((t_player *) sp->player)->number);
 }
 
 void f_add(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
@@ -273,10 +275,7 @@ void f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	memory_init(&mem, &sp->vm_memory[(sp->op.ip + (up2 + up3) % IDX_MOD) % MEM_SIZE], DIR_SIZE);
 	memory_set_bounds(&mem, sp->vm_memory, sp->vm_memory + MEM_SIZE);
 	memory_memmove(&mem, p1);
-	ft_changememvs((sp->op.ip + (up2 + up3) % IDX_MOD) % MEM_SIZE, ((t_player *)sp->player)->number);
-//	mvwprintw(g_vs->info_win, 6, 3, "!!=%d", (sp->op.ip + (up2 + up3) % IDX_MOD) % MEM_SIZE);
-//	wrefresh(g_vs->info_win);
-
+    get_vm(0)->options.visual_ncurses ? ft_changememvs((sp->op.ip + (up2 + up3) % IDX_MOD) % MEM_SIZE, ((t_player *)sp->player)->number) : 0;
 }
 
 void f_fork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
