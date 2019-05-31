@@ -26,7 +26,7 @@
 # define T_SECOND_PARAM (uint8_t)0x30
 # define T_THIRD_PARAM (uint8_t)0x0C
 
-# define OPTIONS "d:n:s:"
+# define OPTIONS "d:n:v:sa"
 
 typedef struct	s_player
 {
@@ -35,6 +35,17 @@ typedef struct	s_player
 	int32_t		number;
 } 				t_player;
 
+typedef struct	s_options
+{
+	bool		o_op;
+	bool		o_dump;
+	uint32_t	o_dump_point;
+	bool		o_visual;
+	uint32_t	o_v_param;
+	uint8_t		o_next_player;
+	bool		visual_ncurses;
+}				t_options;
+
 typedef struct	s_vm
 {
 	t_player	*players;
@@ -42,21 +53,16 @@ typedef struct	s_vm
 	t_threads	threads;
 	uint32_t	last_alive;
 	uint32_t	cycle;
-	bool		o_dump;
-	uint32_t	o_dump_point;
-	bool		o_stop;
-	uint32_t	o_stop_point;
-	uint8_t		o_next_player;
+	t_options	options;
 }				t_vm;
 
+t_vm	*get_vm(t_vm *vm);
 
-t_vm			*get_vm(t_vm *vm);
-
-bool			load_from_file(char *filename, t_player *player, uint8_t memory[]);
+void	load_from_file(char *filename, t_player *player, uint8_t memory[]);
 
 void	vm_cycle(t_vm *vm);
 
-uint8_t get_param_type(uint8_t tparams, uint8_t param_number);
+uint8_t get_param_type(uint8_t opcode, uint8_t tparams, uint8_t param_number);
 
 uint8_t decode_tparams(struct s_thread *pc, uint8_t opcode);
 
@@ -68,12 +74,10 @@ void	op_exec(t_thread *pc);
 
 uint32_t threads_alive(t_threads *threads);
 
-t_op    op_tab[17];
-
 void init_carridge(t_player *player, uint8_t i, uint8_t *memory, int gap);
 
-void poor_mans_visualization(uint8_t *bytecode, t_player *players, int num_players);
+void poor_mans_visualization(uint8_t *bytecode);
 
-int get_options(int	argc, char *argv[], const char *options);
+void handle_options(char **arguments, int argc, t_vm *vm, uint8_t *files);
 
 #endif

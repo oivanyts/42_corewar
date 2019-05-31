@@ -13,11 +13,15 @@ typedef struct s_memory
 {
 	void *memory;
 	size_t memory_size;
+	void *memory_begin;
+	void *memory_end;
 } t_memory;
 
 void    memory_init(t_memory *mem, void *ptr, size_t size);
 
-void    memory_init_number(t_memory *mem, void *ptr, size_t size, uint64_t num);
+void	memory_set_bounds(t_memory *mem, void *memory_begin, void *memory_end);
+
+void    memory_init_number(t_memory *mem, uint32_t *num);
 
 void    memory_memmove(t_memory *dst, t_memory *src);
 
@@ -38,7 +42,5 @@ uint8_t memory_tou8(t_memory *mem);
 uint16_t memory_tou16(t_memory *mem);
 
 uint32_t memory_tou32(t_memory *mem);
-
-void    memory_xprintf(t_memory *mem);
 
 #endif

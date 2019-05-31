@@ -60,6 +60,8 @@ typedef struct s_opcall
 
 t_opcall opcalls[16];
 
+t_op    op_tab[17];
+
 uint32_t swap32(uint32_t toswap);
 
 uint16_t swap16(uint16_t toswap);

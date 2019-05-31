@@ -53,15 +53,15 @@ void load_reg_param(t_thread *sp, t_memory *mem)
 
 void load_param(t_thread *sp, t_memory *mem, uint8_t param_number)
 {
-	if (get_param_type(sp->op.tparams, param_number) == REG_CODE)
+	if (get_param_type(sp->op.opcode, sp->op.tparams, param_number) == T_REG)
 	{
 		load_reg_param(sp, mem);
 	}
-	else if (get_param_type(sp->op.tparams, param_number) == DIR_CODE)
+	else if (get_param_type(sp->op.opcode, sp->op.tparams, param_number) == T_DIR)
 	{
 		load_dir_param(sp, mem);
 	}
-	else if (get_param_type(sp->op.tparams, param_number) == IND_CODE)
+	else if (get_param_type(sp->op.opcode, sp->op.tparams, param_number) == T_IND)
 	{
 		load_ind_param(sp, mem);
 	}
@@ -73,11 +73,11 @@ void load_param(t_thread *sp, t_memory *mem, uint8_t param_number)
 
 void load_idx_param(t_thread *sp, t_memory *mem, uint8_t param_number)
 {
-	if (get_param_type(sp->op.tparams, param_number) == DIR_CODE)
+	if (get_param_type(sp->op.opcode, sp->op.tparams, param_number) == T_DIR)
 	{
 		load_dir_idx_param(sp, mem);
 	}
-	else if (get_param_type(sp->op.tparams, param_number) == IND_CODE)
+	else if (get_param_type(sp->op.opcode, sp->op.tparams, param_number) == T_IND)
 	{
 		load_ind_param(sp, mem);
 	}
@@ -97,9 +97,9 @@ void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	load_param(sp, p1, 1);
 	p32 = memory_tou32(p1);
 	p32 = swap32(p32);
-	if (((t_player*)sp->player)->number == -p32)
+	if (-p32 > 0 && -p32 <= get_vm(0)->nplayers)
 	{
-		get_vm(0)->last_alive = ((t_player*)sp->player)->number;
+		get_vm(0)->last_alive = -p32;
 		g_vsmap[sp->op.ip].live = 50;
 		g_vsmap[sp->op.ip].liveplayer = ((t_player*)sp->player)->number;
 	}
@@ -108,10 +108,6 @@ void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 void f_ld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
     (void)p3;
-	if (memory_tou8(p2) == 1)
-	{
-		get_vm(0);
-	}
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	memory_memmove(p2, p1);
@@ -135,26 +131,46 @@ void f_st(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 void f_add(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
+	uint32_t sum;
+	t_memory res_memory;
+
+	if (((t_player*)(sp->player))->number == 1)
+	{
+		get_vm(0);
+	}
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
-	*(uint32_t*)p3->memory = swap32(swap32(memory_tou32(p1)) + swap32(memory_tou32(p2)));
-	//memory_add(p3, p1, p2);
+	sum = swap32(swap32(memory_tou32(p1)) + swap32(memory_tou32(p2)));
+	memory_init_number(&res_memory, &sum);
+	memory_memmove(p3, &res_memory);
 	sp->cf = memory_iszero(p3);
 }
 
 void f_sub(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
+	uint32_t sum;
+	t_memory res_memory;
+
+	if (((t_player*)(sp->player))->number == 1)
+	{
+		get_vm(0);
+	}
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
-	*(uint32_t*)p3->memory = swap32(swap32(memory_tou32(p1)) - swap32(memory_tou32(p2)));
-	//memory_subtract(p3, p1, p2);
+	sum = swap32(swap32(memory_tou32(p1)) - swap32(memory_tou32(p2)));
+	memory_init_number(&res_memory, &sum);
+	memory_memmove(p3, &res_memory);
 	sp->cf = memory_iszero(p3);
 }
 
 void f_and(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
+	if (((t_player*)(sp->player))->number == 1)
+	{
+		get_vm(0);
+	}
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
@@ -164,6 +180,10 @@ void f_and(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 void f_or(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
+	if (((t_player*)(sp->player))->number == 1)
+	{
+		get_vm(0);
+	}
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
@@ -173,6 +193,10 @@ void f_or(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 void f_xor(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
+	if (((t_player*)(sp->player))->number == 1)
+	{
+		get_vm(0);
+	}
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
@@ -197,14 +221,10 @@ void f_ldi(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	int32_t up1;
 	int32_t up2;
 
-	if (memory_tou8(p3) == 1)
-	{
-		get_vm(0);
-	}
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
-	if (get_param_type(sp->op.tparams, 1) == REG_CODE)
+	if (get_param_type(sp->op.opcode, sp->op.tparams, 1) == T_REG)
 	{
 		up1 = swap32(memory_tou32(p1));
 	}
@@ -212,8 +232,7 @@ void f_ldi(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	{
 		up1 = (int16_t)swap16(memory_tou16(p1));
 	}
-	//up1 = swap16(memory_tou16(p1));
-	if (get_param_type(sp->op.tparams, 2) == REG_CODE)
+	if (get_param_type(sp->op.opcode, sp->op.tparams, 2) == T_REG)
 	{
 		up2 = swap32(memory_tou32(p2));
 	}
@@ -221,27 +240,21 @@ void f_ldi(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	{
 		up2 = (int16_t)swap16(memory_tou16(p2));
 	}
-	//up2 = swap32(memory_tou32(p2));
 	memory_init(&mem, &sp->vm_memory[(sp->op.ip + (up1 + up2) % IDX_MOD) % MEM_SIZE], REG_SIZE);
+	memory_set_bounds(&mem, sp->vm_memory, sp->vm_memory + MEM_SIZE);
 	memory_memmove(p3, &mem);
 }
 
 void f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-	t_memory mem, mem2;
-	int32_t up1;
+	t_memory mem;
 	int32_t up2;
 	int32_t up3;
 
-	if (get_vm(0)->cycle >= 2290)
-	{
-		get_vm(0);
-	}
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
-	up1 = (memory_tou32(p1));
-	if (get_param_type(sp->op.tparams, 2) == REG_CODE)
+	if (get_param_type(sp->op.opcode, sp->op.tparams, 2) == T_REG)
 	{
 		up2 = swap32(memory_tou32(p2));
 	}
@@ -249,8 +262,7 @@ void f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	{
 		up2 = (int16_t)swap16(memory_tou16(p2));
 	}
-	//up2 = swap16(memory_tou16(p2));
-	if (get_param_type(sp->op.tparams, 3) == REG_CODE)
+	if (get_param_type(sp->op.opcode, sp->op.tparams, 3) == T_REG)
 	{
 		up3 = swap32(memory_tou32(p3));
 	}
@@ -258,9 +270,8 @@ void f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	{
 		up3 = (int16_t)swap16(memory_tou16(p3));
 	}
-	//up3 = swap16(memory_tou16(p3));
-	memory_init(&mem2, &up1, REG_SIZE);
 	memory_init(&mem, &sp->vm_memory[(sp->op.ip + (up2 + up3) % IDX_MOD) % MEM_SIZE], DIR_SIZE);
+	memory_set_bounds(&mem, sp->vm_memory, sp->vm_memory + MEM_SIZE);
 	memory_memmove(&mem, p1);
 	ft_changememvs((sp->op.ip + (up2 + up3) % IDX_MOD) % MEM_SIZE, ((t_player *)sp->player)->number);
 //	mvwprintw(g_vs->info_win, 6, 3, "!!=%d", (sp->op.ip + (up2 + up3) % IDX_MOD) % MEM_SIZE);
@@ -291,7 +302,11 @@ void f_lld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	int16_t addr;
 
 	(void)p3;
-	if (get_param_type(sp->op.tparams, 1) == T_DIR)
+	if (((t_player*)(sp->player))->number == 1)
+	{
+		get_vm(0);
+	}
+	if (get_param_type(sp->op.opcode, sp->op.tparams, 1) == T_DIR)
 	{
 		load_param(sp, p1, 1);
 	}
@@ -312,14 +327,10 @@ void f_lldi(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	int32_t up1;
 	int32_t up2;
 
-	if (memory_tou8(p3) == 1)
-	{
-		get_vm(0);
-	}
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
-	if (get_param_type(sp->op.tparams, 1) == REG_CODE)
+	if (get_param_type(sp->op.opcode, sp->op.tparams, 1) == T_REG)
 	{
 		up1 = swap32(memory_tou32(p1));
 	}
@@ -327,8 +338,7 @@ void f_lldi(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	{
 		up1 = (int16_t)swap16(memory_tou16(p1));
 	}
-	//up1 = swap16(memory_tou16(p1));
-	if (get_param_type(sp->op.tparams, 2) == REG_CODE)
+	if (get_param_type(sp->op.opcode, sp->op.tparams, 2) == T_REG)
 	{
 		up2 = swap32(memory_tou32(p2));
 	}
@@ -336,8 +346,8 @@ void f_lldi(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	{
 		up2 = (int16_t)swap16(memory_tou16(p2));
 	}
-	//up2 = swap16(memory_tou16(p2));
 	memory_init(&mem, &sp->vm_memory[(sp->op.ip + up1 + up2) % MEM_SIZE], REG_SIZE);
+	memory_set_bounds(&mem, sp->vm_memory, sp->vm_memory + MEM_SIZE);
 	memory_memmove(p3, &mem);
 }
 
