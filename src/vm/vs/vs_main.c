@@ -6,7 +6,7 @@
 /*   By: npiatiko <npiatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 12:44:52 by npiatiko          #+#    #+#             */
-/*   Updated: 2019/05/30 16:10:52 by npiatiko         ###   ########.fr       */
+/*   Updated: 2019/05/30 17:04:02 by npiatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void	ft_printinfo(t_vm *vm, int delay, int key)
 		mvwprintw(g_vs->info_win, 23 - (vm->nplayers - 1 - i) * 4, 3, "Player -%d : ", vm->players[i].number);
 		wattron(g_vs->info_win, COLOR_PAIR(vm->players[i].number + 10) | A_BOLD);
 		wprintw(g_vs->info_win, "%.41s", vm->players[i].header.prog_name);
-
+		mvwprintw(g_vs->info_win, 23 - (vm->nplayers - 1 - i) * 4 + 1, 3, "Test");
 	}
 	wrefresh(g_vs->info_win);
 }
