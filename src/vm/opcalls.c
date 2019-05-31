@@ -93,6 +93,7 @@ void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	(void)p2;
 	(void)p3;
 	sp->lives += 1;
+	sp->last_live = get_vm(0)->cycle;
 	load_param(sp, p1, 1);
 	p32 = memory_tou32(p1);
 	p32 = swap32(p32);
