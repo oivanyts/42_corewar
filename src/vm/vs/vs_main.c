@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 //#include "asm.h"
+#include "op.h"
 #include "vm.h"
 #include "vs.h"
 #include <sys/time.h>
@@ -126,12 +127,15 @@ void	ft_printinfo(t_vm *vm, int delay, int key)
 	int i;
 
 	wattrset(g_vs->info_win, COLOR_PAIR(WHITE) | A_BOLD);
-	mvwprintw(g_vs->info_win, 27, 3, "Live breakdown for current period :");
-	mvwprintw(g_vs->info_win, 30, 3, "Live breakdown for last period :");
 	mvwprintw(g_vs->info_win, 7, 3, "Cycle : %-3d", vm->cycle * (bool) vm->last_alive);
 	mvwprintw(g_vs->info_win, 5, 3, "key  : %c", key);
 	mvwprintw(g_vs->info_win, 2, 3, "%-13s", delay ? "** RUNNING ** " : "** PAUSED **");
 	mvwprintw(g_vs->info_win, 4, 3, "Cycles/second limit : %-5d", g_vs->speed);
+	mvwprintw(g_vs->info_win, 33, 3, "CYCLE_TO_DIE : %-5d", CYCLE_TO_DIE);
+	mvwprintw(g_vs->info_win, 35, 3, "CYCLE_DELTA : %-5d", CYCLE_DELTA);
+	mvwprintw(g_vs->info_win, 37, 3, "NBR_LIVE : %-5d", NBR_LIVE);
+	mvwprintw(g_vs->info_win, 39, 3, "MAX_CHECKS : %-5d", MAX_CHECKS);
+
 	i = vm->nplayers;
 	while (i--)
 	{
@@ -259,6 +263,9 @@ void ft_vsinit(t_vm *vm, t_player *players)
 	wborder(g_vs->info_win, ch, ch, ch, ch, ch, ch, ch, ch);
 	wattron(g_vs->info_win, COLOR_PAIR(WHITE));
 	mvwprintw(g_vs->info_win, 2, 3,"** PAUSED **");
+	mvwprintw(g_vs->info_win, 27, 3, "Live breakdown for current period :");
+	mvwprintw(g_vs->info_win, 30, 3, "Live breakdown for last period :");
+	ft_printlivebar(vm, 3);
 //	mvwprintw(g_vs->info_win, 10, 3, "%d", getch());
 	wrefresh(g_vs->mem_win);
 	wrefresh(g_vs->info_win);
