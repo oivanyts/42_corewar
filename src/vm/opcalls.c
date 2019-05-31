@@ -96,9 +96,9 @@ void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	load_param(sp, p1, 1);
 	p32 = memory_tou32(p1);
 	p32 = swap32(p32);
-	if (((t_player*)sp->player)->number == -p32) //need to fix
+	if (-p32 > 0 && -p32 <= get_vm(0)->nplayers)
 	{
-		get_vm(0)->last_alive = ((t_player*)sp->player)->number;
+		get_vm(0)->last_alive = -p32;
 	}
 }
 
