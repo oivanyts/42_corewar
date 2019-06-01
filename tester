@@ -1,0 +1,8 @@
+#!/bin/bash
+./asm $1
+./cmake-build-debug/asm $1
+name1=$(echo $1 | sed s/'\.s'/'\.cor'/)
+name2=$(echo $1 | sed s/'\.s'/'\.MYY'/)
+#echo $name1 $name2
+echo -en "\033[31m"
+diff $name1 $name2
