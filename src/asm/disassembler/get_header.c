@@ -1,9 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_header.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/06/03 18:27:25 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/06/03 18:27:27 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "asm.h"
 #include "disassembler.h"
 
 static void		read_magic(t_dasm *dasm, t_header *header)
 {
-
 	header->magic = get_int_from_pointer(dasm->bin);
 	if (header->magic != COREWAR_EXEC_MAGIC)
 	{
@@ -16,13 +27,12 @@ static void		read_magic(t_dasm *dasm, t_header *header)
 static void		read_prog_name(t_dasm *dasm, t_header *header)
 {
 	ft_strncpy(header->prog_name,
-			   (const char*)(dasm->bin + dasm->curr), PROG_NAME_LENGTH + 1);
+			(const char*)(dasm->bin + dasm->curr), PROG_NAME_LENGTH + 1);
 	dasm->curr += PROG_NAME_LENGTH + 4;
 }
 
 static void		read_prog_size(t_dasm *dasm, t_header *header)
 {
-
 	header->prog_size = get_int_from_pointer(dasm->bin + dasm->curr);
 	dasm->curr += sizeof(header->prog_size);
 }

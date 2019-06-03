@@ -31,16 +31,7 @@ void	err_no_endline(t_asm *a)
 void	err_no_closed_quote(t_asm *a)
 {
 	ft_printf("You have open quote at [%i:%i], but don't have closed quote.\n",
-			  a->fsm->st_row, a->fsm->st_col);
-	system("leaks -q asm");
-	exit(1);
-}
-
-void	err_empty_file(t_asm *a)
-{
-	if (a)
-		;
-	ft_printf("The file hasn't any instruction.\n");
+			a->fsm->st_row, a->fsm->st_col);
 	system("leaks -q asm");
 	exit(1);
 }

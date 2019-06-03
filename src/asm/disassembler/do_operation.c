@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   do_operation.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/06/03 18:24:52 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/06/03 18:25:22 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "disassembler.h"
 #include "asm.h"
 
@@ -17,12 +29,14 @@ static void	choose_arg(t_oper *oper, t_byte **bin, int i, t_dasm *dasm)
 	{
 		if (oper->op->dirsize == DIR_SIZE)
 		{
-			ft_printf_fd(dasm->fd, "%c%i", DIRECT_CHAR, get_int_from_pointer(*bin));
+			ft_printf_fd(dasm->fd, "%c%i", DIRECT_CHAR,
+					get_int_from_pointer(*bin));
 			*bin += REG_SIZE;
 		}
 		else
 		{
-			ft_printf_fd(dasm->fd, "%c%i", DIRECT_CHAR, get_short_from_pointer(*bin));
+			ft_printf_fd(dasm->fd, "%c%i", DIRECT_CHAR,
+					get_short_from_pointer(*bin));
 			*bin += IND_SIZE;
 		}
 	}
@@ -31,7 +45,7 @@ static void	choose_arg(t_oper *oper, t_byte **bin, int i, t_dasm *dasm)
 void		do_operation(t_dasm *dasm, t_byte *bin)
 {
 	t_oper	oper;
-	int 	i;
+	int		i;
 
 	oper.start = bin;
 	oper.op = &g_op_tab[get_char_from_pointer(bin++) - 1];
