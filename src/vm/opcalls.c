@@ -103,6 +103,11 @@ void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 			ft_printf("Player %d (%s) is said to be alive\n", get_vm(0)->players[-p32 - 1].number, get_vm(0)->players[-p32 - 1].header.prog_name);
 		get_vm(0)->last_alive = -p32;
 	}
+	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+	{
+		ft_printf("P    %d | %s %d\n", sp - threads_at(&get_vm(0)->threads, 0) + 1,
+				  op_tab[sp->op.opcode].name, p32);
+	}
 }
 
 void f_ld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
@@ -112,6 +117,11 @@ void f_ld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	load_param(sp, p2, 2);
 	memory_memmove(p2, p1);
     sp->cf = memory_iszero(p2);
+	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+	{
+		ft_printf("P    %d | %s %d r%d\n", sp - threads_at(&get_vm(0)->threads, 0) + 1,
+				  op_tab[sp->op.opcode].name, swap32(memory_tou32(p1)), (uint32_t *)p2->memory - (uint32_t *)&sp->reg[0] + 1);
+	}
 }
 
 void f_st(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
@@ -119,6 +129,15 @@ void f_st(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
     (void)sp;
     (void)p3;
 	load_param(sp, p1, 1);
+	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+	{
+		ft_printf("P    %d | %s r%d ", sp - threads_at(&get_vm(0)->threads, 0) + 1,
+				  op_tab[sp->op.opcode].name, (uint32_t *)p1->memory - (uint32_t*)&sp->reg[0] + 1);
+		if (get_param_type(sp->op.opcode, sp->op.tparams, 2) == T_REG)
+			ft_printf("r%d\n", (uint8_t *)p2->memory);
+		else
+			ft_printf("%d\n", (int16_t)swap16(memory_tou16(p2)));
+	}
 	load_param(sp, p2, 2);
 	memory_memmove(p2, p1);
 }
@@ -206,6 +225,15 @@ void f_zjmp(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	{
 		load_dir_idx_param(sp, p1);
 		sp->ip = (uint8_t*)p1->memory - sp->vm_memory;
+	}
+	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+	{
+		ft_printf("P    %d | %s %d ", sp - threads_at(&get_vm(0)->threads, 0) + 1,
+				  op_tab[sp->op.opcode].name, sp->ip - sp->op.ip);
+		if (sp->cf)
+			ft_printf("OK\n");
+		else
+			ft_printf("FAILED\n");
 	}
 }
 
