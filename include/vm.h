@@ -53,7 +53,7 @@ typedef struct	s_vm
 	t_threads	threads;
 	uint32_t	last_alive;
 	uint32_t	cycle;
-	uint16_t	ctd;
+	int32_t	ctd;
 	t_options	options;
 }				t_vm;
 

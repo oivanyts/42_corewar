@@ -71,7 +71,7 @@ void	vm_cycle(t_vm *vm)
 	alive = 1;
 	while (alive)
 	{
-		!vm->options.visual_ncurses && (vm->options.o_v_param & 3) ? ft_printf("It is now cycle %d\n", vm->cycle , vm->ctd, cycles) : 0;
+		!vm->options.visual_ncurses && (vm->options.o_v_param & 2) ? ft_printf("It is now cycle %d\n", vm->cycle , vm->ctd, cycles) : 0;
 		foreach_thread(&vm->threads, op_exec);
 		if (cycles >= vm->ctd)
 		{
@@ -82,14 +82,14 @@ void	vm_cycle(t_vm *vm)
 			if (alive >= NBR_LIVE)
 			{
 				vm->ctd -= CYCLE_DELTA;
-				!vm->options.visual_ncurses && (vm->options.o_v_param & 3) ? ft_printf("Cycle to die is now %d\n", vm->ctd) : 0;
+				!vm->options.visual_ncurses && (vm->options.o_v_param & 2) ? ft_printf("Cycle to die is now %d\n", vm->ctd) : 0;
 				checks = 0;
 			}
 		}
 		if (checks == MAX_CHECKS)
 		{
 			vm->ctd -= CYCLE_DELTA;
-			!vm->options.visual_ncurses && (vm->options.o_v_param & 3) ? ft_printf("Cycle to die is now %d\n", vm->ctd) : 0;
+			!vm->options.visual_ncurses && (vm->options.o_v_param & 2) ? ft_printf("Cycle to die is now %d\n", vm->ctd) : 0;
 			checks = 0;
 		}
 		if (vm->cycle == vm->options.o_dump_point && vm->options.o_dump)
@@ -398,7 +398,6 @@ void print_moves(const t_thread *pc)
 	}
 	ft_printf(" \n", op_tab[pc->op.opcode].name);
 	//ft_printf(" {red}[%s]{eoc}\n", op_tab[pc->op.opcode].name);
-
 }
 
 void	print_op(const t_thread *pc)
