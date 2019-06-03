@@ -1,5 +1,5 @@
 NAME_ASM = asm
-NAME_VM = vm
+NAME_VM = corewar
 
 FLAGS = -Wall -Wextra -Werror
 
@@ -86,7 +86,7 @@ $(NAME_ASM): $(OBJ_ASM) ./libft/libft.a
 .PHONY : $(NAME_VM)
 $(NAME_VM): $(OBJ_VM) ./libft/libft.a
 	@echo "Building of vm..."
-	@gcc -o $(NAME_VM) $(OBJ_VM) ./libft/libft.a
+	@gcc -o $(NAME_VM) $(OBJ_VM) ./libft/libft.a -lncurses
 
 ./src/asm/%.o: ./src/asm/%.c $(INC_ASM) $(INC_GENERAL)
 	gcc $(FLAGS) -I./include -I./libft/includes -o $@ -c $<

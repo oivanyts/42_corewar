@@ -12,3 +12,4 @@ asm
 !src/*
 .idea
 .DS_Store
+tester
