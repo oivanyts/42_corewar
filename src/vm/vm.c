@@ -33,9 +33,13 @@ uint32_t threads_alive(t_threads *threads)
 
 void    kill_thread_if_no_lives(t_thread *th)
 {
-	if (th->lives == 0)
+	if (th->lives == 0 && th->alive)
 	{
 		th->alive = 0;
+		get_vm(0)->options.o_v_param & 8 ?
+		ft_printf("Process %d hasn't lived for %d cycles (CTD %d)\n",
+				th - threads_at(&get_vm(0)->threads, 0) + 1,
+				get_vm(0)->cycle - th->last_live, get_vm(0)->ctd) : 0;
 	}
 	else
 	{
@@ -50,6 +54,7 @@ void    foreach_thread(t_threads *threads, void(*func)(t_thread*))
 	thread = threads_size(threads) - 1;
 	while (thread >= 0)
 	{
+
 		func(threads_at(threads, thread));
 		--thread;
 	}
@@ -58,19 +63,18 @@ void    foreach_thread(t_threads *threads, void(*func)(t_thread*))
 void	vm_cycle(t_vm *vm)
 {
 	int32_t cycles;
-	int32_t cycles_to_die;
 	uint32_t checks;
 	uint32_t alive;
 
 	cycles = 1;
-	cycles_to_die = CYCLE_TO_DIE;
+	vm->ctd = CYCLE_TO_DIE;
 	checks = 0;
 	alive = 1;
 	while (alive)
 	{
-		vm->options.visual_ncurses ? 0 : ft_printf("It is now cycle %d\n", vm->cycle , cycles_to_die, cycles);
+		!vm->options.visual_ncurses && (vm->options.o_v_param & 2) ? ft_printf("It is now cycle %d\n", vm->cycle , vm->ctd, cycles) : 0;
 		foreach_thread(&vm->threads, op_exec);
-		if (cycles >= cycles_to_die)
+		if (cycles >= vm->ctd)
 		{
 			alive = threads_alive(&vm->threads);
 			foreach_thread(&vm->threads, kill_thread_if_no_lives);
@@ -79,15 +83,15 @@ void	vm_cycle(t_vm *vm)
 			++checks;
 			if (alive >= NBR_LIVE)
 			{
-				cycles_to_die -= CYCLE_DELTA;
-				vm->options.visual_ncurses ? 0 : ft_printf("Cycle to die is now %d\n", cycles_to_die);
+				vm->ctd -= CYCLE_DELTA;
+				!vm->options.visual_ncurses && (vm->options.o_v_param & 2) ? ft_printf("Cycle to die is now %d\n", vm->ctd) : 0;
 				checks = 0;
 			}
 		}
 		if (checks == MAX_CHECKS)
 		{
-			cycles_to_die -= CYCLE_DELTA;
-			vm->options.visual_ncurses ? 0 : ft_printf("Cycle to die is now %d\n", cycles_to_die);
+			vm->ctd -= CYCLE_DELTA;
+			!vm->options.visual_ncurses && (vm->options.o_v_param & 2) ? ft_printf("Cycle to die is now %d\n", vm->ctd) : 0;
 			checks = 0;
 		}
 		if (vm->cycle == vm->options.o_dump_point && vm->options.o_dump)
@@ -95,11 +99,14 @@ void	vm_cycle(t_vm *vm)
 			poor_mans_visualization(threads_at(&vm->threads, 0)->vm_memory);
 			return ;
 		}
+		if (vm->ctd < CYCLE_TO_DIE % CYCLE_DELTA - CYCLE_DELTA)
+		{
+			return ;
+		}
 		vm->options.visual_ncurses ? ft_drawmap(vm) : 0;
 		++cycles;
 		++vm->cycle;
 	}
-
 }
 
 void decode_opcode(struct s_thread *pc)
@@ -458,7 +465,7 @@ void	op_exec(t_thread *pc)
 		}
 		opcalls[pc->op.opcode].opfunc(pc, &pc->op.args[0], &pc->op.args[1], &pc->op.args[2]);
 	}
-	get_vm(0)->options.visual_ncurses ? 0 : print_moves(threads_at(&get_vm(0)->threads, pc_i));
+	!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 16 ? print_moves(threads_at(&get_vm(0)->threads, pc_i)) : 0;
 }
 
 t_vm *get_vm(t_vm *vm)

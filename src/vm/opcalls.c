@@ -94,11 +94,14 @@ void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	(void)p2;
 	(void)p3;
 	sp->lives += 1;
+	sp->last_live = get_vm(0)->cycle;
 	load_param(sp, p1, 1);
 	p32 = memory_tou32(p1);
 	p32 = swap32(p32);
 	if (-p32 > 0 && -p32 <= get_vm(0)->nplayers)
 	{
+		if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 1)
+			ft_printf("Player %d (%s) is said to be alive\n", get_vm(0)->players[-p32 - 1].number, get_vm(0)->players[-p32 - 1].header.prog_name);
 		get_vm(0)->last_alive = -p32;
 		if (get_vm(0)->options.visual_ncurses)
 		{

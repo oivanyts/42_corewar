@@ -47,6 +47,7 @@ typedef struct s_thread
 	uint8_t  *vm_memory;//указатель на оперативную память
 	uint32_t lives;		//сколько раз поток сообщил о том, что жив
 	bool alive;			//определяет, жив ли поток
+	uint32_t	last_live;
 	uint16_t wait;		//сколько еще ждать до выполнения операции
 	t_decoded_op op;	//содержит информацию об операции, которая ожидает выполнения
 	bool processing;	//

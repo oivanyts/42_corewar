@@ -195,7 +195,7 @@ int		main(int argc, char *argv[])
 //	}
 	if (vm.options.visual_ncurses == 0 && !threads_alive(&vm.threads))
 	{
-		ft_printf("Contestant %d, \"%s\", has won\n", players[vm.last_alive - 1].number, players[vm.last_alive - 1].header.prog_name);
+		ft_printf("Contestant %d, \"%s\", has won !\n", players[vm.last_alive - 1].number, players[vm.last_alive - 1].header.prog_name);
 	}
 	else
 		ft_announcewinner(players[vm.last_alive - 1].number, players[vm.last_alive - 1].header.prog_name);
