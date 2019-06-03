@@ -27,7 +27,6 @@ SRCS_ASM =./src/asm/bcode.c\
           ./src/asm/lexer/finite_state_machine.c\
           ./src/asm/lexer/init_lexer.c\
           ./src/asm/lexer/lexer.c\
-          ./src/asm/lexer/main.c\
           ./src/asm/lexer/read_text.c\
           ./src/asm/lexer/str_cmp.c
 
@@ -71,41 +70,35 @@ OBJ_ASM = $(SRCS_ASM:.c=.o)
 
 OBJ_VM = $(SRCS_VM:.c=.o)
 
-.PHONY : all
 all: libft $(NAME_ASM) $(NAME_VM)
 
 .PHONY : libft
 libft:
 	@make -C ./libft
 
-.PHONY : $(NAME_ASM)
 $(NAME_ASM): $(OBJ_ASM) ./libft/libft.a
 	@echo "Building of asm..."
 	@gcc -o $(NAME_ASM) $(OBJ_ASM) ./libft/libft.a
 
-.PHONY : $(NAME_VM)
 $(NAME_VM): $(OBJ_VM) ./libft/libft.a
 	@echo "Building of vm..."
 	@gcc -o $(NAME_VM) $(OBJ_VM) ./libft/libft.a -lncurses
 
 ./src/asm/%.o: ./src/asm/%.c $(INC_ASM) $(INC_GENERAL)
-	gcc $(FLAGS) -I./include -I./libft/includes -o $@ -c $<
+	@gcc $(FLAGS) -I./include -I./libft/includes -o $@ -c $<
 
 ./src/vm/%.o: ./src/vm/%.c $(INC_VM) $(INC_GENERAL)
-	gcc $(FLAGS) -I./include -I./libft/includes -o $@ -c $<
+	@gcc $(FLAGS) -I./include -I./libft/includes -o $@ -c $<
 
-.PHONY : clean
 clean:
 	@make clean -C ./libft
 	@rm -f $(OBJ_ASM)
 	@rm -f $(OBJ_VM)
 
-.PHONY : fclean
 fclean: clean
 	@make fclean -C ./libft
 	@rm -f $(NAME_ASM)
 	@rm -f $(NAME_VM)
 
-.PHONY : re
 re: fclean all
 

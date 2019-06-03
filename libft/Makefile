@@ -105,7 +105,7 @@ $(NAME): $(OBJS)
 	@ranlib $(NAME)
 
 %.o: %.c $(INC)
-	gcc $(FLAGS) -I./includes -o $@ -c $<
+	@gcc $(FLAGS) -I./includes -o $@ -c $<
 
 clean:
 	@rm -f $(OBJS)
