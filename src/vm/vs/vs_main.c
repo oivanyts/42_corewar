@@ -10,14 +10,25 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include "asm.h"
 #include "op.h"
 #include "vm.h"
 #include "vs.h"
 #include <sys/time.h>
+#include "error.h"
 
-#define NLINES 10
-#define NCOLS 40
+void ft_announcewinner(int32_t number, char *name)
+{
+	wattron(g_vs->info_win, COLOR_PAIR(WHITE) | A_BOLD);
+	mvwprintw(g_vs->info_win, 41, 3, "The winner is : ");
+	wattron(g_vs->info_win, COLOR_PAIR(number + 10) | A_BOLD);
+	wprintw(g_vs->info_win, name);
+	nodelay(stdscr, FALSE);
+	wattron(g_vs->info_win, COLOR_PAIR(WHITE) | A_BOLD | A_BLINK);
+	mvwprintw(g_vs->info_win, 43, 3, "Press any key to exit.");
+	wrefresh(g_vs->info_win);
+	getch();
+	endwin();
+}
 
 int		ft_getnchars(int lives)
 {
@@ -29,13 +40,16 @@ int		ft_getnchars(int lives)
 
 void	ft_resetlivesinper(t_vm *vm)
 {
-	int 	i;
+	int	i;
 
-	ft_printlivebar(get_vm(0), 3);
-	i = vm->nplayers;
-	while (i--)
-		vm->players[i].livesinper = 0;
-	g_vs->sumlives = 0;
+	if (vm->options.visual_ncurses)
+	{
+		ft_printlivebar(get_vm(0), 3);
+		i = vm->nplayers;
+		while (i--)
+			vm->players[i].livesinper = 0;
+		g_vs->sumlives = 0;
+	}
 }
 
 void	ft_initcolors(void)
@@ -56,7 +70,9 @@ void	ft_initcolors(void)
 
 void	ft_changememvs(int memstart, int player)
 {
-	int		i = 4;
+	int	i;
+
+	i = 4;
 	while (i--)
 	{
 		g_vsmap[memstart % 4095].player = player;
@@ -65,34 +81,31 @@ void	ft_changememvs(int memstart, int player)
 	}
 }
 
-int 	ft_getattr(int i)
+int		ft_getattr(int i)
 {
-	if (g_vsmap[i].newdata > 0)
-	{
-		g_vsmap[i].newdata--;
-		return (A_BOLD);
-	}
-	else if (!g_vsmap[i].player)
-		return (A_BOLD);
-	return (0);
-}
+	int	color;
 
-void	ft_drawlive(int i)
-{
+	color = COLOR_PAIR(g_vsmap[i].player + 10);
 	if (g_vsmap[i].live > 0)
 	{
 		g_vsmap[i].live--;
-		wattrset(g_vs->mem_win, COLOR_PAIR(g_vsmap[i].liveplayer + 20) | A_BOLD);
-		if (g_vsmap[i].liveplayer > 4 || g_vsmap[i].liveplayer < 1)
-			mvwprintw(g_vs->info_win, 8, 3, "player : %08d", g_vsmap[i].liveplayer);
+		color = COLOR_PAIR(g_vsmap[i].liveplayer + 20) | A_BOLD;
 	}
+	else if (g_vsmap[i].newdata > 0)
+	{
+		g_vsmap[i].newdata--;
+		color = color | A_BOLD;
+	}
+	else if (!g_vsmap[i].player)
+		color = color | A_BOLD;
+	return (color);
 }
 
-void ft_speedcontroll()
+void	ft_speedcontroll(void)
 {
 	static long long int	prevtime = 0;
 	struct timeval			curtime;
-	long long int 			dusec;
+	long long int			dusec;
 
 	wattron(g_vs->info_win, COLOR_PAIR(WHITE));
 	gettimeofday(&curtime, NULL);
@@ -111,42 +124,54 @@ void	ft_printlivebar(t_vm *vm, int indent)
 
 	i = vm->nplayers;
 	wattrset(g_vs->info_win, COLOR_PAIR(GRAY) | A_BOLD);
-	mvwprintw(g_vs->info_win, 28 + indent, 3, "[--------------------------------------------------]");
+	mvwprintw(g_vs->info_win, 28 + indent, 3,
+			"[--------------------------------------------------]");
 	wmove(g_vs->info_win, 28 + indent, 4);
 	while (i-- && g_vs->sumlives)
 	{
-		wattrset(g_vs->info_win, COLOR_PAIR(vm->players[i].number + 10) | A_BOLD);
-		wprintw(g_vs->info_win,"%.*s",ft_getnchars(vm->players[i].livesinper) , "--------------------------------------------------");
+		wattrset(g_vs->info_win, COLOR_PAIR(PLAYER_COLOR) | A_BOLD);
+		wprintw(g_vs->info_win, "%.*s", ft_getnchars(vm->players[i].livesinper),
+				"--------------------------------------------------");
 	}
 	wattrset(g_vs->info_win, COLOR_PAIR(GRAY) | A_BOLD);
 	mvwprintw(g_vs->info_win, 28 + indent, 54, "]");
 }
 
-void	ft_printinfo(t_vm *vm, int delay, int key)
+void	ft_printplayers(t_vm *vm)
 {
-	int i;
-
-	wattrset(g_vs->info_win, COLOR_PAIR(WHITE) | A_BOLD);
-	mvwprintw(g_vs->info_win, 7, 3, "Cycle : %-3d", vm->cycle * (bool) vm->last_alive);
-	mvwprintw(g_vs->info_win, 5, 3, "key  : %c", key);
-	mvwprintw(g_vs->info_win, 2, 3, "%-13s", delay ? "** RUNNING ** " : "** PAUSED **");
-	mvwprintw(g_vs->info_win, 4, 3, "Cycles/second limit : %-5d", g_vs->speed);
-	mvwprintw(g_vs->info_win, 33, 3, "CYCLE_TO_DIE : %-5d", CYCLE_TO_DIE);
-	mvwprintw(g_vs->info_win, 35, 3, "CYCLE_DELTA : %-5d", CYCLE_DELTA);
-	mvwprintw(g_vs->info_win, 37, 3, "NBR_LIVE : %-5d", NBR_LIVE);
-	mvwprintw(g_vs->info_win, 39, 3, "MAX_CHECKS : %-5d", MAX_CHECKS);
+	int		i;
 
 	i = vm->nplayers;
 	while (i--)
 	{
 		wattrset(g_vs->info_win, COLOR_PAIR(WHITE));
-		mvwprintw(g_vs->info_win, 23 - (vm->nplayers - 1 - i) * 4 + 1, 3, "Last live :%22d", vm->players[i].lastlive);
-		mvwprintw(g_vs->info_win, 23 - (vm->nplayers - 1 - i) * 4 + 2, 3, "Lives in current period :%8d",
-				  vm->players[i].livesinper);
-		mvwprintw(g_vs->info_win, 23 - (vm->nplayers - 1 - i) * 4, 3, "Player -%d : ", vm->players[i].number);
-		wattrset(g_vs->info_win, COLOR_PAIR(vm->players[i].number + 10) | A_BOLD);
+		mvwprintw(g_vs->info_win, 23 - (vm->nplayers - 1 - i) * 4 + 1, 3,
+				"Last live :%22d", vm->players[i].lastlive);
+		mvwprintw(g_vs->info_win, 23 - (vm->nplayers - 1 - i) * 4 + 2, 3,
+				"Lives in current period :%8d", vm->players[i].livesinper);
+		mvwprintw(g_vs->info_win, 23 - (vm->nplayers - 1 - i) * 4, 3,
+				"Player -%d : ", vm->players[i].number);
+		wattrset(g_vs->info_win, COLOR_PAIR(PLAYER_COLOR) | A_BOLD);
 		wprintw(g_vs->info_win, "%.41s", vm->players[i].header.prog_name);
 	}
+}
+
+void	ft_printinfo(t_vm *vm, int delay, int key)
+{
+	wattrset(g_vs->info_win, COLOR_PAIR(WHITE) | A_BOLD);
+	mvwprintw(g_vs->info_win, 7, 3, "Cycle : %-3d",
+			vm->cycle * (bool)vm->last_alive);
+	mvwprintw(g_vs->info_win, 5, 3, "key  : %d", key);
+	mvwprintw(g_vs->info_win, 2, 3, "%-13s",
+			delay ? "** RUNNING ** " : "** PAUSED **");
+	mvwprintw(g_vs->info_win, 4, 3, "Cycles/second limit : %-5d", g_vs->speed);
+	mvwprintw(g_vs->info_win, 33, 3, "CYCLE_TO_DIE : %-5d", CYCLE_TO_DIE);
+	mvwprintw(g_vs->info_win, 35, 3, "CYCLE_DELTA : %-5d", CYCLE_DELTA);
+	mvwprintw(g_vs->info_win, 37, 3, "NBR_LIVE : %-5d", NBR_LIVE);
+	mvwprintw(g_vs->info_win, 39, 3, "MAX_CHECKS : %-5d", MAX_CHECKS);
+	mvwprintw(g_vs->info_win, 27, 3, "Live breakdown for current period :");
+	mvwprintw(g_vs->info_win, 30, 3, "Live breakdown for last period :");
+	ft_printplayers(vm);
 	ft_printlivebar(vm, 0);
 	wrefresh(g_vs->info_win);
 }
@@ -166,14 +191,14 @@ void	ft_kbhandler(t_vm *vm)
 		else if (key == '-')
 			g_vs->speed == 1 ? 0 : g_vs->speed--;
 		else if (key == '+')
-			g_vs->speed += 10;
+			g_vs->speed += g_vs->speed == INT_MAX ? 0 : 10;
 		else if (key == '_')
-			g_vs->speed = g_vs->speed < 11 ? g_vs->speed : g_vs->speed - 10;
+			g_vs->speed -= g_vs->speed < 11 ? 0 : 10;
 		nodelay(stdscr, delay);
 		ft_printinfo(vm, delay, key);
 		key = getch();
-		if (delay || (!ft_strchr("-_=+ ", key) && key > 0))
-			break;
+		if (delay || (!ft_strchr("-_=+", key) && key > 0))
+			break ;
 	}
 }
 
@@ -181,10 +206,13 @@ void	ft_drawcarriage(t_thread *th)
 {
 	if (th->alive && !(g_vsmap[th->ip].live))
 	{
-		wattrset(g_vs->mem_win, COLOR_PAIR(g_vsmap[th->ip].player + 10) | A_REVERSE);
-		mvwprintw(g_vs->mem_win, th->ip / 64 + 2, (th->ip % 64) * 3 + 3, "%.2x", th->vm_memory[th->ip]);
+		wattrset(g_vs->mem_win,
+				COLOR_PAIR(g_vsmap[th->ip].player + 10) | A_REVERSE);
+		mvwprintw(g_vs->mem_win, th->ip / 64 + 2, (th->ip % 64) * 3 + 3,
+				"%.2x", th->vm_memory[th->ip]);
 	}
 }
+
 void	ft_drawmap(t_vm *vm)
 {
 	int i;
@@ -192,25 +220,14 @@ void	ft_drawmap(t_vm *vm)
 	i = 0;
 	while (i < MEM_SIZE)
 	{
-		wattrset(g_vs->mem_win, COLOR_PAIR(g_vsmap[i].player + 10) | ft_getattr(i));
-		ft_drawlive(i);
-		mvwprintw(g_vs->mem_win, i / 64 + 2, (i % 64) * 3 + 3, "%.2x", (threads_at(&vm->threads, 0))->vm_memory[i]);
-//		mvwprintw(g_vs->mem_win, i / 64 + 2, (i % 64) * 3 + 3, "%.2d", g_vsmap[i].player);
-//		wattroff(g_vs->mem_win, COLOR_PAIR(g_vsmap[i].player + 10));
+		wattrset(g_vs->mem_win, ft_getattr(i));
+		mvwprintw(g_vs->mem_win, i / 64 + 2, (i % 64) * 3 + 3, "%.2x",
+				(threads_at(&vm->threads, 0))->vm_memory[i]);
 		i++;
 	}
 	foreach_thread(&vm->threads, ft_drawcarriage);
-//	wattrset(g_vs->info_win, COLOR_PAIR(WHITE));
-//	mvwprintw(g_vs->info_win, 7, 3, "Cycle : %-3d", vm->cycle);
-//	mvwprintw(g_vs->info_win, 6, 3, "Cycle : %08d", COLOR_PAIR(11));
-//	mvwprintw(g_vs->info_win, 7, 3, "Cycle : %08d", COLOR_PAIR(222));
-
 	wrefresh(g_vs->mem_win);
-//	wrefresh(g_vs->info_win);
 	ft_kbhandler(vm);
-//	getch();
-//	endwin();
-
 }
 
 void	ft_initvsmap(t_vm *vm, t_player *player)
@@ -233,44 +250,41 @@ void	ft_initvsmap(t_vm *vm, t_player *player)
 	}
 }
 
-void ft_vsinit(t_vm *vm, t_player *players)
+void	ft_initscr(t_vm *vm, t_player *players)
 {
-	chtype ch;
-
 	initscr();
 	noecho();
-//	keypad(stdscr, TRUE);
-//	nodelay(stdscr, FALSE);
-//	cbreak();
+	cbreak();
 	curs_set(0);
 	if (!has_colors())
 	{
 		endwin();
-		ft_printf("\nОшибка! Не поддерживаются цвета\n");
-		return ;
+		handle_error(error_colors);
 	}
 	g_vs = (t_vs *)ft_memalloc(sizeof(t_vs));
 	g_vsmap = (t_vsmap *)ft_memalloc(sizeof(t_vsmap) * MEM_SIZE);
+	if (!g_vs || !g_vsmap)
+	{
+		endwin();
+		handle_error(error_memalloc);
+	}
 	ft_initvsmap(vm, players);
 	start_color();
 	ft_initcolors();
 	refresh();
 	g_vs->mem_win = newwin(68, 197, 0, 0);
 	g_vs->info_win = newwin(68, 58, 0, 196);
+}
+
+void	ft_vsinit(t_vm *vm, t_player *players)
+{
+	chtype ch;
+
+	ft_initscr(vm, players);
 	g_vs->speed = 50;
 	ch = '+' | COLOR_PAIR(BORDER_GRAY);
 	wborder(g_vs->mem_win, ch, ch, ch, ch, ch, ch, ch, ch);
 	wborder(g_vs->info_win, ch, ch, ch, ch, ch, ch, ch, ch);
-	wattron(g_vs->info_win, COLOR_PAIR(WHITE));
-	mvwprintw(g_vs->info_win, 2, 3,"** PAUSED **");
-	mvwprintw(g_vs->info_win, 27, 3, "Live breakdown for current period :");
-	mvwprintw(g_vs->info_win, 30, 3, "Live breakdown for last period :");
 	ft_printlivebar(vm, 3);
-//	mvwprintw(g_vs->info_win, 10, 3, "%d", getch());
-	wrefresh(g_vs->mem_win);
-	wrefresh(g_vs->info_win);
 	ft_drawmap(vm);
-//	refresh();
-//	getch();
-//	endwin();
 }

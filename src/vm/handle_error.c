@@ -13,7 +13,7 @@
 #include "libft.h"
 #include "error.h"
 
-const char	*error_table[9] =
+const char	*error_table[11] =
 {
 	"Cannot open file.",
 	"Array sizing failed.",
@@ -23,7 +23,9 @@ const char	*error_table[9] =
 	"Wrong magic number in header.",
 	"Wrong parameter type passed to command.",
 	"Option fail",
- 	"File *FILENAME* has too large a code (*SIZE* > 682 bytes)"
+ 	"File *FILENAME* has too large a code (*SIZE* > 682 bytes)",
+ 	"Colors not supported",
+ 	"Memory doesn't allocate"
 };
 
 void	handle_error(t_error_code n_err)

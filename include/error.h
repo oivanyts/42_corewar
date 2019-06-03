@@ -15,11 +15,13 @@ typedef enum e_error_code
     error_wrong_magic,
     error_wrong_tparam,
     error_option,
-	error_champ_size
+	error_champ_size,
+	error_colors,
+	error_memalloc
 } t_error_code;
 
-void	handle_error(t_error_code n_err);
+void		handle_error(t_error_code n_err);
 
-const char *error_table[9];
+const char	*error_table[11];
 
 #endif

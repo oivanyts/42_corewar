@@ -4,6 +4,7 @@
 
 #define TOFILE //
 
+
 t_list *find_all_carridges(t_player *pPlayer, int num_players)
 {
 	t_list	*ret = NULL;
@@ -196,5 +197,7 @@ int		main(int argc, char *argv[])
 	{
 		ft_printf("Contestant %d, \"%s\", has won\n", players[vm.last_alive - 1].number, players[vm.last_alive - 1].header.prog_name);
 	}
+	else
+		ft_announcewinner(players[vm.last_alive - 1].number, players[vm.last_alive - 1].header.prog_name);
 	return 0;
 }

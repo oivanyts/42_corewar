@@ -14,6 +14,7 @@
 #define LIVE_BLUE	22
 #define WHITE 25
 #define SEC 1000000
+#define PLAYER_COLOR vm->players[i].number + 10
 
 
 typedef struct	s_vsmap
@@ -40,4 +41,5 @@ void	ft_drawmap(t_vm *vm);
 void	ft_changememvs(int memstart, int player);
 void    foreach_thread(t_threads *threads, void(*func)(t_thread*));
 void	ft_printlivebar(t_vm *vm, int indent);
+void	ft_announcewinner(int32_t number, char *name);
 #endif
