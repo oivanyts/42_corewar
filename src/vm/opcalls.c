@@ -100,7 +100,7 @@ void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	if (-p32 > 0 && -p32 <= get_vm(0)->nplayers)
 	{
 		if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 1)
-			ft_printf("Player %d (%s) is said to be alive\n", ((t_player*)sp->player)->number, ((t_player*)sp->player)->header.prog_name);
+			ft_printf("Player %d (%s) is said to be alive\n", get_vm(0)->players[-p32 - 1].number, get_vm(0)->players[-p32 - 1].header.prog_name);
 		get_vm(0)->last_alive = -p32;
 	}
 }
