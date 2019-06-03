@@ -165,7 +165,7 @@ void	ft_printinfo(t_vm *vm, int delay, int key)
 	mvwprintw(g_vs->info_win, 2, 3, "%-13s",
 			delay ? "** RUNNING ** " : "** PAUSED **");
 	mvwprintw(g_vs->info_win, 4, 3, "Cycles/second limit : %-5d", g_vs->speed);
-	mvwprintw(g_vs->info_win, 33, 3, "CYCLE_TO_DIE : %-5d", CYCLE_TO_DIE);
+	mvwprintw(g_vs->info_win, 33, 3, "CYCLE_TO_DIE : %-5d", vm->ctd);
 	mvwprintw(g_vs->info_win, 35, 3, "CYCLE_DELTA : %-5d", CYCLE_DELTA);
 	mvwprintw(g_vs->info_win, 37, 3, "NBR_LIVE : %-5d", NBR_LIVE);
 	mvwprintw(g_vs->info_win, 39, 3, "MAX_CHECKS : %-5d", MAX_CHECKS);
