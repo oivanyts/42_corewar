@@ -42,4 +42,5 @@ void	ft_changememvs(int memstart, int player);
 void    foreach_thread(t_threads *threads, void(*func)(t_thread*));
 void	ft_printlivebar(t_vm *vm, int indent);
 void	ft_announcewinner(int32_t number, char *name);
+void	ft_vsexit();
 #endif

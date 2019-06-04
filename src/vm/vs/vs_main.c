@@ -27,7 +27,14 @@ void ft_announcewinner(int32_t number, char *name)
 	mvwprintw(g_vs->info_win, 43, 3, "Press any key to exit.");
 	wrefresh(g_vs->info_win);
 	getch();
+	ft_vsexit();
+}
+
+void	ft_vsexit()
+{
 	endwin();
+	free(g_vs);
+	free(g_vsmap);
 }
 
 int		ft_getnchars(int lives)
@@ -266,6 +273,7 @@ void	ft_initscr(t_vm *vm, t_player *players)
 	if (!g_vs || !g_vsmap)
 	{
 		endwin();
+		ft_vsexit();
 		handle_error(error_memalloc);
 	}
 	ft_initvsmap(vm, players);
