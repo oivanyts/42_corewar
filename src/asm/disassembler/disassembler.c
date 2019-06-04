@@ -41,6 +41,8 @@ void		disassembler(char *name)
 	print_header(&dasm);
 	while (dasm.curr < dasm.len)
 		do_operation(&dasm, &dasm.bin[dasm.curr]);
+	ft_printf("File %s was disassemble and writing to %s\n",
+			name, dasm.file_name);
 	free(dasm.file_name);
 	free(dasm.bin);
 	close(dasm.fd);
