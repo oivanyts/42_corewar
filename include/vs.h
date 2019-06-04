@@ -1,6 +1,7 @@
 #ifndef VS_H
 # define VS_H
 # include <ncurses.h>
+#include "vm.h"
 #define COLOR_GRAY 55
 #define BORDER_GRAY 56
 #define GRAY	10
@@ -35,12 +36,13 @@ typedef struct	s_vs
 
 t_vsmap	*g_vsmap;
 t_vs	*g_vs;
+
 void	ft_vsinit(t_vm *vm, t_player *players);
-void	ft_initvsmap(t_vm *vm, t_player *player);
 void	ft_drawmap(t_vm *vm);
 void	ft_changememvs(int memstart, int player);
-void    foreach_thread(t_threads *threads, void(*func)(t_thread*));
 void	ft_printlivebar(t_vm *vm, int indent);
 void	ft_announcewinner(int32_t number, char *name);
 void	ft_vsexit();
+int		ft_getnchars(int lives);
+void	ft_kbhandler(t_vm *vm);
 #endif

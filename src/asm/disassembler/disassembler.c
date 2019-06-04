@@ -34,7 +34,8 @@ void		disassembler(char *name)
 	if ((dasm.fd = open(dasm.file_name, O_CREAT | O_RDWR | O_TRUNC,
 			S_IWRITE | S_IREAD)) < 0)
 	{
-		ft_printf("File \"%s\" can't be created.", dasm.file_name);
+		ft_printf("File \"%s\" can't be created.\n", dasm.file_name);
+		system("leaks -q asm");
 		exit(1);
 	}
 	set_header(&dasm);
