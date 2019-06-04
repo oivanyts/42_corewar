@@ -189,15 +189,13 @@ int		main(int argc, char *argv[])
 	}
 	vm.options.visual_ncurses ? ft_vsinit(&vm, &players[0]) : 0;
 	vm_cycle(&vm);
-//	if (vm.options.o_dump)
-//	{
-//		poor_mans_visualization(memory);
-//	}
 	if (vm.options.visual_ncurses == 0 && !threads_alive(&vm.threads))
 	{
 		ft_printf("Contestant %d, \"%s\", has won !\n", players[vm.last_alive - 1].number, players[vm.last_alive - 1].header.prog_name);
 	}
-	else
+	else if (!threads_alive(&vm.threads))
+	{
 		ft_announcewinner(players[vm.last_alive - 1].number, players[vm.last_alive - 1].header.prog_name);
+	}
 	return 0;
 }
