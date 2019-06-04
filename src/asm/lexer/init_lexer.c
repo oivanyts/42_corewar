@@ -58,7 +58,6 @@ static void	init_errors(t_asm *a)
 	a->errors[0] = err_lex;
 	a->errors[1] = err_no_endline;
 	a->errors[2] = err_no_closed_quote;
-	a->errors[3] = err_empty_file;
 }
 
 void		init_asm(t_asm *a, char *file_name)

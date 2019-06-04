@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   read_binary.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/06/03 18:29:04 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/06/03 18:29:05 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "asm.h"
 #include "disassembler.h"
 #include "lexer.h"
 
-static int	get_file_len(fd)
+static int	get_file_len(int fd)
 {
 	char	buf[1];
 	int		len;
@@ -18,7 +30,7 @@ static char	*reverse_string(char *name)
 {
 	char	*str;
 	int		i;
-	int 	len;
+	int		len;
 
 	i = 0;
 	len = ft_strlen(name);
@@ -61,7 +73,7 @@ static void	check_fd(int fd, char *name)
 
 void		read_binaryy(char *name, t_dasm *dasm)
 {
-	int 	fd;
+	int		fd;
 	t_byte	*p_bin;
 
 	fd = open(name, O_RDONLY);

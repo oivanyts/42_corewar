@@ -1,11 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   disassembler.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/06/03 18:21:49 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/06/03 18:21:58 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lexer.h"
 #include "asm.h"
 #include "disassembler.h"
 
 static void	print_header(t_dasm *dasm)
 {
-	ft_printf_fd(dasm->fd, "%s \"%s\"\n", NAME_CMD_STRING, dasm->header.prog_name);
-	ft_printf_fd(dasm->fd, "%s \"%s\"\n\n", COMMENT_CMD_STRING, dasm->header.comment);
+	ft_printf_fd(dasm->fd, "%s \"%s\"\n", NAME_CMD_STRING,
+			dasm->header.prog_name);
+	ft_printf_fd(dasm->fd, "%s \"%s\"\n\n", COMMENT_CMD_STRING,
+			dasm->header.comment);
 }
 
 void		disassembler(char *name)
