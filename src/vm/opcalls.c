@@ -87,6 +87,32 @@ void load_idx_param(t_thread *sp, t_memory *mem, uint8_t param_number)
 	}
 }
 
+void		do_operation(t_thread *sp)
+{
+	uint8_t		i = 0;
+	uint8_t		arg_type;
+
+
+	ft_printf("P    %d | %s", sp - threads_at(&get_vm(0)->threads, 0) + 1, op_tab[sp->op.opcode].name);
+	while (i < op_tab[sp->op.opcode].args)
+	{
+		if ((arg_type = get_param_type(sp->op.opcode, sp->op.tparams, i + 1)) == T_REG)
+		{
+			ft_printf(" r%d", (memory_tou8(&sp->op.args[i])));
+		}
+		else
+		{
+			if (arg_type == T_IND || op_tab[sp->op.opcode].tdir_size)
+				ft_printf(" %d", (int16_t)swap16(memory_tou16(&sp->op.args[i])));
+			else
+				ft_printf(" %d", (int16_t)swap32(memory_tou32(&sp->op.args[i])));
+		}
+		i++;
+	}
+	if (sp->op.opcode != 8)
+		ft_printf("\n");
+}
+
 void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
 	int32_t p32;
@@ -114,8 +140,9 @@ void f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	}
 	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
 	{
-		ft_printf("P    %d | %s %d\n", sp - threads_at(&get_vm(0)->threads, 0) + 1,
-				  op_tab[sp->op.opcode].name, p32);
+		do_operation(sp);
+//		ft_printf("P    %d | %s %d\n", sp - threads_at(&get_vm(0)->threads, 0) + 1,
+//				  op_tab[sp->op.opcode].name, p32);
 	}
 }
 
@@ -128,24 +155,27 @@ void f_ld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
     sp->cf = memory_iszero(p2);
 	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
 	{
-		ft_printf("P    %d | %s %d r%d\n", sp - threads_at(&get_vm(0)->threads, 0) + 1,
-				  op_tab[sp->op.opcode].name, swap32(memory_tou32(p1)), (uint32_t *)p2->memory - (uint32_t *)&sp->reg[0] + 1);
+		do_operation(sp);
+//		ft_printf("P    %d | %s %d r%d\n", sp - threads_at(&get_vm(0)->threads, 0) + 1,
+//				  op_tab[sp->op.opcode].name, swap32(memory_tou32(p1)), (uint32_t *)p2->memory - (uint32_t *)&sp->reg[0] + 1);
 	}
 }
 
 void f_st(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
-    (void)sp;
-    (void)p3;
+	(void)sp;
+	(void)p3;
+
 	load_param(sp, p1, 1);
 	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
 	{
-		ft_printf("P    %d | %s r%d ", sp - threads_at(&get_vm(0)->threads, 0) + 1,
-				  op_tab[sp->op.opcode].name, (uint32_t *)p1->memory - (uint32_t*)&sp->reg[0] + 1);
-		if (get_param_type(sp->op.opcode, sp->op.tparams, 2) == T_REG)
-			ft_printf("r%d\n", (uint8_t *)p2->memory);
-		else
-			ft_printf("%d\n", (int16_t)swap16(memory_tou16(p2)));
+		do_operation(sp);
+//		ft_printf("P    %d | %s r%d ", sp - threads_at(&get_vm(0)->threads, 0) + 1,
+//				  op_tab[sp->op.opcode].name, (uint32_t *)p1->memory - (uint32_t*)&sp->reg[0] + 1);
+//		if (get_param_type(sp->op.opcode, sp->op.tparams, 2) == T_REG)
+//			ft_printf("r%d\n", (uint8_t *)p2->memory);
+//		else
+//			ft_printf("%d\n", (int16_t)swap16(memory_tou16(p2)));
 	}
 	load_param(sp, p2, 2);
 	memory_memmove(p2, p1);
@@ -162,6 +192,12 @@ void f_add(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	{
 		get_vm(0);
 	}
+	do_operation(sp);
+	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+	{
+		do_operation(sp);
+//		ft_printf("P    %d | %s r%d", , op_tab[sp->op.opcode].name, (uint32_t *)p1->memory - (uint32_t *)&sp->reg[0] + 1);
+	}
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
@@ -176,6 +212,10 @@ void f_sub(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	uint32_t sum;
 	t_memory res_memory;
 
+	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+	{
+		do_operation(sp);
+	}
 	if (((t_player*)(sp->player))->number == 1)
 	{
 		get_vm(0);
@@ -191,6 +231,11 @@ void f_sub(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 void f_and(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
+
+	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+	{
+		do_operation(sp);
+	}
 	if (((t_player*)(sp->player))->number == 1)
 	{
 		get_vm(0);
@@ -198,12 +243,22 @@ void f_and(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
+	do_operation(sp);
+//	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+//	{
+//		ft_printf("P    %d | %s r%d\n", sp - threads_at(&get_vm(0)->threads, 0) + 1, op_tab[sp->op.opcode].name, (int8_t)p1->memory);
+//	}
 	memory_and(p3, p1, p2);
 	sp->cf = memory_iszero(p3);
 }
 
 void f_or(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
+
+	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+	{
+		do_operation(sp);
+	}
 	if (((t_player*)(sp->player))->number == 1)
 	{
 		get_vm(0);
@@ -217,6 +272,11 @@ void f_or(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 void f_xor(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
+
+	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+	{
+		do_operation(sp);
+	}
 	if (((t_player*)(sp->player))->number == 1)
 	{
 		get_vm(0);
@@ -239,12 +299,11 @@ void f_zjmp(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	}
 	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
 	{
-		ft_printf("P    %d | %s %d ", sp - threads_at(&get_vm(0)->threads, 0) + 1,
-				  op_tab[sp->op.opcode].name, sp->ip - sp->op.ip);
+		do_operation(sp);
 		if (sp->cf)
-			ft_printf("OK\n");
+			ft_printf("%d OK\n", sp->ip - sp->op.ip);
 		else
-			ft_printf("FAILED\n");
+			ft_printf("%d FAILED\n", swap16(memory_tou16(p1)));
 	}
 }
 
@@ -254,6 +313,10 @@ void f_ldi(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	int32_t up1;
 	int32_t up2;
 
+	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+	{
+		do_operation(sp);
+	}
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
@@ -284,28 +347,56 @@ void f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	int32_t up2;
 	int32_t up3;
 
+	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+	{
+		do_operation(sp);
+	}
+//	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+//	{
+//		ft_printf("P    %d | %s r%d", sp - threads_at(&get_vm(0)->threads, 0) + 1, op_tab[sp->op.opcode].name, memory_tou8(p1));
+//	}
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
 	if (get_param_type(sp->op.opcode, sp->op.tparams, 2) == T_REG)
 	{
 		up2 = swap32(memory_tou32(p2));
+//		if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+//		{
+//			ft_printf(" r%d", (uint32_t *)p1->memory - (uint32_t*)&sp->reg[0] + 1);
+//		}
 	}
 	else
 	{
 		up2 = (int16_t)swap16(memory_tou16(p2));
+//		if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+//		{
+//			ft_printf(" %d", up2);
+//		}
 	}
 	if (get_param_type(sp->op.opcode, sp->op.tparams, 3) == T_REG)
 	{
 		up3 = swap32(memory_tou32(p3));
+//		if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+//		{
+//			ft_printf(" r%d\n", (uint32_t *)p1->memory - (uint32_t*)&sp->reg[0] + 1);
+//		}
 	}
 	else
 	{
 		up3 = (int16_t)swap16(memory_tou16(p3));
+//		if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+//		{
+//			ft_printf(" %d\n", up3);
+//		}
 	}
 	memory_init(&mem, &sp->vm_memory[(sp->op.ip + (up2 + up3) % IDX_MOD) % MEM_SIZE], DIR_SIZE);
 	memory_set_bounds(&mem, sp->vm_memory, sp->vm_memory + MEM_SIZE);
 	memory_memmove(&mem, p1);
+	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+	{
+		ft_printf("       | -> store to %d + %d = %d (with pc and mod %d)\n", up2, up3, up2 + up3, (sp->op.ip + (up2 + up3) % IDX_MOD) % MEM_SIZE);
+	}
     get_vm(0)->options.visual_ncurses ? ft_changememvs((sp->op.ip + (up2 + up3) % IDX_MOD) % MEM_SIZE, ((t_player *)sp->player)->number) : 0;
 }
 
@@ -316,6 +407,10 @@ void f_fork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 	(void)p2;
     (void)p3;
+	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+	{
+		do_operation(sp);
+	}
     load_idx_param(sp, p1, 1);
 	player = sp->player;
 	ft_memcpy(&tmp, sp, sizeof(t_thread));
@@ -332,6 +427,10 @@ void f_lld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	int16_t addr;
 
 	(void)p3;
+	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+	{
+		do_operation(sp);
+	}
 	if (((t_player*)(sp->player))->number == 1)
 	{
 		get_vm(0);
@@ -357,6 +456,10 @@ void f_lldi(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	int32_t up1;
 	int32_t up2;
 
+	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+	{
+		do_operation(sp);
+	}
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
@@ -389,6 +492,10 @@ void f_lfork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
     (void)p2;
     (void)p3;
+	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+	{
+		do_operation(sp);
+	}
     player = sp->player;
 	ft_memcpy(&tmp, sp, sizeof(t_thread));
 	tmp.processing = 0;
@@ -405,6 +512,10 @@ void f_aff(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
     (void)sp;
     (void)p2;
     (void)p3;
+	if (get_vm(0)->options.visual_ncurses == 0 && get_vm(0)->options.o_v_param & 4)
+	{
+		do_operation(sp);
+	}
     load_param(sp, p1, 1);
     ft_printf("%c", swap32(memory_tou32(p1)));
 }
