@@ -85,4 +85,7 @@ void handle_options(char **arguments, int argc, t_vm *vm, uint8_t *files);
 
 void	ft_resetlivesinper(t_vm *vm);
 
+void    foreach_thread(t_threads *threads, void(*func)(t_thread*));
+
+
 #endif
