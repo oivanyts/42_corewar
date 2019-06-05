@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-bool ft_string_to_number(char *string, int *n)
+bool	ft_string_to_number(char *string, int *n)
 {
 	*n = ft_atoi(string);
 	while (ft_isspace(*string))

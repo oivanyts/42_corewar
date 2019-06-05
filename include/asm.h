@@ -18,61 +18,59 @@
 
 typedef enum	e_identifier
 {
-	COMMENT, NAME, LABEL, INSTRUCTION,
-	REGISTER, INDIRECT, DIRECT, DIRECT_LABEL,
-	INDIRECT_LABEL, SEPARATOR, STRING, ENDLINE, END
+	COMMENT,
+	NAME,
+	LABEL,
+	INSTRUCTION,
+	REGISTER,
+	INDIRECT,
+	DIRECT,
+	DIRECT_LABEL,
+	INDIRECT_LABEL,
+	SEPARATOR,
+	STRING,
+	ENDLINE,
+	END
 }				t_identifier;
 
-typedef struct  s_asm
+typedef struct	s_asm
 {
-	int 				row;
-	int 				col;
+	int					row;
+	int					col;
 	struct s_fsm		*fsm;
-    struct s_op_list	*op_list;
-    struct s_token_list	*token_list;
-    int 				(*lex_condition[15])(char *c);
-	int 				(*id_state[15])(struct s_asm *a);
+	struct s_op_list	*op_list;
+	struct s_token_list	*token_list;
+	int					(*lex_condition[15])(char *c);
+	int					(*id_state[15])(struct s_asm *a);
 	void				(*errors[3])(struct s_asm *a);
-}               t_asm;
+}				t_asm;
 
 typedef struct	s_fsm
 {
-	int 				st_col;
-	int 				st_row;
-	char 				*start;
-	char 				*curr;
-	int 				state;
-	char 				*code;
+	int					st_col;
+	int					st_row;
+	char				*start;
+	char				*curr;
+	int					state;
+	char				*code;
 }				t_fsm;
 
-typedef struct	s_op_list					//Структура для зберігання списку операцій (одна строка - одна операція)
+typedef struct	s_op_list
 {
-	struct s_token_list	*token_list;		//Для зберігання списку з токенами
-	int 				instrsize;
-	int 				instrstart;
-	struct s_op_list	*next;				//Перехід на наступний токен
+	struct s_token_list	*token_list;
+	int					instrsize;
+	int					instrstart;
+	struct s_op_list	*next;
 }				t_op_list;
 
 typedef struct	s_token_list
 {
-	enum e_identifier	ident;			//ідентифікатор токену (один зі списку нижче)
-	void				*data;				//Для зберігання самої строки, що відповідає даному токену
-	int					col;				//Номер колонки (де знаходиться перший символ токену)
-	int					row;				//Номер рядка
+	enum e_identifier	ident;
+	void				*data;
+	int					col;
+	int					row;
 	struct s_token_list	*next;
 }				t_token_list;
-
-// COMMENT - NULL
-// NAME	- NULL
-// LABEL - name of label (char*)
-// INSTRUCTION - name of instruction (char*)
-// REGISTER - number (int)
-// INDIRECT - number (int)
-// DIRECT - number (int)
-// DIRECT_LABEL - name of label (char*)
-// INDIRECT_LABEL - name of label (char*)
-// SEPARATOR - NULL
-// STRING - (char*)
 
 typedef struct	s_op
 {
@@ -86,7 +84,7 @@ typedef struct	s_op
 	int		dirsize;
 }				t_op;
 
-static char 	*g_ident_str[] =
+static char		*g_ident_str[] =
 {
 	"COMMENT", "NAME", "LABEL", "INSTRUCTION",
 	"REGISTER", "INDIRECT", "DIRECT", "DIRECT_LABEL",
@@ -119,19 +117,19 @@ static t_op		g_op_tab[17] =
 	{0, 0, {0}, 0, 0, 0, 0, 0}
 };
 
-t_header	*ft_validation(t_op_list *oplist);
-void		ft_exit(char *stre, int e);
-int			ft_getprogsize(t_op_list *oplist);
-t_op		*ft_getfuncname(t_token_list *toklst);
-void		ft_replacelable(t_op_list *oplist);
-int			ft_searchlable(t_op_list *oplist, t_token_list *toklst);
-int			ft_gettypearg(t_identifier ident);
-void		ft_errhandler(t_token_list *toklst);
-int			ft_toklistlen(t_token_list *toklst);
-int			ft_oplistlen(t_op_list *oplist);
-char		*ft_getfilename(int ac, char **av);
-char		*ft_getoutputfilename(char *filename);
-void		ft_asmtobcode(int fd, t_op_list *oplist);
-void		ft_writehead(int fd, t_header *header);
-void		ft_free(t_op_list *oplist, char *filename);
+t_header		*ft_validation(t_op_list *oplist);
+void			ft_exit(char *stre, int e);
+int				ft_getprogsize(t_op_list *oplist);
+t_op			*ft_getfuncname(t_token_list *toklst);
+void			ft_replacelable(t_op_list *oplist);
+int				ft_searchlable(t_op_list *oplist, t_token_list *toklst);
+int				ft_gettypearg(t_identifier ident);
+void			ft_errhandler(t_token_list *toklst);
+int				ft_toklistlen(t_token_list *toklst);
+int				ft_oplistlen(t_op_list *oplist);
+char			*ft_getfilename(int ac, char **av);
+char			*ft_getoutputfilename(char *filename);
+void			ft_asmtobcode(int fd, t_op_list *oplist);
+void			ft_writehead(int fd, t_header *header);
+void			ft_free(t_op_list *oplist, char *filename);
 #endif

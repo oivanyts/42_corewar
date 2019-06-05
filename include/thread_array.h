@@ -16,21 +16,16 @@
 # include "array.h"
 # include "opcalls.h"
 
-typedef struct			s_threads
+typedef struct	s_threads
 {
 	struct s_array arr;
-} t_threads;
+}				t_threads;
 
-void	    threads_init(t_threads *ths);
-
-void		threads_destroy(t_threads *ths);
-
-size_t		threads_size(const t_threads *ths);
-
-t_thread	*threads_at(t_threads *ths, size_t i);
-
-bool		threads_push_back(t_threads *ths, const t_thread *th);
-
-t_thread    *threads_back(t_threads *ths);
+void			threads_init(t_threads *ths);
+void			threads_destroy(t_threads *ths);
+size_t			threads_size(const t_threads *ths);
+t_thread		*threads_at(t_threads *ths, size_t i);
+bool			threads_push_back(t_threads *ths, const t_thread *th);
+t_thread		*threads_back(t_threads *ths);
 
 #endif

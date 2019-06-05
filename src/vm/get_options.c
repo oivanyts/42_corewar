@@ -1,7 +1,7 @@
 #include "libft.h"
 #include "vm.h"
 
-void print_usage(char *argv)
+void		print_usage(char *argv)
 {
 	char	*prog_name;
 
@@ -9,10 +9,11 @@ void print_usage(char *argv)
 	if (!prog_name)
 		prog_name = argv;
 	ft_strrchr(argv, '/');
-	ft_printf("Usage: .%s\t[-%c N -%c N -%c N | -%c -%c ] <champion1.cor> <...>\n",
-			prog_name, OPTIONS[0], OPTIONS[2], OPTIONS[4], OPTIONS[6], OPTIONS[7]);
+	ft_printf("Usage: .%s\t[-%c N -%c N -%c N "
+		"| -%c -%c ] <champion1.cor> <...>\n",
+		prog_name, OPTIONS[0], OPTIONS[2], OPTIONS[4], OPTIONS[6], OPTIONS[7]);
 	ft_printf("\t-a\t\t\t: Prints output from \"aff\" (Default is to hide it)\n"
-		   "\t-s\t\t\t: Ncurses output mode\n"
+		"\t-s\t\t\t: Ncurses output mode\n"
 	"\t-n N\t\t: \n"
 	"#### TEXT OUTPUT MODE #################################################\n"
 	"\t-d N\t\t: Dumps memory after N cycles then exits\n"
@@ -26,7 +27,7 @@ void print_usage(char *argv)
 	exit(1);
 }
 
-bool is_option(char **argv, int argc, uint8_t *arg_num, char *string1)
+bool		is_option(char **argv, int argc, uint8_t *arg_num, char *string1)
 {
 	char	*option;
 	int		param;
@@ -86,8 +87,7 @@ bool is_option(char **argv, int argc, uint8_t *arg_num, char *string1)
 	return (true);
 }
 
-
-int place_process(uint8_t *files, uint8_t o_numb, uint8_t i)
+int			place_process(uint8_t *files, uint8_t o_numb, uint8_t i)
 {
 	int8_t	drag;
 
@@ -111,10 +111,10 @@ int place_process(uint8_t *files, uint8_t o_numb, uint8_t i)
 			drag++;
 		files[drag] = i;
 	}
-	return 0;
+	return (0);
 }
 
-void handle_options(char **arguments, int argc, t_vm *vm, uint8_t *files)
+void		handle_options(char **arguments, int argc, t_vm *vm, uint8_t *files)
 {
 	uint8_t		i;
 
