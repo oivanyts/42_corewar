@@ -2,93 +2,6 @@
 #include "vm.h"
 #include "vs.h"
 
-t_list		*find_all_carridges(t_player *player, int num_players)
-{
-	t_list		*ret;
-	t_thread	*tmp;
-	int			i;
-	int			j;
-	int			size;
-
-	ret = NULL;
-	i = 0;
-	while (i < num_players)
-	{
-		j = 0;
-		size = threads_size(player[i].threads);
-		while (j < size)
-		{
-			tmp = threads_at(player[i].threads, j++);
-			ft_lstaddback(&ret, ft_lstnew(&(tmp->ip), sizeof(int)));
-		}
-		i++;
-	}
-	return (ret);
-}
-
-void		delcarlist(t_list *list)
-{
-	t_list	*tmp;
-
-	while (list->next)
-	{
-		tmp = list;
-		list = list->next;
-		free(tmp);
-	}
-	free(list);
-}
-
-bool		check_pos(size_t i, t_list *list)
-{
-	while (list)
-	{
-		if (*(int *)list->content == (int)i)
-			return (true);
-		list = list->next;
-	}
-	return (false);
-}
-
-void		poor_mans_visualization(uint8_t *bytecode)
-{
-	size_t		i = 0;
-	int			player_gap;
-//	t_list		*carridges = NULL;
-	t_vm		*vm;
-
-	vm = get_vm(0);
-
-//	int    color[4] = {31,34,36,32};
-
-//	carridges = find_all_carridges(vm->players, vm->nplayers);
-	player_gap = MEM_SIZE / vm->nplayers;
-	while (i < MEM_SIZE)
-	{
-		if (!(i % 64))
-		{
-			ft_printf("0x%04x : ", i);
-		}
-//		if (check_pos(i, carridges))
-//		{
-//			ft_printf("\033[48;05;%dm", color[i / player_gap] + 10);
-//		}
-//		else if (i < vm->players[i / player_gap].header.prog_size + (i / player_gap) * player_gap)
-//		{
-//			ft_printf("\033[38;05;%dm", color[i / player_gap]);
-//		}
-		ft_printf("%.2x%c", bytecode[i], ' ');
-	//ft_printf("\033[m");
-		i++;
-		if (!(i % 64) )
-		{
-			ft_printf("\n");
-		}
-	}
-//	delcarlist(carridges);
-	//ft_printf("\n");
-}
-
 uint8_t		next_file(uint8_t files[4])
 {
 	uint8_t i;
@@ -112,7 +25,6 @@ uint8_t		parce_info
 
 	ft_bzero(&files, sizeof(int) * 4);
 	vm = get_vm(0);
-	vm->nplayers = 0;
 	ft_bzero(vm, sizeof(t_vm));
 	handle_options(arguments, argc, vm, &files[0]);
 	if (vm->nplayers < 1)

@@ -11,6 +11,8 @@ void	f_sub(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	uint32_t sum;
 	t_memory res_memory;
 
+	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
+		output_operation(sp);
 	if (((t_player*)(sp->player))->number == 1)
 	{
 		get_vm(0);
@@ -26,6 +28,8 @@ void	f_sub(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 void	f_and(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
+	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
+		output_operation(sp);
 	if (((t_player*)(sp->player))->number == 1)
 	{
 		get_vm(0);
@@ -39,6 +43,8 @@ void	f_and(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 void	f_or(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
+	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
+		output_operation(sp);
 	if (((t_player*)(sp->player))->number == 1)
 	{
 		get_vm(0);
@@ -52,6 +58,8 @@ void	f_or(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 
 void	f_xor(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
+	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
+		output_operation(sp);
 	if (((t_player*)(sp->player))->number == 1)
 	{
 		get_vm(0);
@@ -75,11 +83,10 @@ void	f_zjmp(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	if (get_vm(0)->options.visual_ncurses == 0
 		&& get_vm(0)->options.o_v_param & 4)
 	{
-		ft_printf("P    %d | %s %d ", sp - threads_at(&get_vm(0)->threads, 0)
-					+ 1, g_op_tab[sp->op.opcode].name, sp->ip - sp->op.ip);
+		output_operation(sp);
 		if (sp->cf)
-			ft_printf("OK\n");
+			ft_printf(" OK\n");
 		else
-			ft_printf("FAILED\n");
+			ft_printf(" FAILED\n");
 	}
 }
