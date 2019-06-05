@@ -103,5 +103,5 @@ void	f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 		% MEM_SIZE], DIR_SIZE);
 	memory_set_bounds(&mem, sp->vm_memory, sp->vm_memory + MEM_SIZE);
 	memory_memmove(&mem, p1);
-	f_sti_visual();
+	f_sti_visual(sp, up2, up3);
 }
