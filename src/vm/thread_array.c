@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   thread_array.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myaremen <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/06/05 17:22:20 by myaremen          #+#    #+#             */
+/*   Updated: 2019/06/05 17:22:28 by myaremen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "thread_array.h"
 
 void		threads_init(t_threads *ths)
@@ -23,9 +35,4 @@ bool		threads_push_back(t_threads *ths, const t_thread *th)
 t_thread	*threads_at(t_threads *ths, size_t i)
 {
 	return ((t_thread*)array_at(&ths->arr, i));
-}
-
-t_thread	*threads_back(t_threads *ths)
-{
-	return (array_back(&ths->arr));
 }
