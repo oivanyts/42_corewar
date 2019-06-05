@@ -6,7 +6,7 @@
 #include "vm.h"
 #include "vs.h"
 
-void		output_operation(t_thread *sp)
+void output_operation(t_thread *sp)
 {
 	uint8_t		i;
 	uint8_t		arg_type;
@@ -17,15 +17,13 @@ void		output_operation(t_thread *sp)
 	while (i < g_op_tab[sp->op.opcode].args)
 	{
 		if ((arg_type = get_param_type(sp->op.opcode, sp->op.tparams, i + 1)) == T_REG)
-		{
-			ft_printf(" r%d", (memory_tou8(&sp->op.args[i])));
-		}
+			ft_printf(" r%d", (int32_t*)sp->op.args[i].memory - (int32_t*)&sp->reg[0] + 1);
 		else
 		{
-			if (arg_type == T_IND || g_op_tab[sp->op.opcode].tdir_size)
-				ft_printf(" %d", (int16_t)swap16(memory_tou16(&sp->op.args[i])));
+			if (arg_type == T_IND)
+				ft_printf(" %d", sp->op.args[i].memory - (void *)&sp->vm_memory[sp->op.ip]);
 			else
-				ft_printf(" %d", (int16_t)swap32(memory_tou32(&sp->op.args[i])));
+				ft_printf(" %d", g_op_tab[sp->op.opcode].tdir_size ? (int16_t)memory_tou16(&sp->op.args[i]) : (int32_t)memory_tou32(&sp->op.args[i]));
 		}
 		i++;
 	}
@@ -68,6 +66,10 @@ void	f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
+	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
+	{
+		output_operation(sp);
+	}
 	if (get_param_type(sp->op.opcode, sp->op.tparams, 2) == T_REG)
 		up2 = swap32(memory_tou32(p2));
 	else
@@ -82,8 +84,7 @@ void	f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	memory_memmove(&mem, p1);
 	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
 	{
-		output_operation(sp);
-		ft_printf("\t   | -> store to %d + %d = %d (with pc and mod %d)\n", up2,
+		ft_printf("       | -> store to %d + %d = %d (with pc and mod %d)\n", up2,
 				  up3, up2 + up3, (sp->op.ip + (up2 + up3) % IDX_MOD) % MEM_SIZE);
 	}
 	get_vm(0)->options.visual_ncurses ? ft_changememvs((sp->op.ip + (up2 + up3)
