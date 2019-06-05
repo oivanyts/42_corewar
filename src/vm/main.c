@@ -2,54 +2,55 @@
 #include "vm.h"
 #include "vs.h"
 
-#define TOFILE //
-
-
-t_list *find_all_carridges(t_player *pPlayer, int num_players)
+t_list		*find_all_carridges(t_player *player, int num_players)
 {
-	t_list	*ret = NULL;
-	int 	i = 0, size, j;
+	t_list		*ret;
 	t_thread	*tmp;
+	int			i;
+	int			j;
+	int			size;
 
+	ret = NULL;
+	i = 0;
 	while (i < num_players)
 	{
 		j = 0;
-		size = threads_size(pPlayer[i].threads);
+		size = threads_size(player[i].threads);
 		while (j < size)
 		{
-			tmp = threads_at(pPlayer[i].threads, j++);
+			tmp = threads_at(player[i].threads, j++);
 			ft_lstaddback(&ret, ft_lstnew(&(tmp->ip), sizeof(int)));
 		}
 		i++;
 	}
-	return ret;
+	return (ret);
 }
 
-void delcarlist(t_list *pList)
+void		delcarlist(t_list *list)
 {
 	t_list	*tmp;
-	while (pList->next)
+
+	while (list->next)
 	{
-		tmp = pList;
-		pList = pList->next;
+		tmp = list;
+		list = list->next;
 		free(tmp);
 	}
-	free(pList);
+	free(list);
 }
 
-
-bool check_pos(size_t i, t_list *pList)
+bool		check_pos(size_t i, t_list *list)
 {
-	while (pList)
+	while (list)
 	{
-		if (*(int *)pList->content == (int)i)
+		if (*(int *)list->content == (int)i)
 			return (true);
-		pList = pList->next;
+		list = list->next;
 	}
 	return (false);
 }
 
-void poor_mans_visualization(uint8_t *bytecode)
+void		poor_mans_visualization(uint8_t *bytecode)
 {
 	size_t		i = 0;
 	int			player_gap;
@@ -88,12 +89,7 @@ void poor_mans_visualization(uint8_t *bytecode)
 	//ft_printf("\n");
 }
 
-
-
-
-
-
-uint8_t next_file(uint8_t files[4])
+uint8_t		next_file(uint8_t files[4])
 {
 	uint8_t i;
 	uint8_t cp;
@@ -106,14 +102,13 @@ uint8_t next_file(uint8_t files[4])
 	return (cp);
 }
 
-
-
-uint8_t parce_info(int argc, char **arguments, t_player *player, uint8_t *memory)
+uint8_t		parce_info
+	(int argc, char **arguments, t_player *player, uint8_t *memory)
 {
 	uint8_t		i;
 	t_vm		*vm;
-	uint8_t 	files[4];
-	uint16_t 	player_gap;
+	uint8_t		files[4];
+	uint16_t	player_gap;
 
 	ft_bzero(&files, sizeof(int) * 4);
 	vm = get_vm(0);
@@ -129,7 +124,8 @@ uint8_t parce_info(int argc, char **arguments, t_player *player, uint8_t *memory
 	i = 0;
 	while (i < vm->nplayers)
 	{
-		load_from_file(arguments[next_file(files)], &player[i], &memory[(i) * player_gap]);
+		load_from_file(arguments[next_file(files)], &player[i],
+				&memory[(i) * player_gap]);
 		player[i].number = i + 1;
 		player[i].threads = &vm->threads;
 		init_carridge(&player[i], i, memory, player_gap);
@@ -138,7 +134,7 @@ uint8_t parce_info(int argc, char **arguments, t_player *player, uint8_t *memory
 	return (0);
 }
 
-void init_vm(t_vm *vm, t_player *players, int32_t nplayers)
+void		init_vm(t_vm *vm, t_player *players, int32_t nplayers)
 {
 	int32_t player_i;
 	int32_t max_player_i;
@@ -159,7 +155,7 @@ void init_vm(t_vm *vm, t_player *players, int32_t nplayers)
 	vm->cycle = 1;
 }
 
-void	print_players_intro(t_player *players, int32_t nplayers)
+void		print_players_intro(t_player *players, int32_t nplayers)
 {
 	int32_t player_i;
 
@@ -167,16 +163,18 @@ void	print_players_intro(t_player *players, int32_t nplayers)
 	ft_printf("Introducing contestants...\n");
 	while (player_i < nplayers)
 	{
-		ft_printf("* Player %d, weighing %u bytes, \"%s\" (\"%s\") !\n", players[player_i].number, players[player_i].header.prog_size, players[player_i].header.prog_name, players[player_i].header.comment);
+		ft_printf("* Player %d, weighing %u bytes, \"%s\" (\"%s\") !\n",
+		players[player_i].number, players[player_i].header.prog_size,
+		players[player_i].header.prog_name, players[player_i].header.comment);
 		++player_i;
 	}
 }
 
-int		main(int argc, char *argv[])
+int			main(int argc, char *argv[])
 {
 	t_player	players[argc - 1];
-	uint8_t 	memory[MEM_SIZE];
-	t_vm vm;
+	uint8_t		memory[MEM_SIZE];
+	t_vm		vm;
 
 	get_vm(&vm);
 	ft_bzero(players, sizeof(t_player) * (argc - 1));
@@ -184,18 +182,20 @@ int		main(int argc, char *argv[])
 	parce_info(argc - 1, argv, &players[0], &memory[0]);
 	init_vm(&vm, &players[0], vm.nplayers);
 	if (vm.options.visual_ncurses == 0)
-	{
 		print_players_intro(players, vm.nplayers);
-	}
 	vm.options.visual_ncurses ? ft_vsinit(&vm, &players[0]) : 0;
 	vm_cycle(&vm);
+//	if (vm.options.o_dump)
+//	{
+//		poor_mans_visualization(memory);
+//	}
 	if (vm.options.visual_ncurses == 0 && !threads_alive(&vm.threads))
-	{
-		ft_printf("Contestant %d, \"%s\", has won !\n", players[vm.last_alive - 1].number, players[vm.last_alive - 1].header.prog_name);
-	}
-	else if (!threads_alive(&vm.threads))
-	{
-		ft_announcewinner(players[vm.last_alive - 1].number, players[vm.last_alive - 1].header.prog_name);
-	}
-	return 0;
+		ft_printf("Contestant %d, \"%s\", has won !\n",
+				players[vm.last_alive - 1].number,
+				players[vm.last_alive - 1].header.prog_name);
+	else
+		ft_announcewinner(players[vm.last_alive - 1].number,
+				players[vm.last_alive - 1].header.prog_name);
+	system("leaks -q vm");
+	return (0);
 }

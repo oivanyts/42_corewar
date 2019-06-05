@@ -25,7 +25,7 @@ t_thread	*threads_at(t_threads *ths, size_t i)
 	return ((t_thread*)array_at(&ths->arr, i));
 }
 
-t_thread    *threads_back(t_threads *ths)
+t_thread	*threads_back(t_threads *ths)
 {
-    return (array_back(&ths->arr));
+	return (array_back(&ths->arr));
 }

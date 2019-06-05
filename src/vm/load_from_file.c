@@ -13,9 +13,9 @@
 #include "vm.h"
 #include "op.h"
 
-void	output_binary(uint8_t *bytecode, size_t size)
+void			output_binary(uint8_t *bytecode, size_t size)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (i < size)
@@ -28,19 +28,19 @@ void	output_binary(uint8_t *bytecode, size_t size)
 	ft_printf("\n");
 }
 
-unsigned int reverse_byte(unsigned int old)
+unsigned int	reverse_byte(unsigned int old)
 {
 	return ((old >> 24) | ((old >> 8) & 0xff00) | ((old << 8) & 0xff0000) |
 	old << 24);
 }
 
-void load_from_file(char *filename, t_player *player, uint8_t memory[])
+void			load_from_file(char *fname, t_player *player, uint8_t memory[])
 {
 	int		fd;
 	size_t	ret;
 	uint8_t	bytes[MEM_SIZE];
 
-	(fd = open(filename, O_RDONLY)) > 0 ? 0 : handle_error(error_opening_file);
+	(fd = open(fname, O_RDONLY)) > 0 ? 0 : handle_error(error_opening_file);
 	(ret = (size_t)read(fd, bytes, MEM_SIZE)) > 0 ? 0 : handle_error(4);
 	player->header.magic = *(uint32_t *)&bytes;
 	if ((IS_BIG_ENDIAN && COREWAR_EXEC_MAGIC != player->header.magic)
@@ -55,24 +55,26 @@ void load_from_file(char *filename, t_player *player, uint8_t memory[])
 	player->header.prog_size = *(uint32_t *)&bytes[8 + PROG_NAME_LENGTH];
 	if (!IS_BIG_ENDIAN)
 		player->header.prog_size = reverse_byte(player->header.prog_size);
-	ft_memcpy(player->header.comment, &bytes[12 + PROG_NAME_LENGTH], COMMENT_LENGTH);
+	ft_memcpy(player->header.comment,
+			&bytes[12 + PROG_NAME_LENGTH], COMMENT_LENGTH);
 	ft_memcpy(memory, &bytes[12 + PROG_NAME_LENGTH + COMMENT_LENGTH + 4],
-			  (size_t)player->header.prog_size);
+			(size_t)player->header.prog_size);
 	close(fd);
 }
 
-void init_carridge(t_player *player, uint8_t i, uint8_t *memory, int gap)
+void			init_carridge
+	(t_player *player, uint8_t i, uint8_t *memory, int gap)
 {
-    t_thread	tmp;
+	t_thread	tmp;
 
-    ft_bzero(&tmp, sizeof(t_thread));
-    tmp.player = player;
-    tmp.lives = 0;
-    tmp.alive = 1;
-    tmp.processing = 0;
-    tmp.vm_memory = memory;
-    tmp.ip = (uint32_t)(gap * i);
-    tmp.reg[0] = swap32(-player->number);
-    if (!threads_push_back(player->threads, &tmp))
-        handle_error(error_array_add);
+	ft_bzero(&tmp, sizeof(t_thread));
+	tmp.player = player;
+	tmp.lives = 0;
+	tmp.alive = 1;
+	tmp.processing = 0;
+	tmp.vm_memory = memory;
+	tmp.ip = (uint32_t)(gap * i);
+	tmp.reg[0] = swap32(-player->number);
+	if (!threads_push_back(player->threads, &tmp))
+		handle_error(error_array_add);
 }
