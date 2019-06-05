@@ -87,3 +87,12 @@ void	ft_vsinit(t_vm *vm, t_player *players)
 	ft_printlivebar(vm, 3);
 	ft_drawmap(vm);
 }
+
+void	ft_initlive(t_thread *sp, int32_t p32)
+{
+	g_vsmap[sp->op.ip].live = 50;
+	g_vsmap[sp->op.ip].liveplayer = -p32;
+	get_vm(0)->players[-p32 - 1].lastlive = get_vm(0)->cycle;
+	get_vm(0)->players[-p32 - 1].livesinper++;
+	g_vs->sumlives++;
+}
