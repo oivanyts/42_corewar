@@ -37,4 +37,14 @@ unsigned long long int	ft_ullmin
 		return (num2);
 	}
 }
-//get_options();
+
+uint32_t				swap32(uint32_t toswap)
+{
+	return (toswap >> 24 | ((toswap >> 8) & 0xff00)
+			| ((toswap << 8) & 0xff0000) | toswap << 24);
+}
+
+uint16_t				swap16(uint16_t toswap)
+{
+	return (toswap >> 8 | toswap << 8);
+}

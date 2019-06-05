@@ -73,6 +73,8 @@ uint8_t			decode_tparams(struct s_thread *pc, uint8_t opcode);
 t_memory		decode_param
 						(t_decoded_op op, t_thread *pc, uint8_t param_number);
 
+void			decode_opcode(struct s_thread *pc);
+
 void			op_decode(t_thread *pc);
 
 void			op_exec(t_thread *pc);
@@ -90,5 +92,9 @@ void			handle_options
 void			ft_resetlivesinper(t_vm *vm);
 
 void			foreach_thread(t_threads *threads, void(*func)(t_thread*));
+
+uint8_t			force_get_param_type(uint8_t tparams, uint8_t param_number);
+
+void			print_moves(const t_thread *pc);
 
 #endif

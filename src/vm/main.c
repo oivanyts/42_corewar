@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myaremen <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/06/05 17:26:45 by myaremen          #+#    #+#             */
+/*   Updated: 2019/06/05 17:26:46 by myaremen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "op.h"
 #include "vm.h"
 #include "vs.h"
@@ -196,6 +208,7 @@ int			main(int argc, char *argv[])
 	else
 		ft_announcewinner(players[vm.last_alive - 1].number,
 				players[vm.last_alive - 1].header.prog_name);
+	threads_destroy(&vm.threads);
 	system("leaks -q vm");
 	return (0);
 }
