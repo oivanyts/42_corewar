@@ -14,7 +14,7 @@
 #include "vm.h"
 #include "vs.h"
 
-void output_operation(t_thread *sp)
+void	output_operation(t_thread *sp)
 {
 	uint8_t		i;
 	uint8_t		arg_type;
@@ -24,21 +24,24 @@ void output_operation(t_thread *sp)
 			g_op_tab[sp->op.opcode].name);
 	while (i < g_op_tab[sp->op.opcode].args)
 	{
-		if ((arg_type = get_param_type(sp->op.opcode, sp->op.tparams, i + 1)) == T_REG)
-			ft_printf(" r%d", (int32_t*)sp->op.args[i].memory - (int32_t*)&sp->reg[0] + 1);
+		if ((arg_type = get_param_type(sp->op.opcode, sp->op.tparams, i + 1))
+		== T_REG)
+			ft_printf(" r%d", (int32_t*)sp->op.args[i].memory -
+			(int32_t*)&sp->reg[0] + 1);
 		else
 		{
 			if (arg_type == T_IND)
-				ft_printf(" %d", sp->op.args[i].memory - (void *)&sp->vm_memory[sp->op.ip]);
+				ft_printf(" %d", sp->op.args[i].memory -
+				(void *)&sp->vm_memory[sp->op.ip]);
 			else
-				ft_printf(" %d", g_op_tab[sp->op.opcode].tdir_size ? (int16_t)memory_tou16(&sp->op.args[i]) : (int32_t)memory_tou32(&sp->op.args[i]));
+				ft_printf(" %d", g_op_tab[sp->op.opcode].tdir_size ?
+				(int16_t)memory_tou16(&sp->op.args[i]) :
+				(int32_t)memory_tou32(&sp->op.args[i]));
 		}
 		i++;
 	}
-	if (sp->op.opcode != 8)
-		ft_printf("\n");
+	sp->op.opcode != 8 ? ft_printf("\n") : ft_printf("");
 }
-
 
 void	f_ldi(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
@@ -65,6 +68,18 @@ void	f_ldi(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	memory_memmove(p3, &mem);
 }
 
+void	f_sti_visual(t_thread *sp, int32_t up2, int32_t up3)
+{
+	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
+	{
+		ft_printf("       | -> store to %d + %d = %d (with pc and mod %d)\n",
+				up2, up3, up2 + up3, (sp->op.ip + (up2 + up3) % IDX_MOD)
+				% MEM_SIZE);
+	}
+	get_vm(0)->options.visual_ncurses ? ft_changememvs((sp->op.ip + (up2 + up3)
+	% IDX_MOD) % MEM_SIZE, ((t_player *)sp->player)->number) : 0;
+}
+
 void	f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
 	t_memory	mem;
@@ -75,9 +90,7 @@ void	f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
 	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
-	{
 		output_operation(sp);
-	}
 	if (get_param_type(sp->op.opcode, sp->op.tparams, 2) == T_REG)
 		up2 = swap32(memory_tou32(p2));
 	else
@@ -90,11 +103,5 @@ void	f_sti(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 		% MEM_SIZE], DIR_SIZE);
 	memory_set_bounds(&mem, sp->vm_memory, sp->vm_memory + MEM_SIZE);
 	memory_memmove(&mem, p1);
-	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
-	{
-		ft_printf("       | -> store to %d + %d = %d (with pc and mod %d)\n", up2,
-				  up3, up2 + up3, (sp->op.ip + (up2 + up3) % IDX_MOD) % MEM_SIZE);
-	}
-	get_vm(0)->options.visual_ncurses ? ft_changememvs((sp->op.ip + (up2 + up3)
-		% IDX_MOD) % MEM_SIZE, ((t_player *)sp->player)->number) : 0;
+	f_sti_visual();
 }
