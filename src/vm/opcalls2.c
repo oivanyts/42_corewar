@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: myaremen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/06/05 17:20:55 by myaremen          #+#    #+#             */
-/*   Updated: 2019/06/05 17:20:57 by myaremen         ###   ########.fr       */
+/*   Created: 2019/06/05 19:55:56 by myaremen          #+#    #+#             */
+/*   Updated: 2019/06/05 19:55:57 by myaremen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,18 @@ void	load_idx_param(t_thread *sp, t_memory *mem, uint8_t param_number)
 
 void	f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
+	static int count = 0;
 	int32_t p32;
 
 	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
 		output_operation(sp);
 	p2 = p3;
+	if (get_vm(0)->cycle >= 17704)
+	{
+		get_vm(0);
+		++count;
+		get_vm(0);
+	}
 	sp->lives += 1;
 	sp->last_live = get_vm(0)->cycle;
 	load_param(sp, p1, 1);
@@ -60,13 +67,11 @@ void	f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 void	f_ld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
 	(void)p3;
+	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
+		output_operation(sp);
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	memory_memmove(p2, p1);
-	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
-	{
-		output_operation(sp);
-	}
 	sp->cf = memory_iszero(p2);
 //	if (get_vm(0)->options.visual_ncurses == 0
 //		&& get_vm(0)->options.o_v_param & 4)
@@ -81,13 +86,11 @@ void	f_st(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
 	(void)sp;
 	(void)p3;
+	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
+		output_operation(sp);
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	memory_memmove(p2, p1);
-	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
-	{
-		output_operation(sp);
-	}
 	if (get_param_type(sp->op.opcode, sp->op.tparams, 2)
 		== T_IND && get_vm(0)->options.visual_ncurses)
 		ft_changememvs(((uint8_t *)p2->memory - &sp->vm_memory[0]),

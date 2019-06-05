@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "array.h"
+#include "vm.h"
 
 uint8_t					*as_byte(void *ptr)
 {
@@ -38,13 +39,22 @@ unsigned long long int	ft_ullmin
 	}
 }
 
-uint32_t				swap32(uint32_t toswap)
+void		poor_mans_visualization(uint8_t *bytecode)
 {
-	return (toswap >> 24 | ((toswap >> 8) & 0xff00)
-			| ((toswap << 8) & 0xff0000) | toswap << 24);
-}
+	size_t		i;
 
-uint16_t				swap16(uint16_t toswap)
-{
-	return (toswap >> 8 | toswap << 8);
+	i = 0;
+	while (i < MEM_SIZE)
+	{
+		if (!(i % 64))
+		{
+			ft_printf("0x%04x : ", i);
+		}
+		ft_printf("%.2x%c", bytecode[i], ' ');
+		i++;
+		if (!(i % 64))
+		{
+			ft_printf("\n");
+		}
+	}
 }
