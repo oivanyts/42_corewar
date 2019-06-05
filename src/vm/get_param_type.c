@@ -15,7 +15,7 @@
 uint8_t		get_param1_type(uint8_t opcode, uint8_t tparams)
 {
 	if ((g_op_tab[opcode].targs[0] & T_IND)
-		&& (((tparams & T_FIRST_PARAM) >> 6) & 0x3) == IND_CODE)
+	&& (((tparams & T_FIRST_PARAM) >> 6) & 0x3) == IND_CODE)
 	{
 		return (T_IND);
 	}

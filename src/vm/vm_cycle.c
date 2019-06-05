@@ -33,7 +33,8 @@ uint32_t	threads_alive(t_threads *threads)
 
 void		kill_thread_if_no_lives(t_thread *th)
 {
-	if (th->lives == 0 && th->alive)
+	if ((int32_t)(get_vm(0)->cycle - th->last_live) >= get_vm(0)->ctd
+	&& th->alive)
 	{
 		th->alive = 0;
 		get_vm(0)->options.o_v_param & 8 ?
