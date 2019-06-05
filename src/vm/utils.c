@@ -52,7 +52,7 @@ void		poor_mans_visualization(uint8_t *bytecode)
 		}
 		ft_printf("%.2x%c", bytecode[i], ' ');
 		i++;
-		if (!(i % 64) )
+		if (!(i % 64))
 		{
 			ft_printf("\n");
 		}

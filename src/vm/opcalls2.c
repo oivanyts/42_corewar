@@ -1,6 +1,15 @@
-//
-// Created by Nickolay PIATIKOP on 2019-06-05.
-//
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   opcalls2.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myaremen <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/06/05 19:55:56 by myaremen          #+#    #+#             */
+/*   Updated: 2019/06/05 19:55:57 by myaremen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "opcalls.h"
 #include "vm.h"
 #include "vs.h"
@@ -25,11 +34,18 @@ void	load_idx_param(t_thread *sp, t_memory *mem, uint8_t param_number)
 
 void	f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
+	static int count = 0;
 	int32_t p32;
 
 	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
 		output_operation(sp);
 	p2 = p3;
+	if (get_vm(0)->cycle >= 17704)
+	{
+		get_vm(0);
+		++count;
+		get_vm(0);
+	}
 	sp->lives += 1;
 	sp->last_live = get_vm(0)->cycle;
 	load_param(sp, p1, 1);

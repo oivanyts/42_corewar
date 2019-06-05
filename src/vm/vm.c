@@ -33,7 +33,7 @@ uint32_t	threads_alive(t_threads *threads)
 
 void		kill_thread_if_no_lives(t_thread *th)
 {
-	if (th->lives == 0 && th->alive)
+	if ((int32_t)(get_vm(0)->cycle - th->last_live) >= get_vm(0)->ctd && th->alive)
 	{
 		th->alive = 0;
 		get_vm(0)->options.o_v_param & 8 ?
@@ -423,27 +423,6 @@ void		print_moves(const t_thread *pc)
 		i++;
 	}
 	ft_printf(" \n", g_op_tab[pc->op.opcode].name);
-	//ft_printf(" {red}[%s]{eoc}\n", g_op_tab[pc->op.opcode].name);
-}
-
-void		print_op(const t_thread *pc)
-{
-	t_vm	*vm;
-	uint8_t	i;
-
-	i = 0;
-	vm = get_vm(0);
-	ft_printf("P    %d | %s",
-			pc - threads_at(&vm->threads, 0) + 1, g_op_tab[pc->op.opcode].name);
-	while (i <= g_op_tab[pc->op.opcode].args)
-	{
-		if (get_param_type(pc->op.opcode, pc->op.tparams, i + 1) == T_REG)
-			ft_printf(" r");
-		i++;
-	}
-	ft_printf("\n");
-	if (pc->op.opcode == 2 || pc->op.opcode == 10)
-		ft_printf("\t\t| -> %.5s\n", g_op_tab[pc->op.opcode].descr);
 }
 
 uint32_t	get_thread_number(const t_thread *pc)

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myaremen <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/06/05 17:35:41 by myaremen          #+#    #+#             */
+/*   Updated: 2019/06/05 17:44:21 by myaremen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "op.h"
 #include "vm.h"
 #include "vs.h"
@@ -15,7 +27,7 @@ uint8_t		next_file(uint8_t files[4])
 	return (cp);
 }
 
-uint8_t		parce_info
+void		parce_info
 	(int argc, char **arguments, t_player *player, uint8_t *memory)
 {
 	uint8_t		i;
@@ -43,7 +55,6 @@ uint8_t		parce_info
 		init_carridge(&player[i], i, memory, player_gap);
 		i++;
 	}
-	return (0);
 }
 
 void		init_vm(t_vm *vm, t_player *players, int32_t nplayers)
@@ -104,6 +115,7 @@ int			main(int argc, char *argv[])
 	else if (vm.options.visual_ncurses)
 		ft_announcewinner(players[vm.last_alive - 1].number,
 				players[vm.last_alive - 1].header.prog_name);
+	threads_destroy(&vm.threads);
 	system("leaks -q vm");
 	return (0);
 }
