@@ -189,11 +189,11 @@ int			main(int argc, char *argv[])
 //	{
 //		poor_mans_visualization(memory);
 //	}
-	if (vm.options.visual_ncurses == 0 && !threads_alive(&vm.threads))
+	if (vm.options.visual_ncurses == 0 && vm.options.o_dump_point != vm.cycle)
 		ft_printf("Contestant %d, \"%s\", has won !\n",
 				players[vm.last_alive - 1].number,
 				players[vm.last_alive - 1].header.prog_name);
-	else
+	else if (vm.options.visual_ncurses)
 		ft_announcewinner(players[vm.last_alive - 1].number,
 				players[vm.last_alive - 1].header.prog_name);
 	system("leaks -q vm");
