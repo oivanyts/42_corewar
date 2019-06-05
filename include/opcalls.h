@@ -99,5 +99,6 @@ void			load_reg_param(t_thread *sp, t_memory *mem);
 void			load_param(t_thread *sp, t_memory *mem, uint8_t param_number);
 void			load_idx_param
 							(t_thread *sp, t_memory *mem, uint8_t param_number);
+void			output_operation(t_thread *sp);
 
 #endif

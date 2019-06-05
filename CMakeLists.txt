@@ -19,8 +19,6 @@ add_executable(vm ${SOURCE_FILES_VM} ${SOURCE_FILES_VS})
 
 target_include_directories(vm PUBLIC ./include)
 target_include_directories(asm PUBLIC ./include)
-target_include_directories(vs PUBLIC ./include)
 
-target_link_libraries(vs LIBFT)
 target_link_libraries(vm LIBFT ncurses)
 target_link_libraries(asm LIBFT)

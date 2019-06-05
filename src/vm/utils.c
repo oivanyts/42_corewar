@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "array.h"
+#include "vm.h"
 
 uint8_t					*as_byte(void *ptr)
 {
@@ -37,4 +38,23 @@ unsigned long long int	ft_ullmin
 		return (num2);
 	}
 }
-//get_options();
+
+void		poor_mans_visualization(uint8_t *bytecode)
+{
+	size_t		i;
+
+	i = 0;
+	while (i < MEM_SIZE)
+	{
+		if (!(i % 64))
+		{
+			ft_printf("0x%04x : ", i);
+		}
+		ft_printf("%.2x%c", bytecode[i], ' ');
+		i++;
+		if (!(i % 64) )
+		{
+			ft_printf("\n");
+		}
+	}
+}
