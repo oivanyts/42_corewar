@@ -60,9 +60,7 @@ uint32_t	memory_tou32(t_memory *mem)
 
 	mem_cpy = *mem;
 	if ((uint8_t*)mem->memory_end - (uint8_t*)mem->memory >= 4)
-	{
 		res = *(uint32_t*)(mem->memory);
-	}
 	else
 	{
 		i = 0;
