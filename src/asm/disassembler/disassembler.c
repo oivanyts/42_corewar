@@ -35,7 +35,6 @@ void		disassembler(char *name)
 			S_IWRITE | S_IREAD)) < 0)
 	{
 		ft_printf("File \"%s\" can't be created.\n", dasm.file_name);
-		system("leaks -q asm");
 		exit(1);
 	}
 	set_header(&dasm);

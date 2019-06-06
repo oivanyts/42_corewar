@@ -35,6 +35,5 @@ void	handle_error(t_error_code n_err)
 {
 	ft_printf("Error: %s\n", g_error_table[n_err]);
 	threads_destroy(&get_vm(0)->threads);
-	system("leaks -q vm");
 	exit(n_err);
 }

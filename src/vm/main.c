@@ -116,6 +116,5 @@ int			main(int argc, char *argv[])
 		ft_announcewinner(players[vm.last_alive - 1].number,
 				players[vm.last_alive - 1].header.prog_name);
 	threads_destroy(&vm.threads);
-	system("leaks -q vm");
 	return (0);
 }

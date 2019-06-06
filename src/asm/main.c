@@ -34,6 +34,5 @@ int		main(int argc, char **argv)
 	close(fd);
 	ft_printf("Writing output program to %s\n", filename);
 	ft_free(oplist, filename);
-	system("leaks -q asm");
 	return (0);
 }

@@ -17,7 +17,6 @@ void	ft_exit(char *stre, int e)
 	ft_printf("Error: %s\n", stre);
 	e == 23 ? ft_printf("usage: asm [-d][filename]\n"
 						"\t-d: disassemble *.cor to *.s.\n") : 0;
-	system("leaks -q asm");
 	exit(e);
 }
 
@@ -25,7 +24,6 @@ void	ft_errhandler(t_token_list *toklst)
 {
 	ft_printf("Syntax error at token [TOKEN][%03d:%03d] %s\n",
 			toklst->row, toklst->col, g_ident_str[toklst->ident]);
-	system("leaks -q asm");
 	exit(8);
 }
 

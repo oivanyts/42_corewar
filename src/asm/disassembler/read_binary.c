@@ -49,7 +49,6 @@ static void	validation(char *name, t_dasm *dasm)
 	if (!str_cmp(rev_name, "roc."))
 	{
 		ft_printf("The file must be .cor extension!\n");
-		system("leaks -q asm");
 		exit(0);
 	}
 	tmp = ft_strdup(rev_name + 4);
@@ -63,13 +62,11 @@ static void	check_fd(int fd, char *name)
 	if (fd < 0)
 	{
 		perror("Read binary");
-		system("leaks -q asm");
 		exit(1);
 	}
 	if ((read(fd, 0, 0)) < 0)
 	{
 		ft_printf("\"%s\" is directory. You must send a file!\n", name);
-		system("leaks -q asm");
 		exit(1);
 	}
 }
