@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "errors.h"
 #include "asm.h"
 #include "lexer.h"
 
@@ -36,10 +37,22 @@ int		id_label(t_asm *a)
 	t_fsm	*fsm;
 	char	*data;
 	size_t	len;
+	int 	i;
 
 	fsm = a->fsm;
 	len = fsm->curr - fsm->start;
 	data = (char*)ft_memalloc(len + 1);
+
+	i = -1;
+	while (data[++i] != '\0')
+	{
+		if (!ft_strchr(LABEL_CHARS, data[i]))
+		{
+			a->col = fsm->st_col + i;
+			err_lex(a);
+		}
+	}
+
 	ft_strncpy(data, fsm->start, len);
 	add_to_token_list(&a->token_list, LABEL, data, a);
 	return (1);
