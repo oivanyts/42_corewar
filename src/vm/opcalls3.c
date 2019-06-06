@@ -90,7 +90,7 @@ void	f_zjmp(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	(void)p2;
 	(void)p3;
 	load_dir_idx_param(sp, p1);
-	if (get_vm(0)->options.visual_ncurses == 0
+	if (!get_vm(0)->options.visual_ncurses
 		&& get_vm(0)->options.o_v_param & 4)
 	{
 		ft_printf("P\t %d | %s %d", sp - threads_at(&get_vm(0)->threads, 0) + 1,

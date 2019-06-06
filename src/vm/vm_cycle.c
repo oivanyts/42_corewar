@@ -37,8 +37,8 @@ void		kill_thread_if_no_lives(t_thread *th)
 	&& th->alive)
 	{
 		th->alive = 0;
-		get_vm(0)->options.o_v_param & 8 ?
-		ft_printf("Process %d hasn't lived for %d cycles (CTD %d)\n",
+		get_vm(0)->options.o_v_param & 8U && !get_vm(0)->options.visual_ncurses
+		? ft_printf("Process %d hasn't lived for %d cycles (CTD %d)\n",
 				th - threads_at(&get_vm(0)->threads, 0) + 1,
 				get_vm(0)->cycle - th->last_live, get_vm(0)->ctd) : 0;
 	}
@@ -103,7 +103,8 @@ void		vm_cycle(t_vm *vm)
 		? ft_printf("It is now cycle %d\n", vm->cycle, vm->ctd, cycles) : 0;
 		foreach_thread(&vm->threads, op_exec);
 		ctd_check(vm, &cycles, &checks, &alive);
-		if (vm->cycle == vm->options.o_dump_point && vm->options.o_dump)
+		if (vm->cycle == vm->options.o_dump_point && vm->options.o_dump &&
+		!get_vm(0)->options.visual_ncurses)
 		{
 			poor_mans_visualization(threads_at(&vm->threads, 0)->vm_memory);
 			return ;
