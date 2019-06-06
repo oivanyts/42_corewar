@@ -40,7 +40,7 @@ void	f_live(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	sp->last_live = get_vm(0)->cycle;
 	load_param(sp, p1, 1);
 	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
-		output_operation(sp, false);
+		output_operation(sp);
 	p32 = memory_tou32(p1);
 	p32 = swap32(p32);
 	if (-p32 > 0 && -p32 <= get_vm(0)->nplayers)
@@ -65,7 +65,7 @@ void	f_ld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	sp->cf = memory_iszero(p2);
 	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
 	{
-		output_operation(sp, NULL);
+		output_operation(sp);
 	}
 }
 
@@ -78,7 +78,7 @@ void	f_st(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	memory_memmove(p2, p1);
 	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
 	{
-		output_operation(sp, true);
+		output_operation(sp);
 	}
 	if (get_param_type(sp->op.opcode, sp->op.tparams, 2)
 		== T_IND && get_vm(0)->options.visual_ncurses)
@@ -92,7 +92,7 @@ void	f_add(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	t_memory res_memory;
 
 	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
-		output_operation(sp, NULL);
+		output_operation(sp);
 	if (((t_player*)(sp->player))->number == 1)
 	{
 		get_vm(0);
