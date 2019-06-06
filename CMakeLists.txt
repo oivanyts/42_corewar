@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(corewar LANGUAGES C)
+project(corewar_old LANGUAGES C)
 set(CMAKE_C_COMPILER clang)
 
 set(CMAKE_C_STANDARD 99)
