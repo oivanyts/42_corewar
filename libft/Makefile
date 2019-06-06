@@ -1,7 +1,7 @@
 NAME = libft.a
 FLAGS = -Wall -Wextra -Werror
-SRCS = ./src/form_num_char.c \
-	./src/ft_array_print.c \
+SRCS = ./src/form_num_char.c\
+	./src/ft_array_print.c\
 	./src/ft_atoi.c\
 	./src/ft_atoi_hex.c\
 	./src/ft_bzero.c\
@@ -91,7 +91,8 @@ SRCS = ./src/form_num_char.c \
 	./src/ft_tolower.c\
 	./src/ft_toupper.c\
 	./src/get_next_line.c\
-	./src/printf.c
+	./src/printf.c\
+	./src/ft_string_to_number.c
 
 INC = 	./includes/libft.h
 
@@ -105,7 +106,7 @@ $(NAME): $(OBJS)
 	@ranlib $(NAME)
 
 %.o: %.c $(INC)
-	@gcc $(FLAGS) -I./includes -o $@ -c $<
+	gcc $(FLAGS) -I./includes -o $@ -c $<
 
 clean:
 	@rm -f $(OBJS)

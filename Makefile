@@ -30,20 +30,36 @@ SRCS_ASM =./src/asm/bcode.c\
           ./src/asm/lexer/read_text.c\
           ./src/asm/lexer/str_cmp.c
 
-SRCS_VM = ./src/vm/abstract_cpu.c\
-			./src/vm/array.c\
-			./src/vm/array_find.c\
-			./src/vm/array_insert.c\
-			./src/vm/array_size.c\
-			./src/vm/get_options.c\
-			./src/vm/handle_error.c\
-			./src/vm/load_from_file.c\
-			./src/vm/main.c\
-			./src/vm/op.c\
-			./src/vm/opcalls.c\
-			./src/vm/thread_array.c\
-			./src/vm/utils.c\
-			./src/vm/vs/vs_main.c
+SRCS_VM = 	./src/vm/abstract_cpu.c\
+            ./src/vm/abstract_cpu1.c\
+            ./src/vm/abstract_cpu2.c\
+            ./src/vm/array.c\
+            ./src/vm/array_find.c\
+            ./src/vm/array_insert.c\
+            ./src/vm/array_size.c\
+            ./src/vm/decode.c\
+            ./src/vm/decode_param.c\
+            ./src/vm/get_force_param_type.c\
+            ./src/vm/get_options.c\
+            ./src/vm/get_param_type.c\
+            ./src/vm/handle_error.c\
+            ./src/vm/load_from_file.c\
+            ./src/vm/main.c\
+            ./src/vm/op.c\
+            ./src/vm/opcalls.c\
+            ./src/vm/opcalls1.c\
+            ./src/vm/opcalls2.c\
+            ./src/vm/opcalls3.c\
+            ./src/vm/opcalls4.c\
+            ./src/vm/thread_array.c\
+            ./src/vm/utils.c\
+            ./src/vm/utils2.c\
+            ./src/vm/vm.c\
+            ./src/vm/vm_cycle.c\
+            ./src/vm/vs/print_info.c\
+            ./src/vm/vs/print_memory.c\
+            ./src/vm/vs/sub_fns.c\
+            ./src/vm/vs/vs_init.c
 
 INC_GENERAL =./include/op.h
 
@@ -77,12 +93,12 @@ libft:
 	make -C ./libft
 
 $(NAME_ASM): $(OBJ_ASM) ./libft/libft.a
-	echo "Building of asm..."
-	gcc -o $(NAME_ASM) $(OBJ_ASM) ./libft/libft.a
+	@echo "Building of asm..."
+	@gcc -o $(NAME_ASM) $(OBJ_ASM) ./libft/libft.a
 
 $(NAME_VM): $(OBJ_VM) ./libft/libft.a
-	echo "Building of vm..."
-	gcc -o $(NAME_VM) $(OBJ_VM) ./libft/libft.a -lncurses
+	@echo "Building of vm..."
+	@gcc -o $(NAME_VM) $(OBJ_VM) ./libft/libft.a -lncurses
 
 ./src/asm/%.o: ./src/asm/%.c $(INC_ASM) $(INC_GENERAL)
 	gcc $(FLAGS) -I./include -I./libft/includes -o $@ -c $<
