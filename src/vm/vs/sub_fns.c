@@ -23,14 +23,18 @@ void	ft_announcewinner(int32_t number, char *name)
 	mvwprintw(g_vs->info_win, 43, 3, "Press any key to exit.");
 	wrefresh(g_vs->info_win);
 	getch();
-	ft_vsexit();
+	endwin();
+	free(g_vs);
+	free(g_vsmap);
 }
 
-void	ft_vsexit(void)
+void	ft_vsexit(t_error_code n_err)
 {
 	endwin();
 	free(g_vs);
 	free(g_vsmap);
+	threads_destroy(&get_vm(0)->threads);
+	handle_error(n_err);
 }
 
 int		ft_getnchars(int lives)
