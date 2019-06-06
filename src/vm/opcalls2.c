@@ -67,13 +67,6 @@ void	f_ld(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	{
 		output_operation(sp, NULL);
 	}
-//	if (get_vm(0)->options.visual_ncurses == 0
-//		&& get_vm(0)->options.o_v_param & 4)
-//	{
-//		ft_printf("P    %d | %s %d r%d\n", sp - threads_at(&get_vm(0)->threads,
-//			0) + 1, g_op_tab[sp->op.opcode].name, swap32(memory_tou32(p1)),
-//				(uint32_t *)p2->memory - (uint32_t *)&sp->reg[0] + 1);
-//	}
 }
 
 void	f_st(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
