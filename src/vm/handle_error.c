@@ -38,3 +38,4 @@ void	handle_error(t_error_code n_err)
 	system("leaks -q vm");
 	exit(n_err);
 }
+
