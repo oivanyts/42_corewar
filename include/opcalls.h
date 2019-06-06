@@ -51,6 +51,7 @@ typedef struct	s_decoded_op
 **	op;			содержит информацию об операции, которая ожидает выполнения
 **	processing;
 */
+
 typedef struct	s_thread
 {
 	void			*player;

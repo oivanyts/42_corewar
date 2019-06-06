@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_options.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myaremen <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/06/05 17:34:47 by myaremen          #+#    #+#             */
+/*   Updated: 2019/06/05 17:34:49 by myaremen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 #include "vm.h"
 
@@ -27,59 +39,55 @@ void		print_usage(char *argv)
 	exit(1);
 }
 
+void		parce_option(int argc, char *argv[], uint8_t *arg_num, char *option)
+{
+	int		param;
+
+	(argc >= *arg_num && ft_string_to_number(argv[*arg_num], &param))
+	? (*arg_num)++ : print_usage(argv[0]);
+	if (ft_strnequ(option, "d", 1))
+	{
+		if (param < 0)
+			handle_error(error_option);
+		get_vm(0)->options.o_dump = true;
+		get_vm(0)->options.o_dump_point = param;
+	}
+	else if (ft_strnequ(option, "v", 1))
+	{
+		get_vm(0)->options.o_visual = true;
+		get_vm(0)->options.o_v_param = param;
+	}
+	else if (ft_strnequ(option, "n", 1))
+	{
+		if (param > 4 || param < 1)
+			handle_error(error_option);
+		get_vm(0)->options.o_next_player = param;
+	}
+	else
+		print_usage(argv[0]);
+}
+
 bool		is_option(char **argv, int argc, uint8_t *arg_num, char *string1)
 {
 	char	*option;
-	int		param;
-	t_vm	*vm;
 
-	vm = get_vm(0);
 	if (argv[*arg_num][0] != '-')
 		return (false);
 	if ((option = ft_strstr(string1, &argv[*arg_num][1])))
 	{
-		vm->options.o_next_player = 0;
-		if (*(option + 1) == ':' && !vm->options.visual_ncurses)
+		get_vm(0)->options.o_next_player = 0;
+		if (*(option + 1) == ':' && !get_vm(0)->options.visual_ncurses)
 		{
 			(*arg_num)++;
-			if (argc >= *arg_num && ft_string_to_number(argv[*arg_num], &param))
-			{
-				(*arg_num)++;
-			}
-			else
-			{
-				print_usage(argv[0]);
-			}
-			if (ft_strnequ(option, "d", 1))
-			{
-				if (param < 0)
-					handle_error(error_option);
-				vm->options.o_dump = true;
-				vm->options.o_dump_point = param;
-			}
-			else if (ft_strnequ(option, "v", 1))
-			{
-				vm->options.o_visual = true;
-				vm->options.o_v_param = param;
-			}
-			else if (ft_strnequ(option, "n", 1))
-			{
-				if (param > 4 || param < 1)
-					handle_error(error_option);
-				vm->options.o_next_player = param;
-			}
-			else
-			{
-				print_usage(argv[0]);
-			}
+			parce_option(argc, argv, arg_num, option);
 		}
 		else
 		{
 			if (argv[*arg_num][1] == 's')
 			{
-				vm->options.visual_ncurses = true;
-				vm->options.o_dump = false;
-				vm->options.o_visual = false;
+				get_vm(0)->options.visual_ncurses = true;
+				get_vm(0)->options.o_dump = false;
+				get_vm(0)->options.o_visual = false;
 			}
 			(*arg_num)++;
 		}

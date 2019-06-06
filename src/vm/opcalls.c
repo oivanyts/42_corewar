@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   opcalls.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myaremen <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/06/05 19:55:42 by myaremen          #+#    #+#             */
+/*   Updated: 2019/06/05 19:55:44 by myaremen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "opcalls.h"
 #include "vm.h"
 #include "vs.h"
@@ -14,6 +26,7 @@ void	f_fork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	ft_memcpy(&tmp, sp, sizeof(t_thread));
 	tmp.ip = (uint8_t*)p1->memory - sp->vm_memory;
 	tmp.processing = 0;
+	tmp.lives = 0;
 	if (!threads_push_back(player->threads, &tmp))
 	{
 		handle_error(error_array_add);
@@ -79,6 +92,7 @@ void	f_lfork(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	player = sp->player;
 	ft_memcpy(&tmp, sp, sizeof(t_thread));
 	tmp.processing = 0;
+	tmp.lives = 0;
 	addr = memory_tou16(p1);
 	addr = swap16(addr);
 	memory_init(p1,
