@@ -31,7 +31,7 @@ void	ft_printlivebar(t_vm *vm, int indent)
 				"--------------------------------------------------");
 	}
 	wattrset(g_vs->info_win, COLOR_PAIR(GRAY) | A_BOLD);
-	mvwprintw(g_vs->info_win, 28 + indent, 54, "]");
+	mvwprintw(g_vs->info_win, 28 + indent, 54, "]  ");
 }
 
 void	ft_printplayers(t_vm *vm)
@@ -41,11 +41,11 @@ void	ft_printplayers(t_vm *vm)
 	i = vm->nplayers;
 	while (i--)
 	{
-		wattrset(g_vs->info_win, COLOR_PAIR(WHITE));
+		wattrset(g_vs->info_win, COLOR_PAIR(WHITE) | A_BOLD);
 		mvwprintw(g_vs->info_win, 23 - (vm->nplayers - 1 - i) * 4 + 1, 3,
-				"Last live :%22d", vm->players[i].lastlive);
+				"  Last live :%22d", vm->players[i].lastlive);
 		mvwprintw(g_vs->info_win, 23 - (vm->nplayers - 1 - i) * 4 + 2, 3,
-				"Lives in current period :%8d", vm->players[i].livesinper);
+				"  Lives in current period :%8d", vm->players[i].livesinper);
 		mvwprintw(g_vs->info_win, 23 - (vm->nplayers - 1 - i) * 4, 3,
 				"Player -%d : ", vm->players[i].number);
 		wattrset(g_vs->info_win, COLOR_PAIR(PLAYER_COLOR) | A_BOLD);

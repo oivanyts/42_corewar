@@ -108,8 +108,8 @@ void		vm_cycle(t_vm *vm)
 			poor_mans_visualization(threads_at(&vm->threads, 0)->vm_memory);
 			return ;
 		}
-		if (vm->ctd < CYCLE_TO_DIE % CYCLE_DELTA - CYCLE_DELTA)
-			return ;
+		//if (vm->ctd < CYCLE_TO_DIE % CYCLE_DELTA - CYCLE_DELTA)
+			//return ;
 		vm->options.visual_ncurses ? ft_drawmap(vm) : 0;
 		++cycles;
 		++vm->cycle;

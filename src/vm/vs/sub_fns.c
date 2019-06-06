@@ -62,8 +62,8 @@ void	ft_changememvs(int memstart, int player)
 	i = 4;
 	while (i--)
 	{
-		g_vsmap[memstart % 4095].player = player;
-		g_vsmap[memstart % 4095].newdata = 50;
+		g_vsmap[memstart % MEM_SIZE].player = player;
+		g_vsmap[memstart % MEM_SIZE].newdata = 50;
 		memstart++;
 	}
 }
