@@ -43,7 +43,7 @@ char	*ft_getoutputfilename(char *filename)
 
 	name = ft_strnew(ft_strlen(filename) + 2);
 	ft_memcpy(name, filename, ft_strlen(filename) - 1);
-	ft_memcpy(&name[ft_strlen(filename) - 1], "cor", 3);
+	ft_memcpy(&name[ft_strlen(filename) - 1], "bor", 3);
 	return (name);
 }
 
