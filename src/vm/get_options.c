@@ -45,7 +45,7 @@ void		parce_option(int argc, char *argv[], uint8_t *arg_num, char *option)
 
 	(argc >= *arg_num && ft_string_to_number(argv[*arg_num], &param))
 	? (*arg_num)++ : print_usage(argv[0]);
-	if (ft_strnequ(option, "d", 1))
+	if (ft_strnequ(option, "dump", 4))
 	{
 		if (param < 0)
 			handle_error(error_option);
