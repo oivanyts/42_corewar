@@ -30,7 +30,7 @@ typedef struct  s_asm
 	struct s_fsm		*fsm;
     struct s_op_list	*op_list;
     struct s_token_list	*token_list;
-    int 				(*lex_condition[15])(char *c);
+    int 				(*lex_condition[15])(char *c, char state);
 	int 				(*id_state[15])(struct s_asm *a);
 	void				(*errors[3])(struct s_asm *a);
 }               t_asm;

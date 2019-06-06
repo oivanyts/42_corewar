@@ -10,32 +10,43 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "lex_conditions.h"
 #include "asm.h"
 #include "lexer.h"
 
-int		lex_comment(char *c)
+int		lex_comment(char *c, char st)
 {
-	return (str_cmp(c, COMMENT_CMD_STRING));
+	static char	states[] = {1};
+
+	return (str_cmp(c, COMMENT_CMD_STRING) &&
+	at_right_state(states, sizeof(states), st));
 }
 
-int		lex_whitespace(char *c)
+int		lex_whitespace(char *c, char st)
 {
-	return (*c == ' ' || *c == '\t');
+	static char	states[] = {1};
+
+	return ((*c == ' ' || *c == '\t') &&
+			at_right_state(states, sizeof(states), st));
 }
 
-int		lex_endline(char *c)
+int		lex_endline(char *c, char st)
 {
-	return (*c == '\n');
+	static char	states[] = {1, 17};
+
+	return (*c == '\n' && at_right_state(states, sizeof(states), st));
 }
 
-int		lex_zero(char *c)
+int		lex_zero(char *c, char st)
 {
-	return (*c == '\0');
+	static char	states[] = {17, 16};
+
+	return (*c == '\0' && at_right_state(states, sizeof(states), st));
 }
 
-int		lex_other(char *c)
+int		lex_other(char *c, char st)
 {
-	if (c)
+	if (c || st)
 		;
 	return (1);
 }

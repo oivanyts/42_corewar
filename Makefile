@@ -28,7 +28,8 @@ SRCS_ASM =./src/asm/bcode.c\
           ./src/asm/lexer/init_lexer.c\
           ./src/asm/lexer/lexer.c\
           ./src/asm/lexer/read_text.c\
-          ./src/asm/lexer/str_cmp.c
+          ./src/asm/lexer/str_cmp.c\
+          ./src/asm/lexer/lex_condition/at_right_state.c
 
 SRCS_VM = ./src/vm/abstract_cpu.c\
 			./src/vm/array.c\

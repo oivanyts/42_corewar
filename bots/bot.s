@@ -1,6 +1,9 @@
-.comment "dsfsdf
-loop:
+.comment "dsfsdf"
+.name "fd"
 
-live %:loop
-.name
+lroop:
 
+
+
+
+live %:lroop

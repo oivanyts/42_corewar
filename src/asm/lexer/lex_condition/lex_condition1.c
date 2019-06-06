@@ -10,30 +10,43 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "lex_conditions.h"
 #include "asm.h"
 #include "lexer.h"
 
-int		lex_separator_char(char *c)
+int		lex_separator_char(char *c, char st)
 {
-	return (*c == SEPARATOR_CHAR);
+	static char	states[] = {1};
+
+	return (*c == SEPARATOR_CHAR && at_right_state(states, sizeof(states), st));
 }
 
-int		lex_label_char(char *c)
+int		lex_label_char(char *c, char st)
 {
-	return (*c == LABEL_CHAR);
+	static char	states[] = {1, 2, 3, 4, 8};
+
+	return (*c == LABEL_CHAR && at_right_state(states, sizeof(states), st));
 }
 
-int		lex_commentary(char *c)
+int		lex_commentary(char *c, char st)
 {
-	return (*c == COMMENT_CHAR || *c == ALT_COMMENT_CHAR);
+	static char	states[] = {1};
+
+	return ((*c == COMMENT_CHAR || *c == ALT_COMMENT_CHAR)
+			&& at_right_state(states, sizeof(states), st));
 }
 
-int		lex_quote(char *c)
+int		lex_quote(char *c, char st)
 {
-	return (*c == '"');
+	static char	states[] = {1, 16};
+
+	return (*c == '"' && at_right_state(states, sizeof(states), st));
 }
 
-int		lex_name(char *c)
+int		lex_name(char *c, char st)
 {
-	return (str_cmp(c, NAME_CMD_STRING));
+	static char	states[] = {1};
+
+	return (str_cmp(c, NAME_CMD_STRING) &&
+			at_right_state(states, sizeof(states), st));
 }

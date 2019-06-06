@@ -10,38 +10,49 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "lex_conditions.h"
 #include "asm.h"
 
-int		lex_num(char *c)
+int		lex_num(char *c, char st)
 {
-	return (ft_isdigit(*c));
+	static char	states[] = {1, 2, 4, 5, 6, 7, 8, 9, 10, 11};
+
+	return (ft_isdigit(*c) && at_right_state(states, sizeof(states), st));
 }
 
-int		lex_r(char *c)
+int		lex_r(char *c, char st)
 {
-	return (*c == 'r');
+	static char	states[] = {1};
+
+	return (*c == 'r' && at_right_state(states, sizeof(states), st));
 }
 
-int		lex_label_chars(char *c)
+int		lex_label_chars(char *c, char st)
 {
 	char	*i;
+	static char	states[] = {1, 2, 3, 4, 5, 12, 13, 14, 15};
+
 
 	i = LABEL_CHARS;
 	while (*i != '\0')
 	{
 		if (*i == *c)
-			return (1);
+			return (at_right_state(states, sizeof(states), st));
 		i++;
 	}
 	return (0);
 }
 
-int		lex_minus(char *c)
+int		lex_minus(char *c, char st)
 {
-	return (*c == '-');
+	static char	states[] = {1, 8};
+
+	return (*c == '-'  && at_right_state(states, sizeof(states), st));
 }
 
-int		lex_direct_char(char *c)
+int		lex_direct_char(char *c, char st)
 {
-	return (*c == DIRECT_CHAR);
+	static char	states[] = {1};
+
+	return (*c == DIRECT_CHAR  && at_right_state(states, sizeof(states), st));
 }

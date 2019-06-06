@@ -19,7 +19,7 @@ static int	check_condition(t_asm *a)
 	int		condition;
 
 	condition = 0;
-	while (a->lex_condition[condition](a->fsm->curr) == 0)
+	while (a->lex_condition[condition](a->fsm->curr, a->fsm->state) == 0)
 		condition++;
 	return (condition);
 }
