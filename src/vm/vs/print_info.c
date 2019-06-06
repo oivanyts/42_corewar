@@ -108,6 +108,8 @@ void	ft_kbhandler(t_vm *vm)
 			g_vs->speed += g_vs->speed == INT_MAX ? 0 : 10;
 		else if (key == '_')
 			g_vs->speed -= g_vs->speed < 11 ? 0 : 10;
+		else if (key == 'q')
+			ft_vsexit(by_user);
 		nodelay(stdscr, delay);
 		ft_printinfo(vm, delay, key);
 		key = getch();

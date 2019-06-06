@@ -53,7 +53,7 @@ void			ft_drawmap(t_vm *vm);
 void			ft_changememvs(int memstart, int player);
 void			ft_printlivebar(t_vm *vm, int indent);
 void			ft_announcewinner(int32_t number, char *name);
-void			ft_vsexit();
+void			ft_vsexit(t_error_code n_err);
 int				ft_getnchars(int lives);
 void			ft_kbhandler(t_vm *vm);
 void			ft_initlive(t_thread *sp, int32_t p32);

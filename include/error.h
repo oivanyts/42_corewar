@@ -25,11 +25,12 @@ typedef enum	e_error_code
 	error_option,
 	error_champ_size,
 	error_colors,
-	error_memalloc
+	error_memalloc,
+	by_user
 }				t_error_code;
 
 void			handle_error(t_error_code n_err);
 
-const char		*g_error_table[11];
+const char		*g_error_table[12];
 
 #endif

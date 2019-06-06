@@ -62,11 +62,7 @@ void	ft_initscr(t_vm *vm, t_player *players)
 	g_vs = (t_vs *)ft_memalloc(sizeof(t_vs));
 	g_vsmap = (t_vsmap *)ft_memalloc(sizeof(t_vsmap) * MEM_SIZE);
 	if (!g_vs || !g_vsmap)
-	{
-		endwin();
-		ft_vsexit();
-		handle_error(error_memalloc);
-	}
+		ft_vsexit(error_memalloc);
 	ft_initvsmap(vm, players);
 	start_color();
 	ft_initcolors();

@@ -15,7 +15,7 @@
 #include "thread_array.h"
 #include "vm.h"
 
-const char	*g_error_table[11] =
+const char	*g_error_table[12] =
 {
 	"Cannot open file.",
 	"Array sizing failed.",
@@ -27,7 +27,8 @@ const char	*g_error_table[11] =
 	"Option fail",
 	"File has too large a code.",
 	"Colors not supported.",
-	"Memory doesn't allocate."
+	"Memory doesn't allocate.",
+	"Interrupted by user."
 };
 
 void	handle_error(t_error_code n_err)
