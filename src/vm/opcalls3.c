@@ -27,7 +27,7 @@ void	f_sub(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
 	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
-		output_operation(sp);
+		output_operation(sp, NULL);
 	sum = swap32(swap32(memory_tou32(p1)) - swap32(memory_tou32(p2)));
 	memory_init_number(&res_memory, &sum);
 	memory_memmove(p3, &res_memory);
@@ -41,7 +41,7 @@ void	f_and(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	load_param(sp, p3, 3);
 	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
 	{
-		output_operation(sp);
+		output_operation(sp, NULL);
 	}
 	if (((t_player*)(sp->player))->number == 1)
 	{
@@ -56,9 +56,9 @@ void	f_or(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
-	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
+	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4U)
 	{
-		output_operation(sp);
+		output_operation(sp, NULL);
 	}
 	if (((t_player*)(sp->player))->number == 1)
 	{
@@ -73,9 +73,9 @@ void	f_xor(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	load_param(sp, p1, 1);
 	load_param(sp, p2, 2);
 	load_param(sp, p3, 3);
-	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4)
+	if (!get_vm(0)->options.visual_ncurses && get_vm(0)->options.o_v_param & 4U)
 	{
-		output_operation(sp);
+		output_operation(sp, NULL);
 	}
 	if (((t_player*)(sp->player))->number == 1)
 	{
@@ -89,18 +89,23 @@ void	f_zjmp(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 {
 	(void)p2;
 	(void)p3;
-	if (sp->cf)
-	{
-		load_dir_idx_param(sp, p1);
-		sp->ip = (uint8_t*)p1->memory - sp->vm_memory;
-	}
+	load_dir_idx_param(sp, p1);
 	if (get_vm(0)->options.visual_ncurses == 0
 		&& get_vm(0)->options.o_v_param & 4)
 	{
-		output_operation(sp);
+		ft_printf("P    %d | %s %d", sp - threads_at(&get_vm(0)->threads, 0) + 1,
+				  g_op_tab[sp->op.opcode].name, ((uint8_t*)p1->memory - sp->vm_memory) - sp->op.ip);
 		if (sp->cf)
+		{
 			ft_printf(" OK\n");
+		}
 		else
+		{
 			ft_printf(" FAILED\n");
+		}
+	}
+	if (sp->cf)
+	{
+		sp->ip = (uint8_t*)p1->memory - sp->vm_memory;
 	}
 }
