@@ -13,6 +13,7 @@
 #include "abstract_cpu.h"
 #include "utils.h"
 #include "libft.h"
+#include "opcalls.h"
 
 void		memory_subtract(t_memory *dst, t_memory *param1, t_memory *param2)
 {
@@ -46,6 +47,7 @@ uint16_t	memory_tou16(t_memory *mem)
 	{
 		u16 = (*as_byte(mem->memory) << 8);
 		u16 |= *as_byte(mem->memory_begin);
+		u16 = swap16(u16);
 	}
 	return (u16);
 }
@@ -68,12 +70,14 @@ uint32_t	memory_tou32(t_memory *mem)
 		while (i < 4)
 		{
 			res |= (memory_tou8(&mem_cpy) << ((3 - i) * 8));
+			mem_cpy.memory += 1;
 			if (mem_cpy.memory == mem_cpy.memory_end)
 			{
 				mem_cpy.memory = mem_cpy.memory_begin;
 			}
 			++i;
 		}
+		res = swap32(res);
 	}
 	return (res);
 }
