@@ -45,7 +45,7 @@ void		parce_option(int argc, char *argv[], uint8_t *arg_num, char *option)
 
 	(argc >= *arg_num && ft_string_to_number(argv[*arg_num], &param))
 	? (*arg_num)++ : print_usage(argv[0]);
-	if (ft_strnequ(option, "d", 1))
+	if (ft_strnequ(option, "dump", 4))
 	{
 		if (param < 0)
 			handle_error(error_option);
@@ -54,7 +54,7 @@ void		parce_option(int argc, char *argv[], uint8_t *arg_num, char *option)
 	}
 	else if (ft_strnequ(option, "v", 1))
 	{
-		get_vm(0)->options.o_visual = true;
+		get_vm(0)->options.o_a = true;
 		get_vm(0)->options.o_v_param = param;
 	}
 	else if (ft_strnequ(option, "n", 1))
@@ -76,7 +76,7 @@ bool		is_option(char **argv, int argc, uint8_t *arg_num, char *string1)
 	if ((option = ft_strstr(string1, &argv[*arg_num][1])))
 	{
 		get_vm(0)->options.o_next_player = 0;
-		if (*(option + 1) == ':' && !get_vm(0)->options.visual_ncurses)
+		if (*(option + 1) == ':' ||  ft_strequ(argv[*arg_num], "-dump"))
 		{
 			(*arg_num)++;
 			parce_option(argc, argv, arg_num, option);
@@ -87,8 +87,10 @@ bool		is_option(char **argv, int argc, uint8_t *arg_num, char *string1)
 			{
 				get_vm(0)->options.visual_ncurses = true;
 				get_vm(0)->options.o_dump = false;
-				get_vm(0)->options.o_visual = false;
+				get_vm(0)->options.o_a = false;
 			}
+			else if (argv[*arg_num][1] == 'a')
+				get_vm(0)->options.o_a = true;
 			(*arg_num)++;
 		}
 	}

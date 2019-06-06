@@ -104,7 +104,7 @@ int			main(int argc, char *argv[])
 	ft_bzero(memory, sizeof(uint8_t) * MEM_SIZE);
 	parce_info(argc - 1, argv, &players[0], &memory[0]);
 	init_vm(&vm, &players[0], vm.nplayers);
-	if (vm.options.visual_ncurses == 0)
+	if (!vm.options.visual_ncurses)
 		print_players_intro(players, vm.nplayers);
 	vm.options.visual_ncurses ? ft_vsinit(&vm, &players[0]) : 0;
 	vm_cycle(&vm);

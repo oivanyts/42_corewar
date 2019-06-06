@@ -13,20 +13,6 @@
 #include "vm.h"
 #include "op.h"
 
-void			output_binary(uint8_t *bytecode, size_t size)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < size)
-	{
-		ft_printf("%.2x%.2x ", bytecode[i], bytecode[i + 1]);
-		i += 2;
-		if (!(i % 16))
-			ft_printf("\n");
-	}
-	ft_printf("\n");
-}
 
 unsigned int	reverse_byte(unsigned int old)
 {
@@ -43,9 +29,7 @@ void			load_from_file(char *fname, t_player *player, uint8_t memory[])
 	(fd = open(fname, O_RDONLY)) > 0 ? 0 : handle_error(error_opening_file);
 	(ret = (size_t)read(fd, bytes, MEM_SIZE)) > 0 ? 0 : handle_error(4);
 	player->header.magic = *(uint32_t *)&bytes;
-	if ((IS_BIG_ENDIAN && COREWAR_EXEC_MAGIC != player->header.magic)
-		|| (!IS_BIG_ENDIAN &&
-			reverse_byte(COREWAR_EXEC_MAGIC) != player->header.magic))
+	if (reverse_byte(COREWAR_EXEC_MAGIC) != player->header.magic)
 		handle_error(error_wrong_magic);
 	if (ret - (12 + PROG_NAME_LENGTH + COMMENT_LENGTH + 4) > CHAMP_MAX_SIZE)
 	{

@@ -26,7 +26,7 @@
 # define T_SECOND_PARAM (uint8_t)0x30
 # define T_THIRD_PARAM (uint8_t)0x0C
 
-# define OPTIONS "d:n:v:sa"
+# define OPTIONS "dump:n:v:sa"
 
 typedef struct	s_player
 {
@@ -42,7 +42,7 @@ typedef struct	s_options
 	bool		o_op;
 	bool		o_dump;
 	uint32_t	o_dump_point;
-	bool		o_visual;
+	bool		o_a;
 	uint32_t	o_v_param;
 	uint8_t		o_next_player;
 	bool		visual_ncurses;

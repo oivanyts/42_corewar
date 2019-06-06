@@ -108,5 +108,6 @@ void	f_aff(t_thread *sp, t_memory *p1, t_memory *p2, t_memory *p3)
 	(void)p2;
 	(void)p3;
 	load_param(sp, p1, 1);
-	ft_printf("%c", swap32(memory_tou32(p1)));
+	if (get_vm(0)->options.o_a && !get_vm(0)->options.visual_ncurses)
+		ft_printf("Aff: %c\n", swap32(memory_tou32(p1)));
 }
