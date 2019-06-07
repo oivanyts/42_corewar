@@ -76,7 +76,7 @@ bool		is_option(char **argv, int argc, uint8_t *arg_num, char *string1)
 	if ((option = ft_strstr(string1, &argv[*arg_num][1])))
 	{
 		get_vm(0)->options.o_next_player = 0;
-		if (*(option + 1) == ':' ||  ft_strequ(argv[*arg_num], "-dump"))
+		if (*(option + 1) == ':' || ft_strequ(argv[*arg_num], "-dump"))
 		{
 			(*arg_num)++;
 			parce_option(argc, argv, arg_num, option);
@@ -87,7 +87,6 @@ bool		is_option(char **argv, int argc, uint8_t *arg_num, char *string1)
 			{
 				get_vm(0)->options.visual_ncurses = true;
 				get_vm(0)->options.o_dump = false;
-				get_vm(0)->options.o_a = false;
 			}
 			else if (argv[*arg_num][1] == 'a')
 				get_vm(0)->options.o_a = true;

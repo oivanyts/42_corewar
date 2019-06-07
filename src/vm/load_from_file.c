@@ -13,6 +13,7 @@
 #include "vm.h"
 #include "op.h"
 
+#define HEADER_SIZE (size_t)(16 + PROG_NAME_LENGTH + COMMENT_LENGTH)
 
 unsigned int	reverse_byte(unsigned int old)
 {
@@ -27,21 +28,24 @@ void			load_from_file(char *fname, t_player *player, uint8_t memory[])
 	uint8_t	bytes[MEM_SIZE];
 
 	(fd = open(fname, O_RDONLY)) > 0 ? 0 : handle_error(error_opening_file);
-	(ret = (size_t)read(fd, bytes, MEM_SIZE)) > 0 ? 0 : handle_error(4);
+	(ret = (size_t)read(fd, bytes, MEM_SIZE)) > 0 ?
+		0 : handle_error(error_read);
 	player->header.magic = *(uint32_t *)&bytes;
 	if (reverse_byte(COREWAR_EXEC_MAGIC) != player->header.magic)
 		handle_error(error_wrong_magic);
-	if (ret - (12 + PROG_NAME_LENGTH + COMMENT_LENGTH + 4) > CHAMP_MAX_SIZE)
-	{
-		handle_error(error_champ_size);
-	}
+	(ret - HEADER_SIZE > CHAMP_MAX_SIZE) ? handle_error(error_champ_size) : 0;
 	ft_memcpy(player->header.prog_name, &bytes[4], PROG_NAME_LENGTH);
-	player->header.prog_size = *(uint32_t *)&bytes[8 + PROG_NAME_LENGTH];
-	if (!IS_BIG_ENDIAN)
-		player->header.prog_size = reverse_byte(player->header.prog_size);
+	*(int32_t*)&bytes[4 + PROG_NAME_LENGTH] == 0 ?
+		0 : handle_error(error_nonzero);
+	player->header.prog_size =
+			reverse_byte(*(uint32_t *)&bytes[8 + PROG_NAME_LENGTH]);
+	if (ret - HEADER_SIZE != player->header.prog_size)
+		handle_error(error_diff_size);
 	ft_memcpy(player->header.comment,
 			&bytes[12 + PROG_NAME_LENGTH], COMMENT_LENGTH);
-	ft_memcpy(memory, &bytes[12 + PROG_NAME_LENGTH + COMMENT_LENGTH + 4],
+	if (*(int32_t*)&bytes[12 + PROG_NAME_LENGTH + COMMENT_LENGTH])
+		handle_error(error_nonzero);
+	ft_memcpy(memory, &bytes[HEADER_SIZE],
 			(size_t)player->header.prog_size);
 	close(fd);
 }
