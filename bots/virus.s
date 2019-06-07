@@ -1,5 +1,5 @@
 .name 		"virus"
-.comment	"slow(("
+.comment	"can eat you to death"
 
 live_init:
     st r1, 34

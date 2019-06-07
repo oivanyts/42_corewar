@@ -1,5 +1,5 @@
 .name 		"stealer"
-.comment	"..."
+.comment	"muhahahahaha"
 
 main:
     lfork %2100
